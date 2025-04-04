@@ -22,3 +22,8 @@ Dependencies:
 
 
 - How to implement Anomaly Detection? What algo/strat to use?
+
+
+
+
+- Simple test
