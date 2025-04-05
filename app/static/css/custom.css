@@ -1,0 +1,79 @@
+/* Modern Navbar */
+.navbar-modern {
+    background-color: transparent !important;
+    transition: all 0.3s ease;
+    padding: 1rem 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-scrolled {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+}
+
+.navbar-brand-modern {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #4CAF50 !important;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand-modern:hover {
+    transform: scale(1.05);
+}
+
+.nav-link-modern {
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem !important;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    color: #333 !important;
+    font-weight: 500;
+}
+
+.nav-link-modern:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50 !important;
+    transform: translateY(-2px);
+}
+
+.nav-link-modern.active {
+    background-color: #4CAF50;
+    color: white !important;
+}
+
+.nav-link-button {
+    background-color: #4CAF50;
+    color: white !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
+}
+
+.nav-link-button:hover {
+    background-color: #43A047;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+}
+
+.navbar-toggler-modern {
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background-color: rgba(76, 175, 80, 0.1);
+    transition: all 0.3s ease;
+}
+
+.navbar-toggler-modern:hover {
+    background-color: rgba(76, 175, 80, 0.2);
+}
+
+.navbar-toggler-modern:focus {
+    box-shadow: none;
+}
