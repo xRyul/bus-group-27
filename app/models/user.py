@@ -9,6 +9,11 @@ from app import db, login
 from dataclasses import dataclass
 import datetime
 
+
+from app.models.sustainable_activity import SustainableActivity # For the 'activities' relationship
+from app.models.user_points import UserPoints # For the 'points' relationship
+
+
 @dataclass
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -19,6 +24,17 @@ class User(UserMixin, db.Model):
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     role: so.Mapped[str] = so.mapped_column(sa.String(10), default="Normal")
 
+    # One-to-many: A single user can have multiple sustainable activities. 
+    # activities: Allows querying all activities associated with a user, e.g., user.activities.all().
+    activities: so.WriteOnlyMapped['SustainableActivity'] = so.relationship(
+        back_populates='user', lazy='dynamic'
+    )
+
+    # One-to-one: A single user can have only one set of points.
+    # points: Allows accessing a user's point e.g., user.points.
+    points: so.Mapped[Optional['UserPoints']] = so.relationship( # User might not have points yet
+        back_populates='user', uselist=False
+    )
 
     def __repr__(self):
         pwh = 'None' if not self.password_hash else f'...{self.password_hash[-5:]}'
