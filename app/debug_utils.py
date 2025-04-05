@@ -25,3 +25,5 @@ def reset_db():
         # add the newly created user object to the database session:
         db.session.add(user)
     db.session.commit()
+
+    print('Hello, World!')
