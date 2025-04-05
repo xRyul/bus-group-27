@@ -5,7 +5,7 @@ from wtforms.fields.numeric import IntegerField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, EqualTo, NumberRange, ValidationError, Email, Optional, Length
 from app import db
-from app.models import User
+from app.models.user import User
 import datetime
 
 
