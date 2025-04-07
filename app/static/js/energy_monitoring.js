@@ -180,12 +180,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // Export chart as image
-            const downloadBtn = document.getElementById('downloadChartBtn');
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', function() {
+            // Export chart as image - now connected to the main Export Report button
+            const downloadReportBtn = document.getElementById('downloadReportBtn');
+            if (downloadReportBtn) {
+                downloadReportBtn.addEventListener('click', function() {
                     const link = document.createElement('a');
-                    link.download = 'energy-consumption-chart.png';
+                    link.download = 'energy-consumption-report.png';
                     link.href = mainChart.toBase64Image();
                     link.click();
                 });
@@ -236,14 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         cutout: '70%',
                         plugins: {
                             legend: {
-                                position: 'right',
-                                labels: {
-                                    boxWidth: 12,
-                                    padding: 15,
-                                    font: {
-                                        size: 11
-                                    }
-                                }
+                                display: false // Hide legend, show only on hover
                             },
                             tooltip: {
                                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -296,14 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 12,
-                                padding: 15,
-                                font: {
-                                    size: 11
-                                }
-                            }
+                            display: false // Hide legend, show only on hover
                         },
                         tooltip: {
                             backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -351,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false
+                            display: false // Hide legend, show only on hover
                         },
                         tooltip: {
                             backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -406,15 +392,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Time period changed to:', this.id);
                 // Similar to building selector, you would fetch new data here
                 
-                // For demo purposes
+                // For demo purposes - show loading state briefly
                 document.querySelectorAll('.stat-value').forEach(el => {
                     el.innerHTML = '<div class="spinner-border spinner-border-sm text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>';
                 });
                 
-                // Simulate data loading
+                // Only show loading state for 500ms to avoid UI getting stuck
                 setTimeout(() => {
                     updateRandomStats();
-                }, 800);
+                    updateEnvironmentalStats(); // Also update the second row of stats
+                }, 500);
             });
         });
         
@@ -462,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Function to update stats with random values (for demo purposes)
+    // Function to update main stats with random values (for demo purposes)
     function updateRandomStats() {
         // Total consumption
         const consumptionValue = Math.floor(Math.random() * 1000) + 1500;
@@ -514,6 +501,55 @@ document.addEventListener('DOMContentLoaded', function() {
         const anomalyChangeEl = document.querySelector('.stat-card.alert .stat-change');
         anomalyChangeEl.innerHTML = `<i class="bi bi-arrow-up"></i><span>${anomalyNew} new today</span>`;
         anomalyChangeEl.className = 'stat-change negative';
+    }
+    
+    // Function to update environmental stats with random values
+    function updateEnvironmentalStats() {
+        // Energy Use Intensity
+        const intensityValue = Math.floor(Math.random() * 50) + 100;
+        const intensityChange = (Math.random() * 15 - 10).toFixed(1);
+        document.querySelectorAll('.stat-card').forEach((card, index) => {
+            if (index < 4) return; // Skip the first row of cards
+            
+            const statValue = card.querySelector('.stat-value');
+            const statChange = card.querySelector('.stat-change');
+            
+            if (index === 4) { // Energy Use Intensity
+                statValue.textContent = `${intensityValue} kWh/m²/yr`;
+                statChange.innerHTML = intensityChange < 0 
+                    ? `<i class="bi bi-arrow-down"></i><span>${Math.abs(intensityChange)}% below target</span>`
+                    : `<i class="bi bi-arrow-up"></i><span>${intensityChange}% above target</span>`;
+                statChange.className = intensityChange < 0 
+                    ? 'stat-change positive' 
+                    : 'stat-change negative';
+            } else if (index === 5) { // Renewable Energy
+                const renewableValue = Math.floor(Math.random() * 20) + 20;
+                const renewableTarget = 50;
+                const renewableGap = renewableTarget - renewableValue;
+                statValue.textContent = `${renewableValue}%`;
+                statChange.innerHTML = renewableGap > 0 
+                    ? `<i class="bi bi-arrow-up"></i><span>${renewableGap}% to target (${renewableTarget}%)</span>`
+                    : `<i class="bi bi-check-circle"></i><span>Target achieved</span>`;
+                statChange.className = renewableGap > 0 
+                    ? 'stat-change negative' 
+                    : 'stat-change positive';
+            } else if (index === 6) { // Water Intensity
+                const waterValue = Math.floor(Math.random() * 20) + 35;
+                const waterChange = (Math.random() * 20 - 15).toFixed(1);
+                statValue.textContent = `${waterValue} L/m²/yr`;
+                statChange.innerHTML = waterChange < 0 
+                    ? `<i class="bi bi-arrow-down"></i><span>${Math.abs(waterChange)}% below baseline</span>`
+                    : `<i class="bi bi-arrow-up"></i><span>${waterChange}% above baseline</span>`;
+                statChange.className = waterChange < 0 
+                    ? 'stat-change positive' 
+                    : 'stat-change negative';
+            } else if (index === 7) { // BREEAM Rating
+                // Keep BREEAM rating static as it doesn't change with time periods
+                statValue.textContent = "Excellent";
+                statChange.innerHTML = `<i class="bi bi-check-circle"></i><span>Achieved 2010</span>`;
+                statChange.className = 'stat-change positive';
+            }
+        });
     }
     
     // Dark mode toggle removed
