@@ -81,6 +81,42 @@ class BuildingEnergyMonitoring:
 print(BuildingEnergyMonitoring().daily_data)
 
 class CommunityEngagement:
-    ### FR5 Logic ###
+    def log_activity():
+    data = request.json
+    user_id = data['user_id']
+    activity_id = data['activity_id']
+    point = data['total_points']
+
+    user = User.query.get(user_id)
+    activity = SustainableActivity.guery.get(activity_id)
+
+    if not user or not activity:
+        return jsonify({'error': 'Invalid user or activity ID'}), 400
+
+    user_activity = SustainableActivity(user_id=user_id, activity_id=activity_id)
+    db.session.add(user_activity)
+    user.points += activity.point_value
+    db.session.commit()
+
+    return jsonify({
+        'message': f"Activity logged. {activity.point_value} points awarded.",
+        'total_points': user.points
+    })
+
+    def submit_activity():
+    data = request.get_json()
+    try:
+        activity = SustainableActivity(
+            user_id=data['user_id'],
+            activity_type=data['activity_type'],
+            description=data.get('description', ''),
+            evidence=data.get('evidence'),
+            status='pending'  # default status
+        )
+        db.session.add(activity)
+        db.session.commit()
+        return jsonify({"message": "Activity submitted for review."}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
     ### FR6 Logic ###
     pass
