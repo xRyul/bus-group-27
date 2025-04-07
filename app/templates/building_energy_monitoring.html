@@ -243,7 +243,7 @@
         </div>
     </div>
     
-    <!-- Placeholder for User Interaction Features -->
+    <!-- User Interaction Features -->
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="modern-card">
@@ -251,8 +251,159 @@
                     <h5><i class="bi bi-tools"></i> Actions</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">User interaction features will be implemented here.</p>
+                    <div class="row">
+                        <!-- Data Export -->
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <button class="btn btn-outline-success w-100">
+                                <i class="bi bi-file-earmark-excel"></i> Export Data
+                            </button>
+                        </div>
+                        
+                        <!-- Issue Reporting -->
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#reportIssueModal">
+                                <i class="bi bi-exclamation-circle"></i> Report Issue
+                            </button>
+                        </div>
+                        
+                        <!-- Alert Configuration -->
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <button class="btn btn-outline-warning w-100" data-bs-toggle="modal" data-bs-target="#alertConfigModal">
+                                <i class="bi bi-bell"></i> Configure Alerts
+                            </button>
+                        </div>
+                        
+                        <!-- Annotation -->
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-info w-100" data-bs-toggle="modal" data-bs-target="#addNoteModal">
+                                <i class="bi bi-pencil"></i> Add Note
+                            </button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Issue Modal -->
+<div class="modal fade" id="reportIssueModal" tabindex="-1" aria-labelledby="reportIssueModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportIssueModalLabel">Report Energy Issue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="issueType" class="form-label">Issue Type</label>
+                        <select class="form-select" id="issueType" required>
+                            <option value="">Select issue type</option>
+                            <option value="lights">Lights left on</option>
+                            <option value="hvac">HVAC problems</option>
+                            <option value="water">Water leak</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="issueLocation" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="issueLocation" placeholder="Building and room number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="issueDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="issueDescription" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger">Submit Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configure Alerts Modal -->
+<div class="modal fade" id="alertConfigModal" tabindex="-1" aria-labelledby="alertConfigModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alertConfigModalLabel">Configure Alerts</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="anomalyAlerts" checked>
+                            <label class="form-check-label" for="anomalyAlerts">Anomaly Detection Alerts</label>
+                        </div>
+                        <div class="form-text">Receive notifications when unusual energy usage is detected</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="thresholdAlerts">
+                            <label class="form-check-label" for="thresholdAlerts">Threshold Alerts</label>
+                        </div>
+                        <div class="form-text">Receive notifications when energy usage exceeds defined thresholds</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="weeklyReports" checked>
+                            <label class="form-check-label" for="weeklyReports">Weekly Summary Reports</label>
+                        </div>
+                        <div class="form-text">Receive weekly email summaries of energy usage and trends</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="alertEmail" class="form-label">Email for Notifications</label>
+                        <input type="email" class="form-control" id="alertEmail" placeholder="your@email.com">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning">Save Settings</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Note Modal -->
+<div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNoteModalLabel">Add Note to Timeline</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="noteDate" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="noteDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="noteTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="noteTitle" placeholder="Brief title for your note" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="noteContent" class="form-label">Note</label>
+                        <textarea class="form-control" id="noteContent" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="noteVisibility" checked>
+                            <label class="form-check-label" for="noteVisibility">
+                                Make visible to all users
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-info">Add Note</button>
             </div>
         </div>
     </div>
