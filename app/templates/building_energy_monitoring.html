@@ -1,76 +1,102 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="mb-4">Building Energy Monitoring Dashboard</h1>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Building Energy Monitoring</h1>
+            <p class="dashboard-subtitle">Track, analyze, and optimize energy usage across campus buildings</p>
+        </div>
+        <div class="dashboard-actions">
+            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#reportIssueModal">
+                <i class="bi bi-flag"></i> Report Issue
+            </button>
+            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#alertConfigModal">
+                <i class="bi bi-bell"></i> Alerts
+            </button>
+            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addNoteModal">
+                <i class="bi bi-journal-plus"></i> Add Note
+            </button>
+            <button class="btn btn-primary" id="downloadReportBtn">
+                <i class="bi bi-download"></i> Export Report
+            </button>
+        </div>
+    </div>
     
-    <!-- Dashboard Overview Section -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="modern-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5><i class="bi bi-sliders"></i> Dashboard Controls</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <!-- Building Selector -->
-                        <div class="col-md-3 mb-3">
-                            <label for="buildingSelector" class="form-label">Building</label>
-                            <select class="form-select" id="buildingSelector">
-                                <option value="all">All Buildings</option>
-                                <option value="computer-science" selected>Computer Science</option>
-                                <option value="library">Library</option>
-                                <option value="student-center">Student Center</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Time Period Controls -->
-                        <div class="col-md-5 mb-3">
-                            <label class="form-label">Time Period</label>
-                            <div class="btn-group w-100" role="group" aria-label="Time period">
-                                <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
-                                <label class="btn btn-outline-success" for="day">Day</label>
-                                
-                                <input type="radio" class="btn-check" name="timePeriod" id="week" autocomplete="off">
-                                <label class="btn btn-outline-success" for="week">Week</label>
-                                
-                                <input type="radio" class="btn-check" name="timePeriod" id="month" autocomplete="off">
-                                <label class="btn btn-outline-success" for="month">Month</label>
-                                
-                                <input type="radio" class="btn-check" name="timePeriod" id="year" autocomplete="off">
-                                <label class="btn btn-outline-success" for="year">Year</label>
-                            </div>
-                        </div>
-                        
-                        <!-- Date Range Picker -->
-                        <div class="col-md-4 mb-3">
-                            <label for="dateRange" class="form-label">Date Range</label>
-                            <input type="date" class="form-control" id="dateRange">
-                        </div>
-                    </div>
+    <!-- Dashboard Controls -->
+    <div class="dashboard-controls animate-fade-in">
+        <div class="row">
+            <!-- Building Selector -->
+            <div class="col-md-3 mb-3">
+                <label for="buildingSelector" class="control-label">Building</label>
+                <select class="form-select" id="buildingSelector">
+                    <option value="all">All Buildings</option>
+                    <option value="computer-science" selected>Computer Science</option>
+                    <option value="library">Library</option>
+                    <option value="student-center">Student Center</option>
+                </select>
+            </div>
+            
+            <!-- Time Period Controls -->
+            <div class="col-md-5 mb-3">
+                <label class="control-label">Time Period</label>
+                <div class="filter-group">
+                    <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
+                    <label class="btn btn-filter" for="day">
+                        <i class="bi bi-calendar-day"></i> Day
+                    </label>
                     
-                    <!-- Energy Type Filters -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label class="form-label">Energy Type</label>
-                            <div class="btn-group" role="group" aria-label="Energy type">
-                                <input type="checkbox" class="btn-check" id="electricity" autocomplete="off" checked>
-                                <label class="btn btn-outline-primary" for="electricity">
-                                    <i class="bi bi-lightning-charge"></i> Electricity
-                                </label>
-                                
-                                <input type="checkbox" class="btn-check" id="gas" autocomplete="off">
-                                <label class="btn btn-outline-warning" for="gas">
-                                    <i class="bi bi-fire"></i> Gas
-                                </label>
-                                
-                                <input type="checkbox" class="btn-check" id="water" autocomplete="off">
-                                <label class="btn btn-outline-info" for="water">
-                                    <i class="bi bi-droplet"></i> Water
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    <input type="radio" class="btn-check" name="timePeriod" id="week" autocomplete="off">
+                    <label class="btn btn-filter" for="week">
+                        <i class="bi bi-calendar-week"></i> Week
+                    </label>
+                    
+                    <input type="radio" class="btn-check" name="timePeriod" id="month" autocomplete="off">
+                    <label class="btn btn-filter" for="month">
+                        <i class="bi bi-calendar-month"></i> Month
+                    </label>
+                    
+                    <input type="radio" class="btn-check" name="timePeriod" id="year" autocomplete="off">
+                    <label class="btn btn-filter" for="year">
+                        <i class="bi bi-calendar4"></i> Year
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Date Range Picker -->
+            <div class="col-md-4 mb-3">
+                <label for="dateRange" class="control-label">Date Range</label>
+                <input type="date" class="form-control" id="dateRange">
+            </div>
+        </div>
+        
+        <!-- Energy Type Filters -->
+        <div class="row">
+            <div class="col-md-12">
+                <label class="control-label">Energy Type</label>
+                <div class="filter-group">
+                    <input type="checkbox" class="btn-check" id="electricity" autocomplete="off" checked>
+                    <label class="btn btn-filter" for="electricity">
+                        <i class="bi bi-lightning-charge"></i> Electricity
+                    </label>
+                    
+                    <input type="checkbox" class="btn-check" id="gas" autocomplete="off">
+                    <label class="btn btn-filter" for="gas">
+                        <i class="bi bi-fire"></i> Gas
+                    </label>
+                    
+                    <input type="checkbox" class="btn-check" id="water" autocomplete="off">
+                    <label class="btn btn-filter" for="water">
+                        <i class="bi bi-droplet"></i> Water
+                    </label>
+                    
+                    <input type="checkbox" class="btn-check" id="renewable" autocomplete="off">
+                    <label class="btn btn-filter" for="renewable">
+                        <i class="bi bi-sun"></i> Renewable
+                    </label>
                 </div>
             </div>
         </div>
@@ -80,64 +106,60 @@
     <div class="row mb-4">
         <!-- Total Energy Consumption Card -->
         <div class="col-md-3 mb-3">
-            <div class="modern-card h-100">
-                <div class="card-body text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-lightning-charge"></i>
-                    </div>
-                    <h5 class="mb-2">Total Consumption</h5>
-                    <h3 class="mb-1">2,450 kWh</h3>
-                    <p class="text-success mb-0">
-                        <i class="bi bi-arrow-down"></i> 5.2% from previous
-                    </p>
+            <div class="stat-card energy animate-fade-in delay-1">
+                <div class="stat-icon">
+                    <i class="bi bi-lightning-charge"></i>
+                </div>
+                <div class="stat-title">Total Consumption</div>
+                <div class="stat-value">2,450 kWh</div>
+                <div class="stat-change positive">
+                    <i class="bi bi-arrow-down"></i>
+                    <span>5.2% from previous</span>
                 </div>
             </div>
         </div>
         
         <!-- Energy Cost Card -->
         <div class="col-md-3 mb-3">
-            <div class="modern-card h-100">
-                <div class="card-body text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-currency-dollar"></i>
-                    </div>
-                    <h5 class="mb-2">Estimated Cost</h5>
-                    <h3 class="mb-1">$367.50</h3>
-                    <p class="text-success mb-0">
-                        <i class="bi bi-arrow-down"></i> 3.8% from previous
-                    </p>
+            <div class="stat-card cost animate-fade-in delay-2">
+                <div class="stat-icon">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+                <div class="stat-title">Estimated Cost</div>
+                <div class="stat-value">$367.50</div>
+                <div class="stat-change positive">
+                    <i class="bi bi-arrow-down"></i>
+                    <span>3.8% from previous</span>
                 </div>
             </div>
         </div>
         
         <!-- Carbon Footprint Card -->
         <div class="col-md-3 mb-3">
-            <div class="modern-card h-100">
-                <div class="card-body text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-cloud"></i>
-                    </div>
-                    <h5 class="mb-2">Carbon Footprint</h5>
-                    <h3 class="mb-1">980 kg CO₂</h3>
-                    <p class="text-success mb-0">
-                        <i class="bi bi-arrow-down"></i> 4.5% from previous
-                    </p>
+            <div class="stat-card carbon animate-fade-in delay-3">
+                <div class="stat-icon">
+                    <i class="bi bi-cloud"></i>
+                </div>
+                <div class="stat-title">Carbon Footprint</div>
+                <div class="stat-value">980 kg CO₂</div>
+                <div class="stat-change positive">
+                    <i class="bi bi-arrow-down"></i>
+                    <span>4.5% from previous</span>
                 </div>
             </div>
         </div>
         
         <!-- Anomaly Count Card -->
         <div class="col-md-3 mb-3">
-            <div class="modern-card h-100">
-                <div class="card-body text-center">
-                    <div class="feature-icon">
-                        <i class="bi bi-exclamation-triangle"></i>
-                    </div>
-                    <h5 class="mb-2">Anomalies Detected</h5>
-                    <h3 class="mb-1">3</h3>
-                    <p class="text-danger mb-0">
-                        <i class="bi bi-arrow-up"></i> 2 new today
-                    </p>
+            <div class="stat-card alert animate-fade-in delay-4">
+                <div class="stat-icon">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div class="stat-title">Anomalies Detected</div>
+                <div class="stat-value">3</div>
+                <div class="stat-change negative">
+                    <i class="bi bi-arrow-up"></i>
+                    <span>2 new today</span>
                 </div>
             </div>
         </div>
@@ -146,96 +168,199 @@
     <!-- Main Visualization Section -->
     <div class="row mb-4">
         <div class="col-md-12">
-            <div class="modern-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="dashboard-card animate-fade-in">
+                <div class="card-header">
                     <h5><i class="bi bi-graph-up"></i> Energy Consumption Over Time</h5>
                     <div>
-                        <button class="btn btn-sm btn-outline-secondary" id="downloadChartBtn">
-                            <i class="bi bi-download"></i> Export
-                        </button>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-secondary" id="toggleChartView">
+                                <i class="bi bi-bar-chart"></i> View as Bar Chart
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="downloadChartBtn">
+                                <i class="bi bi-download"></i> Export
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <canvas id="mainChart" height="300"></canvas>
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                    
+                    <!-- Chart Legend & Insights -->
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 12px; height: 12px; background-color: #4CAF50; border-radius: 50%;"></div>
+                                    <span class="small">Electricity (kWh)</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 12px; height: 12px; background-color: #FFB300; border-radius: 50%;"></div>
+                                    <span class="small">Gas (kWh equivalent)</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 12px; height: 12px; background-color: #00ACC1; border-radius: 50%;"></div>
+                                    <span class="small">Water (m³)</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 12px; height: 12px; background-color: red; border-radius: 50%;"></div>
+                                    <span class="small">Anomalies</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <span class="badge bg-warning text-dark">
+                                <i class="bi bi-info-circle"></i> Peak usage: 10:00 - 14:00
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Building Details Panel -->
+    <!-- Building Details & Recommendations -->
     <div class="row mb-4">
+        <!-- Building Information -->
         <div class="col-md-6 mb-3">
-            <div class="modern-card h-100">
+            <div class="dashboard-card h-100 animate-fade-in">
                 <div class="card-header">
                     <h5><i class="bi bi-building"></i> Building Information</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="buildingActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="buildingActionsDropdown">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-text"></i> View Building Report</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-calendar-check"></i> Schedule Audit</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Building Settings</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Computer Science Building</h6>
-                            <p><i class="bi bi-geo-alt"></i> North Campus</p>
-                            <p><i class="bi bi-rulers"></i> Total Area: 5,000 m²</p>
-                            <p><i class="bi bi-calendar3"></i> Built: 2010</p>
+                    <div class="building-info-section">
+                        <div class="building-info-column">
+                            <h6 class="mb-3">Computer Science Building</h6>
+                            <div class="building-info-item">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>North Campus</span>
+                            </div>
+                            <div class="building-info-item">
+                                <i class="bi bi-rulers"></i>
+                                <span>Total Area: 5,000 m²</span>
+                            </div>
+                            <div class="building-info-item">
+                                <i class="bi bi-calendar3"></i>
+                                <span>Built: 2010</span>
+                            </div>
+                            <div class="building-info-item">
+                                <i class="bi bi-people"></i>
+                                <span>Occupancy: ~450 people</span>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <h6>Energy Efficiency</h6>
-                            <p><i class="bi bi-award"></i> Energy Class: B</p>
-                            <p><i class="bi bi-lightning-charge"></i> Usage per m²: 0.49 kWh/m²</p>
-                            <p><i class="bi bi-arrow-down-up"></i> Rank: 3rd of 10 buildings</p>
+                        
+                        <div class="building-info-column">
+                            <h6 class="mb-3">Energy Efficiency</h6>
+                            <div class="building-info-item">
+                                <i class="bi bi-award"></i>
+                                <span>Energy Class: B</span>
+                            </div>
+                            <div class="building-info-item">
+                                <i class="bi bi-lightning-charge"></i>
+                                <span>Usage per m²: 0.49 kWh/m²</span>
+                            </div>
+                            <div class="building-info-item">
+                                <i class="bi bi-arrow-down-up"></i>
+                                <span>Rank: 3rd of 10 buildings</span>
+                            </div>
+                            <div class="building-info-item">
+                                <i class="bi bi-check-circle"></i>
+                                <span>Last Audit: March 2025</span>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Energy Class Visualization -->
-                    <div class="mt-3">
-                        <h6>Energy Class Rating</h6>
-                        <div class="progress" style="height: 30px;">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">A</div>
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 20%; background-color: #8bc34a !important;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">B</div>
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 20%; opacity: 0.5;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">C</div>
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 20%; opacity: 0.5;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">D</div>
-                            <div class="progress-bar bg-danger" role="progressbar" style="width: 20%; opacity: 0.5;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">E</div>
+                    <div class="mt-4">
+                        <h6 class="mb-2">Energy Class Rating</h6>
+                        <div class="energy-class-bar">
+                            <div class="energy-class-segment" style="background-color: #4CAF50;">A</div>
+                            <div class="energy-class-segment active" style="background-color: #8BC34A;">B</div>
+                            <div class="energy-class-segment" style="background-color: #FFEB3B; color: #333;">C</div>
+                            <div class="energy-class-segment" style="background-color: #FFC107; color: #333;">D</div>
+                            <div class="energy-class-segment" style="background-color: #F44336;">E</div>
                         </div>
+                        <p class="small text-muted mt-2">Building is performing well but has potential for improvement to reach Class A.</p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Recommendations -->
+        <!-- AI Recommendations -->
         <div class="col-md-6 mb-3">
-            <div class="modern-card h-100">
+            <div class="dashboard-card h-100 animate-fade-in">
                 <div class="card-header">
                     <h5><i class="bi bi-lightbulb"></i> AI Efficiency Recommendations</h5>
+                    <button class="btn btn-sm btn-outline-primary" id="implementAllBtn">
+                        <i class="bi bi-check2-all"></i> Implement All
+                    </button>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex align-items-start mb-3">
-                        <div class="me-3 text-success"><i class="bi bi-1-circle-fill fs-4"></i></div>
-                        <div>
-                            <h6 class="mb-1">Optimize HVAC Schedule</h6>
-                            <p class="mb-0">Adjust HVAC operating hours to match building occupancy patterns. Potential savings: 15-20%.</p>
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="bi bi-thermometer-half"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <h6>Optimize HVAC Schedule</h6>
+                            <p>Adjust HVAC operating hours to match building occupancy patterns. Potential savings: 15-20%.</p>
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn btn-sm btn-outline-success">Implement</button>
+                                <button class="btn btn-sm btn-outline-secondary">Details</button>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="d-flex align-items-start mb-3">
-                        <div class="me-3 text-success"><i class="bi bi-2-circle-fill fs-4"></i></div>
-                        <div>
-                            <h6 class="mb-1">Investigate Night Usage</h6>
-                            <p class="mb-0">Unusual electricity consumption detected between 2-3 AM. Check for equipment left running overnight.</p>
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <h6>Investigate Night Usage</h6>
+                            <p>Unusual electricity consumption detected between 2-3 AM. Check for equipment left running overnight.</p>
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn btn-sm btn-outline-success">Investigate</button>
+                                <button class="btn btn-sm btn-outline-secondary">Details</button>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="d-flex align-items-start mb-3">
-                        <div class="me-3 text-success"><i class="bi bi-3-circle-fill fs-4"></i></div>
-                        <div>
-                            <h6 class="mb-1">Upgrade Lighting Systems</h6>
-                            <p class="mb-0">Replace remaining fluorescent fixtures with LED lighting. Estimated ROI: 18 months.</p>
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="bi bi-lightbulb"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <h6>Upgrade Lighting Systems</h6>
+                            <p>Replace remaining fluorescent fixtures with LED lighting. Estimated ROI: 18 months.</p>
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn btn-sm btn-outline-success">Implement</button>
+                                <button class="btn btn-sm btn-outline-secondary">Details</button>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="d-flex align-items-start">
-                        <div class="me-3 text-success"><i class="bi bi-4-circle-fill fs-4"></i></div>
-                        <div>
-                            <h6 class="mb-1">Install Occupancy Sensors</h6>
-                            <p class="mb-0">Add motion sensors in low-traffic areas to automatically control lighting.</p>
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">
+                            <i class="bi bi-eye"></i>
+                        </div>
+                        <div class="recommendation-content">
+                            <h6>Install Occupancy Sensors</h6>
+                            <p>Add motion sensors in low-traffic areas to automatically control lighting.</p>
+                            <div class="d-flex gap-2 mt-2">
+                                <button class="btn btn-sm btn-outline-success">Implement</button>
+                                <button class="btn btn-sm btn-outline-secondary">Details</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -331,8 +456,8 @@
                         <!-- Energy Usage Heat Map -->
                         <div class="col-md-6">
                             <h6 class="mb-3">Daily Usage Pattern</h6>
-                            <div id="heatMapContainer" style="height: 250px; background-color: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                                <p class="text-muted">Heat map requires specific library/data</p>
+                            <div style="position: relative; height: 250px; background-color: #f8f9fa; border-radius: 8px; padding: 10px;">
+                                <canvas id="heatMapChart" height="230"></canvas>
                             </div>
                         </div>
                     </div>
