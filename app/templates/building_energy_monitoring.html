@@ -161,7 +161,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Building Details Panel -->
     <div class="row mb-4">
         <div class="col-md-6 mb-3">
@@ -243,48 +243,188 @@
         </div>
     </div>
     
-    <!-- User Interaction Features -->
+    <!-- Sustainability / Environmental Performance Section (Aligned with SCEF) -->
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="modern-card">
-                <div class="card-header">
-                    <h5><i class="bi bi-tools"></i> Actions</h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5><i class="bi bi-leaf"></i> Environmental Performance Indicators</h5>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-outline-success" id="downloadSustainabilityReportBtn">
+                            <i class="bi bi-file-earmark-pdf"></i> Export Report
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="kpi-card text-center p-3">
+                                <h6>Energy Use Intensity (EUI)</h6>
+                                <h3 class="mb-1">127 kWh/m²/yr</h3>
+                                <div class="progress mt-2 mb-2">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 65%;" 
+                                        aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <p class="text-success small mb-0">
+                                    <i class="bi bi-arrow-down"></i> 8% below target/benchmark
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Renewable Energy -->
+                        <div class="col-md-3 mb-3">
+                            <div class="kpi-card text-center p-3">
+                                <h6>Renewable Energy %</h6>
+                                <h3 class="mb-1">32%</h3>
+                                <div class="progress mt-2 mb-2">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 32%;" 
+                                        aria-valuenow="32" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <p class="text-warning small mb-0">
+                                    <i class="bi bi-arrow-up"></i> 18% pts to 2025 Target (50%) 
+                                </p> <!-- Made target reference explicit -->
+                            </div>
+                        </div>
+                        
+                        <!-- Water Intensity -->
+                        <div class="col-md-3 mb-3">
+                            <div class="kpi-card text-center p-3">
+                                <h6>Water Intensity</h6>
+                                <h3 class="mb-1">45 L/m²/yr</h3> 
+                                <div class="progress mt-2 mb-2">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 55%;" 
+                                        aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div> 
+                                </div>
+                                <p class="text-info small mb-0">
+                                    <i class="bi bi-arrow-down"></i> 12% below baseline
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- BREEAM Rating -->
+                        <div class="col-md-3 mb-3">
+                            <div class="kpi-card text-center p-3">
+                                <h6>BREEAM Rating (Design)</h6>
+                                <h3 class="mb-1">Excellent</h3>
+                                <div class="progress mt-2 mb-2">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 80%;" 
+                                        aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div> 
+                                </div>
+                                <p class="text-success small mb-0">
+                                    <i class="bi bi-award"></i> Achieved 2010
+                                </p> 
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Energy Mix Chart -->
                     <div class="row">
-                        <!-- Data Export -->
-                        <div class="col-md-3 mb-3 mb-md-0">
-                            <button class="btn btn-outline-success w-100">
-                                <i class="bi bi-file-earmark-excel"></i> Export Data
-                            </button>
+                        <div class="col-md-6">
+                            <h6 class="mb-3">Energy Source Mix</h6>
+                            <div style="position: relative; height: 250px;"> 
+                                <canvas id="energyMixChart"></canvas>
+                            </div>
                         </div>
                         
-                        <!-- Issue Reporting -->
-                        <div class="col-md-3 mb-3 mb-md-0">
-                            <button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#reportIssueModal">
-                                <i class="bi bi-exclamation-circle"></i> Report Issue
-                            </button>
-                        </div>
-                        
-                        <!-- Alert Configuration -->
-                        <div class="col-md-3 mb-3 mb-md-0">
-                            <button class="btn btn-outline-warning w-100" data-bs-toggle="modal" data-bs-target="#alertConfigModal">
-                                <i class="bi bi-bell"></i> Configure Alerts
-                            </button>
-                        </div>
-                        
-                        <!-- Annotation -->
-                        <div class="col-md-3">
-                            <button class="btn btn-outline-info w-100" data-bs-toggle="modal" data-bs-target="#addNoteModal">
-                                <i class="bi bi-pencil"></i> Add Note
-                            </button>
+                        <!-- Energy Usage Heat Map -->
+                        <div class="col-md-6">
+                            <h6 class="mb-3">Daily Usage Pattern</h6>
+                            <div id="heatMapContainer" style="height: 250px; background-color: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <p class="text-muted">Heat map requires specific library/data</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+
+    <!-- Energy Breakdown Section -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="modern-card">
+                <div class="card-header">
+                    <h5><i class="bi bi-pie-chart"></i> Energy Breakdown</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- System Breakdown -->
+                        <div class="col-md-6">
+                            <h6 class="mb-3">System Breakdown</h6>
+                            <!-- Wrap canvas in a div with controlled height -->
+                            <div style="position: relative; height: 250px;">
+                                <canvas id="systemBreakdownChart"></canvas> <!-- height attribute removed -->
+                            </div>
+                            <div class="mt-3">
+                                <!-- ... progress bars/legend ... -->
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>HVAC</span>
+                                    <span>42%</span>
+                                </div>
+                                <div class="progress mb-2" style="height: 10px;">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 42%"></div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Lighting</span>
+                                    <span>27%</span>
+                                </div>
+                                <div class="progress mb-2" style="height: 10px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 27%"></div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Plug Loads</span>
+                                    <span>18%</span>
+                                </div>
+                                <div class="progress mb-2" style="height: 10px;">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 18%"></div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>Other</span>
+                                    <span>13%</span>
+                                </div>
+                                <div class="progress mb-2" style="height: 10px;">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 13%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Carbon Emissions -->
+                        <div class="col-md-6">
+                            <h6 class="mb-3">GHG Emissions Breakdown</h6>
+                            <!-- Wrap canvas in a div with controlled height -->
+                            <div style="position: relative; height: 200px;">
+                                <canvas id="emissionsBreakdownChart"></canvas> <!-- height attribute removed -->
+                            </div>
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span><i class="bi bi-circle-fill text-danger"></i> Scope 1 (Direct)</span>
+                                    <span>210 kg CO₂e</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span><i class="bi bi-circle-fill text-warning"></i> Scope 2 (Electricity)</span>
+                                    <span>680 kg CO₂e</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span><i class="bi bi-circle-fill text-info"></i> Scope 3 (Indirect)</span>
+                                    <span>90 kg CO₂e</span>
+                                </div>
+                            </div>
+                        </div>
+                        <small class="text-muted mt-3 d-block">Note: GHG Emissions Breakdown (Scope 1, 2, 3) aligns with GHG Protocol and SCEF reporting requirements.</small> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 <!-- Report Issue Modal -->
 <div class="modal fade" id="reportIssueModal" tabindex="-1" aria-labelledby="reportIssueModalLabel" aria-hidden="true">
