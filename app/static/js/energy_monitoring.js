@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         cutout: '70%',
                         plugins: {
                             legend: {
-                                display: false // Hide legend, show only on hover
+                                display: false
                             },
                             tooltip: {
                                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false // Hide legend, show only on hover
+                            display: false
                         },
                         tooltip: {
                             backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false // Hide legend, show only on hover
+                            display: false
                         },
                         tooltip: {
                             backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -390,9 +390,7 @@ document.addEventListener('DOMContentLoaded', function() {
         timePeriodRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 console.log('Time period changed to:', this.id);
-                // Similar to building selector, you would fetch new data here
-                
-                // For demo purposes - show loading state briefly
+
                 document.querySelectorAll('.stat-value').forEach(el => {
                     el.innerHTML = '<div class="spinner-border spinner-border-sm text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>';
                 });
@@ -400,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Only show loading state for 500ms to avoid UI getting stuck
                 setTimeout(() => {
                     updateRandomStats();
-                    updateEnvironmentalStats(); // Also update the second row of stats
+                    updateEnvironmentalStats(); 
                 }, 500);
             });
         });
@@ -410,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (dateRange) {
             dateRange.addEventListener('change', function() {
                 console.log('Date range changed to:', this.value);
-                // Similar data fetching logic
+
             });
         }
         
@@ -552,7 +550,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Dark mode toggle removed
     
     // Setup animations
     function setupAnimations() {
@@ -571,8 +568,7 @@ document.addEventListener('DOMContentLoaded', function() {
             animateOnScroll.observe(element);
         });
     }
-    
-    // Initialize all charts - this will only create charts if their elements exist
+
     initializeCharts();
     
     // Create heatmap chart for daily usage pattern
@@ -583,13 +579,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const heatMapCanvas = document.getElementById('heatMapChart');
         if (!heatMapCanvas) return;
         
-        // Days of the week
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        
-        // Hours of the day (simplified for display)
         const hours = ['12am', '2am', '4am', '6am', '8am', '10am', '12pm', '2pm', '4pm', '6pm', '8pm', '10pm'];
-        
-        // Generate data for the heatmap
         const data = [];
         
         // Pattern: Higher usage during working hours on weekdays, lower on weekends
