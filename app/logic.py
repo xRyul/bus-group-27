@@ -88,7 +88,7 @@ class CommunityEngagement:
         point = data['total_points']
     
         user = User.query.get(user_id)
-        activity = SustainableActivity.guery.get(activity_id)
+        activity = SustainableActivity.query.get(activity_id)
     
         if not user or not activity:
             return jsonify({'error': 'Invalid user or activity ID'}), 400
