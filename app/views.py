@@ -17,6 +17,7 @@ def home():
     return render_template('home.html', title="Home")
 
 @app.route("/building-energy-monitoring")
+@login_required
 def building_energy_monitoring():
     # Initialize the BuildingEnergyMonitoring class
     bem = BuildingEnergyMonitoring()
