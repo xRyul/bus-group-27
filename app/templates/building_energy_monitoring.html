@@ -4,15 +4,73 @@
 <div class="container mt-4">
     <h1 class="mb-4">Building Energy Monitoring Dashboard</h1>
     
-    <!-- Placeholder for Dashboard Overview Section -->
+    <!-- Dashboard Overview Section -->
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="modern-card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5><i class="bi bi-sliders"></i> Dashboard Controls</h5>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Dashboard controls will be implemented here.</p>
+                    <div class="row">
+                        <!-- Building Selector -->
+                        <div class="col-md-3 mb-3">
+                            <label for="buildingSelector" class="form-label">Building</label>
+                            <select class="form-select" id="buildingSelector">
+                                <option value="all">All Buildings</option>
+                                <option value="computer-science" selected>Computer Science</option>
+                                <option value="library">Library</option>
+                                <option value="student-center">Student Center</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Time Period Controls -->
+                        <div class="col-md-5 mb-3">
+                            <label class="form-label">Time Period</label>
+                            <div class="btn-group w-100" role="group" aria-label="Time period">
+                                <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
+                                <label class="btn btn-outline-success" for="day">Day</label>
+                                
+                                <input type="radio" class="btn-check" name="timePeriod" id="week" autocomplete="off">
+                                <label class="btn btn-outline-success" for="week">Week</label>
+                                
+                                <input type="radio" class="btn-check" name="timePeriod" id="month" autocomplete="off">
+                                <label class="btn btn-outline-success" for="month">Month</label>
+                                
+                                <input type="radio" class="btn-check" name="timePeriod" id="year" autocomplete="off">
+                                <label class="btn btn-outline-success" for="year">Year</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Date Range Picker -->
+                        <div class="col-md-4 mb-3">
+                            <label for="dateRange" class="form-label">Date Range</label>
+                            <input type="date" class="form-control" id="dateRange">
+                        </div>
+                    </div>
+                    
+                    <!-- Energy Type Filters -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Energy Type</label>
+                            <div class="btn-group" role="group" aria-label="Energy type">
+                                <input type="checkbox" class="btn-check" id="electricity" autocomplete="off" checked>
+                                <label class="btn btn-outline-primary" for="electricity">
+                                    <i class="bi bi-lightning-charge"></i> Electricity
+                                </label>
+                                
+                                <input type="checkbox" class="btn-check" id="gas" autocomplete="off">
+                                <label class="btn btn-outline-warning" for="gas">
+                                    <i class="bi bi-fire"></i> Gas
+                                </label>
+                                
+                                <input type="checkbox" class="btn-check" id="water" autocomplete="off">
+                                <label class="btn btn-outline-info" for="water">
+                                    <i class="bi bi-droplet"></i> Water
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
