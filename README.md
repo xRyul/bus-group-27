@@ -1,6 +1,7 @@
 # GreenCampus
 
-<img width="1345" alt="image" src="https://github.com/user-attachments/assets/592633e9-e52b-48d2-9f26-735959e86760" />
+<img width="1062" alt="image" src="https://github.com/user-attachments/assets/f7bbd2db-f173-446a-9723-d47d64429664" />
+
 
 ## Assignment 2 Requirements: 
 * **THREE** core features.
