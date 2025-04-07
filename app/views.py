@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, send_file, send_from_directory
+from flask import render_template, redirect, url_for, flash, request, send_file, send_from_directory, jsonify
 from app import app
 from app.models.user import User
 from app.forms import ChooseForm, LoginForm
@@ -15,6 +15,10 @@ from app.logic import BuildingEnergyMonitoring
 @app.route("/")
 def home():
     return render_template('home.html', title="Home")
+
+@app.route("/building-energy-monitoring")
+def building_energy_monitoring():
+    return render_template('building_energy_monitoring.html', title="Building Energy Monitoring")
 
 
 @app.route("/account")
