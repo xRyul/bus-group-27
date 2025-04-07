@@ -1,5 +1,7 @@
 # GreenCampus
 
+<img width="1345" alt="image" src="https://github.com/user-attachments/assets/592633e9-e52b-48d2-9f26-735959e86760" />
+
 ## Assignment 2 Requirements: 
 * **THREE** core features.
   * Building Energy Monitoring (FR2), Community Engagement (FR5, FR6)
