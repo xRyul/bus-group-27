@@ -143,15 +143,20 @@
         </div>
     </div>
     
-    <!-- Placeholder for Main Visualization Section -->
+    <!-- Main Visualization Section -->
     <div class="row mb-4">
         <div class="col-md-12">
             <div class="modern-card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5><i class="bi bi-graph-up"></i> Energy Consumption Over Time</h5>
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary" id="downloadChartBtn">
+                            <i class="bi bi-download"></i> Export
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Main visualization chart will be implemented here.</p>
+                    <canvas id="mainChart" height="300"></canvas>
                 </div>
             </div>
         </div>
@@ -185,4 +190,89 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Dashboard JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Main Chart - Energy Consumption Over Time
+        const mainChartCtx = document.getElementById('mainChart').getContext('2d');
+        const mainChart = new Chart(mainChartCtx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', 
+                         '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', 
+                         '20:00', '21:00', '22:00', '23:00'],
+                datasets: [{
+                    label: 'Electricity (kWh)',
+                    data: {{ hourly_data|default('[]')|safe }},
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#4CAF50',
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Energy Consumption (kWh)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time of Day'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Highlight anomalies on the main chart if available
+        const anomalies = {{ anomalies|default('[]')|safe }};
+        if (anomalies && anomalies.length > 0) {
+            anomalies.forEach(anomaly => {
+                // Add a point annotation for each anomaly
+                mainChart.data.datasets[0].pointBackgroundColor = mainChart.data.datasets[0].pointBackgroundColor || [];
+                mainChart.data.datasets[0].pointBackgroundColor[anomaly.index] = 'red';
+                mainChart.data.datasets[0].pointRadius = mainChart.data.datasets[0].pointRadius || [];
+                mainChart.data.datasets[0].pointRadius[anomaly.index] = 6;
+            });
+            mainChart.update();
+        }
+        
+        // Export chart as image
+        document.getElementById('downloadChartBtn').addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.download = 'energy-consumption-chart.png';
+            link.href = mainChart.toBase64Image();
+            link.click();
+        });
+    });
+</script>
 {% endblock %}

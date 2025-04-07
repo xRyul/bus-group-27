@@ -18,7 +18,35 @@ def home():
 
 @app.route("/building-energy-monitoring")
 def building_energy_monitoring():
-    return render_template('building_energy_monitoring.html', title="Building Energy Monitoring")
+    # Initialize the BuildingEnergyMonitoring class
+    bem = BuildingEnergyMonitoring()
+    
+    # Get hourly data for the Computer Science building
+    hourly_data = []
+    for hour in range(24):
+        # Get the average value for each hour (excluding anomalies)
+        values = bem.hourly_data["Computer Science"]["electric"][hour]
+        # Filter out anomalies for average calculation
+        filtered_values = [v for v in values if v not in [12, 250, 220]]  # Known anomalies
+        hourly_data.append(sum(filtered_values) / len(filtered_values))
+    
+    # Get anomalies
+    anomalies = []
+    outlier_dict = bem.detect_per_hour_iqr_anomalies()
+    for day_index, day_outliers in outlier_dict.items():
+        for hour, value in day_outliers.items():
+            anomalies.append({"index": int(hour), "value": value})
+    
+    # Count total anomalies
+    anomaly_count = len(anomalies)
+    
+    return render_template(
+        'building_energy_monitoring.html', 
+        title="Building Energy Monitoring",
+        hourly_data=hourly_data,
+        anomalies=anomalies,
+        anomaly_count=anomaly_count
+    )
 
 
 @app.route("/account")
