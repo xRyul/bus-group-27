@@ -9,6 +9,7 @@ from urllib.parse import urlsplit
 import csv
 import io
 import datetime
+from app.logic import BuildingEnergyMonitoring
 
 
 @app.route("/")
