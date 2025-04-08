@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import sqlalchemy as sa
 import sqlalchemy.orm as so
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -20,3 +21,9 @@ from app.debug_utils import reset_db
 @app.shell_context_processor
 def make_shell_context():
     return dict(db=db, sa=sa, so=so, reset_db=reset_db)
+
+@app.context_processor
+def inject_current_year():
+    year = datetime.now().year
+    print(f"Injecting current year: {year}")
+    return {'current_year': year}
