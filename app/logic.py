@@ -81,42 +81,52 @@ class BuildingEnergyMonitoring:
 print(BuildingEnergyMonitoring().daily_data)
 
 class CommunityEngagement:
-    def log_activity():
-        data = request.json
-        user_id = data['user_id']
-        activity_id = data['activity_id']
-        point = data['total_points']
-    
-        user = User.query.get(user_id)
-        activity = SustainableActivity.query.get(activity_id)
-    
+    @staticmethod
+    def log_activity(user: User, activity: SustainableActivity):
         if not user or not activity:
-            return jsonify({'error': 'Invalid user or activity ID'}), 400
-    
-        user_activity = SustainableActivity(user_id=user_id, activity_id=activity_id)
-        db.session.add(user_activity)
-        user.points += activity.point_value
-        db.session.commit()
-    
-        return jsonify({
-            'message': f"Activity logged. {activity.point_value} points awarded.",
-            'total_points': user.points
-        })
+            return {'error': 'Invalid user or activity'}, 400
 
-    def submit_activity():
-        data = request.get_json()
-        try:
-            activity = SustainableActivity(
-                user_id=data['user_id'],
-                activity_type=data['activity_type'],
-                description=data.get('description', ''),
-                evidence=data.get('evidence'),
-                status='pending'  # default status
+        user_activity = SustainableActivity(
+            user_id=user.id,
+            activity_type=activity.activity_type,
+            description=activity.description,
+            points_awarded=activity.points_awarded,
+            carbon_saved=activity.carbon_saved,
+            status='verified'
+        )
+        db.session.add(user_activity)
+
+        if hasattr(user, 'points'):
+            user.points.total_points += activity.points_awarded
+            user.points.green_score += activity.carbon_saved
+        else:
+            user.points = UserPoints(
+                total_points=activity.points_awarded,
+                green_score=activity.carbon_saved,
+                user_id=user.id
             )
-            db.session.add(activity)
-            db.session.commit()
-            return jsonify({"message": "Activity submitted for review."}), 201
-        except Exception as e:
-            return jsonify({"error": str(e)}), 400
-    ### FR6 Logic ###
+            db.session.add(user.points)
+        db.session.commit()
+
+        return {
+            'message': f"Activity logged. {activity.points_awarded} points awarded.",
+            'total_points': user.points.total_points
+        }, 200
+
+        @staticmethod
+        def submit_activity(user: User, activity_type: str, description: str = "", evidence: str = None):
+            try:
+                activity = SustainableActivity(
+                    user_id=user.id,
+                    activity_type=activity_type,
+                    description=description,
+                    evidence=evidence,
+                    status='pending'
+                )
+                db.session.add(activity)
+                db.session.commit()
+                return {"message": "Activity submitted for review."}, 201
+            except Exception as e:
+                return {"error": str(e)}, 400
+     ### FR6 Logic ###
     pass
