@@ -81,14 +81,15 @@ class BuildingEnergyMonitoring:
 print(BuildingEnergyMonitoring().daily_data)
 
 class CommunityEngagement:
-    def __init__(self):
-    @staticmethod
-    def log_activity(user: User, activity: SustainableActivity):
-        if not user or not activity:
+    def __init__(self, user: User):
+        self.user = user
+
+    def log_activity(self, activity: SustainableActivity):
+        if not self.user or not activity:
             return {'error': 'Invalid user or activity'}, 400
 
         user_activity = SustainableActivity(
-            user_id=user.id,
+            user_id=self.user.id,
             activity_type=activity.activity_type,
             description=activity.description,
             points_awarded=activity.points_awarded,
@@ -96,38 +97,39 @@ class CommunityEngagement:
             status='verified'
         )
         db.session.add(user_activity)
-
-        if hasattr(user, 'points'):
-            user.points.total_points += activity.points_awarded
-            user.points.green_score += activity.carbon_saved
-        else:
-            user.points = UserPoints(
-                total_points=activity.points_awarded,
-                green_score=activity.carbon_saved,
-                user_id=user.id
-            )
-            db.session.add(user.points)
+        self._update_user_points(activity)
         db.session.commit()
 
         return {
             'message': f"Activity logged. {activity.points_awarded} points awarded.",
-            'total_points': user.points.total_points
+            'total_points': self.user.points.total_points
         }, 200
 
-        @staticmethod
-        def submit_activity(user: User, activity_type: str, description: str = "", evidence: str = None):
-            try:
-                activity = SustainableActivity(
-                    user_id=user.id,
-                    activity_type=activity_type,
-                    description=description,
-                    evidence=evidence,
-                    status='pending'
-                )
-                db.session.add(activity)
-                db.session.commit()
-                return {"message": "Activity submitted for review."}, 201
-            except Exception as e:
-                return {"error": str(e)}, 400
+    def submit_activity(self, activity_type: str, description: str = "", evidence: str = None):
+        try:
+            activity = SustainableActivity(
+                user_id=self.user.id,
+                activity_type=activity_type,
+                description=description,
+                evidence=evidence,
+                status='pending'
+            )
+            db.session.add(activity)
+            db.session.commit()
+            return {"message": "Activity submitted for review."}, 201
+        except Exception as e:
+            return {"error": str(e)}, 400
+
+    def _update_user_points(self, activity: SustainableActivity):
+        if hasattr(self.user, 'points') and self.user.points:
+            self.user.points.total_points += activity.points_awarded
+            self.user.points.green_score += activity.carbon_saved
+        else:
+            self.user.points = UserPoints(
+                total_points=activity.points_awarded,
+                green_score=activity.carbon_saved,
+                user_id=self.user.id
+            )
+            db.session.add(self.user.points)
      ### FR6 Logic ###
     pass
