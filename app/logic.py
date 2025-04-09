@@ -81,6 +81,7 @@ class BuildingEnergyMonitoring:
 print(BuildingEnergyMonitoring().daily_data)
 
 class CommunityEngagement:
+    ### FR5 Logic ###
     def __init__(self, user: User):
         self.user = user
 
@@ -131,5 +132,32 @@ class CommunityEngagement:
                 user_id=self.user.id
             )
             db.session.add(self.user.points)
-     ### FR6 Logic ###
-    pass
+    
+    ### FR6 Logic ###
+    def award_points(self, activity: SustainableActivity):
+        if activity.status != 'verified':
+            return {"error": "Activity must be verified to award points."}, 400
+
+        points_awarded = self.calculate_points(activity.carbon_saved)
+        activity.points_awarded = points_awarded
+
+        if hasattr(self.user, 'points'):
+            self.user.points.total_points += points_awarded
+            self.user.points.green_score += activity.carbon_saved
+        else:
+            self.user.points = UserPoints(
+                total_points=points_awarded,
+                green_score=activity.carbon_saved,
+                user_id=self.user.id
+            )
+            db.session.add(self.user.points)
+        db.session.commit()
+
+        return {
+            'message': f"{points_awarded} points awarded based on carbon impact.",
+            'total_points': self.user.points.total_points,
+            'green_score': self.user.points.green_score
+        }, 200
+
+    def calculate_points(self, carbon_saved: float) -> int:
+        return int(carbon_saved * 2)
