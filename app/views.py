@@ -18,7 +18,11 @@ def home():
 
 @app.route("/green_score")
 def green_score():
-    return render_template('green_score.html', title="Green Score")
+    now = datetime.now()
+    last_updated = now.strftime("%H:%M:%S")
+    green_score =850
+    return render_template('green_score.html', title="Green Score", last_updated=last_updated,
+                            green_score=green_score)
 
 @app.route("/admin")
 def admin():

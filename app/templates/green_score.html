@@ -6,19 +6,28 @@
 
 <div class="score-container">
 
-    <div class="score-header">
-        <div>
-            <h1 class="score-title">{{ current_user.username | capitalize }}'s Green Score </h1>
-            <p class="score-subtitle">View Green Score, achievements and recent point scoring activities.</p>
-        </div>
-
+<div class="score-header">
+    <div>
+        <h1 class="score-title">{{ current_user.username | capitalize }}'s Green Score</h1>
+        <p class="score-subtitle">View Green Score, achievements and recent point scoring activities.</p>
     </div>
+</div>
 
-    <div class="row mb-5">
+<div class="row mb-5">
     <div class="col-md-4">
         <div class="score-card animate-fade-in mb-3">
+            <div class="card-header">
+                <h5>Green Score</h5>
+            </div>
             <div class="card-body">
-                <h5>Gauge Card</h5>
+            <div class="gauge-container">
+                <div class="score-wrapper">
+                    <h3 id="greenScore">{{green_score}}<sup>gs</sup></h3>
+                    <span class ="score-sub">Earn points to boost your Green Score!</span>
+                </div>
+                <canvas id="gaugeChart"></canvas>
+                <span class ="gauge-sub">Last Updated: {{ last_updated }}</span>
+            </div>
             </div>
         </div>
 
@@ -37,6 +46,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="row mb-5">
     <div class="col-md-2">
@@ -91,5 +101,12 @@
 
 
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/score.js') }}"></script>
 
 {% endblock %}
