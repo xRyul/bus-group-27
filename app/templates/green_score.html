@@ -1,1 +1,95 @@
 {% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/score.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<div class="score-container">
+
+    <div class="score-header">
+        <div>
+            <h1 class="score-title">{{ current_user.username | capitalize }}'s Green Score </h1>
+            <p class="score-subtitle">View Green Score, achievements and recent point scoring activities.</p>
+        </div>
+
+    </div>
+
+    <div class="row mb-5">
+    <div class="col-md-4">
+        <div class="score-card animate-fade-in mb-3">
+            <div class="card-body">
+                <h5>Gauge Card</h5>
+            </div>
+        </div>
+
+        <div class="score-card animate-fade-in">
+            <div class="card-body">
+                <h5>Leaderboard</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="score-card animate-fade-in">
+            <div class="card-body">
+                <h5>Recent Score Graph</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-2">
+        <div class="score-card animate-fade-in">
+            <div class="card-body">
+                <h5>Achievement 1</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="score-card animate-fade-in">
+            <div class="card-body">
+                <h5>Achievement 2</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="score-card animate-fade-in">
+            <div class="card-body">
+                <h5>Achievement 3</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="score-card animate-fade-in">
+            <div class="card-body">
+                <h5>Achievement 4</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="score-card animate-fade-in">
+            <div class="card-body">
+                <h5>Achievement 5</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="score-card animate-fade-in">
+            <div class="card-body">
+                <h5>Achievement 6</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+
+{% endblock %}
