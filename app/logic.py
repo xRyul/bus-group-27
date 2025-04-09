@@ -1,4 +1,8 @@
 import numpy as np
+from app.models.user import User  # Import the User class
+from app.models.sustainable_activity import SustainableActivity  # Import SustainableActivity class
+from app.models.user_points import UserPoints  # Import UserPoints class
+from app import db  # Import the db instance
 
 class BuildingEnergyMonitoring:
     def __init__(self):
