@@ -88,3 +88,44 @@ canvas {
     padding-bottom: 1rem;
 }
 
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.95rem;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 12px 14px;
+}
+
+.leaderboard-table thead {
+    background-color: #eaeaea;
+}
+
+.leaderboard-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.leaderboard-table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.leaderboard-table th {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.leaderboard-table td:nth-child(3) {
+    color: green;
+}
+
+.table-wrapper {
+    padding: 16px;
+}

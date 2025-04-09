@@ -6,98 +6,162 @@
 
 <div class="score-container">
 
-<div class="score-header">
-    <div>
-        <h1 class="score-title">{{ current_user.username | capitalize }}'s Green Score</h1>
-        <p class="score-subtitle">View Green Score, achievements and recent point scoring activities.</p>
+    <div class="score-header">
+        <div>
+            <h1 class="score-title">{{ current_user.username | capitalize }}'s Green Score</h1>
+            <p class="score-subtitle">View Green Score, achievements and recent point scoring activities.</p>
+        </div>
     </div>
-</div>
 
-<div class="row mb-5">
-    <div class="col-md-4">
-        <div class="score-card animate-fade-in mb-3">
-            <div class="card-header">
-                <h5>Green Score</h5>
-            </div>
-            <div class="card-body">
-            <div class="gauge-container">
-                <div class="score-wrapper">
-                    <h3 id="greenScore">{{green_score}}<sup>gs</sup></h3>
-                    <span class ="score-sub">Earn points to boost your Green Score!</span>
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="score-card animate-fade-in mb-3">
+                <div class="card-header">
+                    <h5>Green Score</h5>
                 </div>
-                <canvas id="gaugeChart"></canvas>
-                <span class ="gauge-sub">Last Updated: {{ last_updated }}</span>
+                <div class="card-body">
+                    <div class="gauge-container">
+                        <div class="score-wrapper">
+                            <h3 id="greenScore">{{green_score}}<sup>gs</sup></h3>
+                            <span class="score-sub">Earn points to boost your Green Score!</span>
+                        </div>
+                        <canvas id="gaugeChart"></canvas>
+                        <span class="gauge-sub">Last Updated: {{ last_updated }}</span>
+                    </div>
+                </div>
             </div>
+
+            <div class="score-card animate-fade-in">
+                <div class="card-header">
+                    <h5>Leaderboard</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <table class="leaderboard-table">
+                            <thead>
+                            <tr>
+                                <th>Place</th>
+                                <th>Username</th>
+                                <th>GS</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>🥇</td>
+                                <td>Tom</td>
+                                <td>980</td>
+                            </tr>
+                            <tr>
+                                <td>🥈</td>
+                                <td>Brad</td>
+                                <td>945</td>
+                            </tr>
+                            <tr>
+                                <td>🥉</td>
+                                <td>Steve</td>
+                                <td>910</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Alice</td>
+                                <td>890</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>John</td>
+                                <td>875</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Emma</td>
+                                <td>860</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Amy</td>
+                                <td>850</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Sara</td>
+                                <td>825</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>Mike</td>
+                                <td>810</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Linda</td>
+                                <td>800</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="score-card animate-fade-in">
-            <div class="card-body">
-                <h5>Leaderboard</h5>
+        <div class="col-md-8">
+            <div class="score-card animate-fade-in">
+                <div class="card-body">
+                    <h5>Recent Score Graph</h5>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-8">
-        <div class="score-card animate-fade-in">
-            <div class="card-body">
-                <h5>Recent Score Graph</h5>
+
+    <div class="row mb-5">
+        <div class="col-md-2">
+            <div class="score-card animate-fade-in">
+                <div class="card-body">
+                    <h5>Achievement 1</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="score-card animate-fade-in">
+                <div class="card-body">
+                    <h5>Achievement 2</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="score-card animate-fade-in">
+                <div class="card-body">
+                    <h5>Achievement 3</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="score-card animate-fade-in">
+                <div class="card-body">
+                    <h5>Achievement 4</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="score-card animate-fade-in">
+                <div class="card-body">
+                    <h5>Achievement 5</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="score-card animate-fade-in">
+                <div class="card-body">
+                    <h5>Achievement 6</h5>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
-<div class="row mb-5">
-    <div class="col-md-2">
-        <div class="score-card animate-fade-in">
-            <div class="card-body">
-                <h5>Achievement 1</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="score-card animate-fade-in">
-            <div class="card-body">
-                <h5>Achievement 2</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="score-card animate-fade-in">
-            <div class="card-body">
-                <h5>Achievement 3</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="score-card animate-fade-in">
-            <div class="card-body">
-                <h5>Achievement 4</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="score-card animate-fade-in">
-            <div class="card-body">
-                <h5>Achievement 5</h5>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-2">
-        <div class="score-card animate-fade-in">
-            <div class="card-body">
-                <h5>Achievement 6</h5>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 
 </div>
