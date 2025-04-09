@@ -8,13 +8,21 @@ from app import db
 from urllib.parse import urlsplit
 import csv
 import io
-import datetime
+from datetime import datetime
 from app.logic import BuildingEnergyMonitoring
 
 
 @app.route("/")
 def home():
     return render_template('home.html', title="Home")
+
+@app.route("/green_score")
+def green_score():
+    return render_template('green_score.html', title="Green Score")
+
+@app.route("/admin")
+def admin():
+    return render_template('admin.html', title="Admin")
 
 @app.route("/building-energy-monitoring")
 @login_required
