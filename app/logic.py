@@ -81,6 +81,7 @@ class BuildingEnergyMonitoring:
 print(BuildingEnergyMonitoring().daily_data)
 
 class CommunityEngagement:
+    def __init__(self):
     @staticmethod
     def log_activity(user: User, activity: SustainableActivity):
         if not user or not activity:
