@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, send_file, send_from_directory, jsonify
 from app import app
 from app.models.user import User
-from app.forms import ChooseForm, LoginForm
+from app.forms import ChooseForm, LoginForm, UserSubmission
 from flask_login import current_user, login_user, logout_user, login_required, fresh_login_required
 import sqlalchemy as sa
 from app import db
@@ -16,13 +16,16 @@ from app.logic import BuildingEnergyMonitoring
 def home():
     return render_template('home.html', title="Home")
 
-@app.route("/green_score")
+@app.route("/green_score", methods=['GET', 'POST'])
 def green_score():
     now = datetime.now()
     last_updated = now.strftime("%H:%M:%S")
-    green_score =850
+    green_score = 850
+    form = UserSubmission()
+    if form.validate_on_submit():
+        return redirect(url_for('green_score'))
     return render_template('green_score.html', title="Green Score", last_updated=last_updated,
-                            green_score=green_score)
+                            green_score=green_score, form=form)
 
 @app.route("/admin")
 def admin():

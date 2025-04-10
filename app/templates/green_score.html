@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% import 'bootstrap_wtf.html' as wtf %}
+
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/score.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
@@ -120,7 +122,9 @@
                     <h5>Green Activity Submission</h5>
                 </div>
                 <div class="card-body">
-                    <p>Add user submit form here</p>
+                    <div class="form-container">
+                        {{ wtf.quick_form(form, action="", method="post", id="", novalidate=True, autofocus=False) }}
+                    </div>
                 </div>
             </div>
         </div>

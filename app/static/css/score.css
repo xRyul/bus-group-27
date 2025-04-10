@@ -136,3 +136,16 @@
     width: 100%;
     padding: 1rem;
 }
+
+.form-container {
+    position: relative;
+    height: auto;
+    width: 100%;
+    padding: 1rem;
+}
+
+textarea.form-control {
+    height: auto;
+    resize: vertical;
+    min-height: 320px;
+}

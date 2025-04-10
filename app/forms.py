@@ -21,5 +21,5 @@ class LoginForm(FlaskForm):
 class UserSubmission(FlaskForm):
     name = StringField('Activity Name', validators=[DataRequired()])
     type = StringField('Activity Type', validators=[DataRequired()])
-    description = StringField('Description')
+    description = TextAreaField('Description')
     upload = SubmitField('Upload')
