@@ -1,1 +1,62 @@
 {% extends "base.html" %}
+
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/score.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+<div class="admin-container">
+
+    <div class="admin-header">
+        <div>
+            <h1 class="admin-title">Administration Page</h1>
+            <p class="admin-subtitle">Manage Users and Review User Submissions</p>
+        </div>
+    </div>
+
+    <div class="score-card animate-fade-in mb-3">
+        <div class="card-header">
+            <h5>User Table</h5>
+        </div>
+        <div class="card-body">
+            <div class="user-container">
+                <span class="user-sub">Manage User Roles</span>
+            </div>
+
+            <div class="user-container animate-fade-in">
+                <table class="user-table animate-fade-in">
+                    <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{% if user.role == 'Admin' %}
+                            <span class="pill blue-pill">Admin</span>
+                            {% else %}
+                            {{ user.role}}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="edit-button">Edit</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    {% endblock %}

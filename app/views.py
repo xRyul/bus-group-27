@@ -29,7 +29,8 @@ def green_score():
 
 @app.route("/admin")
 def admin():
-    return render_template('admin.html', title="Admin")
+    users = User.query.all()
+    return render_template('admin.html', title="Admin", users=users)
 
 @app.route("/building-energy-monitoring")
 @login_required
