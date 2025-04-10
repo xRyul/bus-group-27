@@ -30,7 +30,28 @@ def green_score():
 @app.route("/admin")
 def admin():
     users = User.query.all()
-    return render_template('admin.html', title="Admin", users=users)
+
+    submissions = [
+        {'submission_date': '2025-04-01', 'username': 'amy', 'type': 'Recycling', 'proof': 'image'},
+        {'submission_date': '2025-04-02', 'username': 'tom', 'type': 'Attending Event', 'proof': 'video'},
+        {'submission_date': '2025-04-03', 'username': 'yin', 'type': 'Energy Saving', 'proof': 'image'},
+        {'submission_date': '2025-04-04', 'username': 'tariq', 'type': 'Waste Reporting', 'proof': 'video'},
+        {'submission_date': '2025-04-05', 'username': 'jo', 'type': 'Walking or Biking', 'proof': 'image'},
+
+        {'submission_date': '2025-04-06', 'username': 'amy', 'type': 'Water Conservation', 'proof': 'video'},
+        {'submission_date': '2025-04-07', 'username': 'tom', 'type': 'Recycling', 'proof': 'image'},
+        {'submission_date': '2025-04-08', 'username': 'yin', 'type': 'Waste Reporting', 'proof': 'video'},
+        {'submission_date': '2025-04-09', 'username': 'tariq', 'type': 'Energy Saving', 'proof': 'image'},
+        {'submission_date': '2025-04-10', 'username': 'jo', 'type': 'Attending Event', 'proof': 'video'},
+
+        {'submission_date': '2025-04-11', 'username': 'amy', 'type': 'Walking or Biking', 'proof': 'image'},
+        {'submission_date': '2025-04-12', 'username': 'tom', 'type': 'Water Conservation', 'proof': 'video'},
+        {'submission_date': '2025-04-13', 'username': 'yin', 'type': 'Recycling', 'proof': 'image'},
+        {'submission_date': '2025-04-14', 'username': 'tariq', 'type': 'Attending Event', 'proof': 'video'},
+        {'submission_date': '2025-04-15', 'username': 'jo', 'type': 'Waste Reporting', 'proof': 'image'}
+    ]
+
+    return render_template('admin.html', title="Admin", users=users,submissions=submissions)
 
 @app.route("/building-energy-monitoring")
 @login_required

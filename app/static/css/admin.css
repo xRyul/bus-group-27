@@ -110,6 +110,26 @@
     outline: none;
 }
 
+.decline-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 5px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.decline-button:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.decline-button:focus {
+    outline: none;
+}
+
 .pill {
     background-color: #28a745;
     color: white;
@@ -126,8 +146,8 @@
             background-color:  teal;
         }
 
-.green-pill {
-             background-color: green;
+.gold-pill {
+             background-color: gold;
         }
 
 .red-pill {

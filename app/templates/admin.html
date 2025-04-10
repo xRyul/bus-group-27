@@ -40,7 +40,7 @@
                     {% for user in users %}
                     <tr>
                         <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
+                        <td>{{ user.username | capitalize }}</td>
                         <td>{{ user.email }}</td>
                         <td>{% if user.role == 'Admin' %}
                             <span class="pill blue-pill">Admin</span>
@@ -50,6 +50,46 @@
                         </td>
                         <td>
                             <button class="edit-button">Edit</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+        <div class="score-card animate-fade-in mb-3">
+        <div class="card-header">
+            <h5>User Submissions Table</h5>
+        </div>
+        <div class="card-body">
+            <div class="user-container">
+                <span class="user-sub">Manage User Submissions</span>
+            </div>
+
+            <div class="user-container animate-fade-in">
+                <table class="user-table animate-fade-in">
+                    <thead>
+                    <tr>
+                        <th>Submission Date</th>
+                        <th>Username</th>
+                        <th>Type</th>
+                        <th>Proof</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for submission in submissions %}
+                    <tr>
+                        <td>{{ submission.submission_date }}</td>
+                        <td>{{ submission.username | capitalize }}</td>
+                        <td>{{ submission.type }}</td>
+                        <td>{{ submission.proof | capitalize  }}</td>
+                        <td>
+                            <button class="edit-button">Approve</button>
+                            <button class="decline-button">Decline</button>
                         </td>
                     </tr>
                     {% endfor %}
