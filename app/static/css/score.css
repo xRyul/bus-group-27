@@ -147,5 +147,60 @@
 textarea.form-control {
     height: auto;
     resize: vertical;
-    min-height: 320px;
+    min-height: 315px;
+}
+
+.achievement-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+}
+
+.achievement-icon {
+    width: 50px;
+    height: 50px;
+    background-color: gold;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.achievement-icon.gold {
+    background-color: gold;
+}
+
+.achievement-icon.green {
+    background-color: green;
+}
+
+.achievement-icon.blue {
+    background-color: blue;
+}
+
+.achievement-icon.red {
+    background-color: red;
+}
+
+.achievement-icon.purple {
+    background-color: purple;
+}
+
+.achievement-icon.orange {
+    background-color: orange;
+}
+
+.achievement-icon i {
+    font-size: 25px;
+    color: white;
+
+}
+
+.achievement-text {
+    margin-top: 10px;
+    font-size: 16px;
+    display: block;
 }
