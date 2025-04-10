@@ -59,7 +59,7 @@
     color: #333;
 }
 
-canvas {
+#gaugeChart {
     width: 100%;
     max-width: 250px;
     height: 250px;
@@ -128,4 +128,11 @@ canvas {
 
 .table-wrapper {
     padding: 16px;
+}
+
+.weekly-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    padding: 1rem;
 }
