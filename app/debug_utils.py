@@ -7,12 +7,31 @@ def reset_db():
     db.drop_all()
     db.create_all()
 
-    users =[
-        {'username': 'amy',   'email': 'amy@b.com', 'role': 'Admin', 'pw': 'amy.pw'},
-        {'username': 'tom',   'email': 'tom@b.com',                  'pw': 'amy.pw'},
-        {'username': 'yin',   'email': 'yin@b.com', 'role': 'Admin', 'pw': 'amy.pw'},
-        {'username': 'tariq', 'email': 'trq@b.com',                  'pw': 'amy.pw'},
-        {'username': 'jo',    'email': 'jo@b.com',                   'pw': 'amy.pw'}
+    # User list with roles.
+    # 'ST' = Sustainability Team
+    # 'UL' = University Leadership
+
+    users = [
+        {'username': 'amy', 'email': 'amy@b.com', 'role': 'Admin', 'pw': 'p123'},
+        {'username': 'tom', 'email': 'tom@b.com', 'role': 'Student', 'pw': 'p123'},
+        {'username': 'yin', 'email': 'yin@b.com', 'role': 'Admin', 'pw': 'p123'},
+        {'username': 'tariq', 'email': 'trq@b.com', 'role': 'Staff', 'pw': 'p123'},
+        {'username': 'jo', 'email': 'jo@b.com', 'role': 'Facilities', 'pw': 'p123'},
+        {'username': 'lee', 'email': 'lee@b.com', 'role': 'UL', 'pw': 'p123'},
+        {'username': 'nina', 'email': 'nina@b.com', 'role': 'Student', 'pw': 'p123'},
+        {'username': 'omar', 'email': 'omar@b.com', 'role': 'ST', 'pw': 'p123'},
+        {'username': 'lisa', 'email': 'lisa@b.com', 'role': 'Staff', 'pw': 'p123'},
+        {'username': 'zane', 'email': 'zane@b.com', 'role': 'Facilities', 'pw': 'p123'},
+        {'username': 'ella', 'email': 'ella@b.com', 'role': 'Student', 'pw': 'p123'},
+        {'username': 'kai', 'email': 'kai@b.com', 'role': 'UL', 'pw': 'p123'},
+        {'username': 'maya', 'email': 'maya@b.com', 'role': 'Admin', 'pw': 'p123'},
+        {'username': 'raj', 'email': 'raj@b.com', 'role': 'Student', 'pw': 'p123'},
+        {'username': 'ken', 'email': 'ken@b.com', 'role': 'ST', 'pw': 'p123'},
+        {'username': 'mia', 'email': 'mia@b.com', 'role': 'UL', 'pw': 'p123'},
+        {'username': 'zoe', 'email': 'zoe@b.com', 'role': 'Staff', 'pw': 'p123'},
+        {'username': 'ian', 'email': 'ian@b.com', 'role': 'Facilities', 'pw': 'p123'},
+        {'username': 'beck', 'email': 'beck@b.com', 'role': 'Student', 'pw': 'p123'},
+        {'username': 'ruth', 'email': 'ruth@b.com', 'role': 'Admin', 'pw': 'p123'}
     ]
 
     # activity_types = {
