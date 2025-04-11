@@ -1,88 +1,118 @@
 import numpy as np
-from app.models.user import User  # Import the User class
-from app.models.sustainable_activity import SustainableActivity  # Import SustainableActivity class
-from app.models.user_points import UserPoints  # Import UserPoints class
-from app import db  # Import the db instance
+from app.models.user import User
+from app.models.sustainable_activity import SustainableActivity
+from app.models.user_points import UserPoints
+from app import db
+from datetime import datetime, timedelta
+from app.models.building_energy import BuildingEnergy
+from app.models.building import Building
+import random
+from collections import defaultdict
 
-class BuildingEnergyMonitoring:
+class SingletonMeta(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+
+class BuildingEnergyMonitoring(metaclass=SingletonMeta):
     def __init__(self):
+        self.raw_data = []
+        self.processed_data = []
+        self.anomaly_lookup = set()
 
-        # Only 5 working days (Monday to Friday) of simulated data to exclude weekend
-        # data to avoid further complexity in data trends.
+        self.simulate_midweek_energy_readings({
+            "Computer Science": 1,
+            "Physics": 2,
+            "Library": 3
+        })
+        self.inject_known_anomalies()
+        self.detect_anomalies_iqr()
+        self.create_model_objects()
+        self.commit_to_database()
 
-        self.hourly_data = {
-            "Computer Science": {
-                "electric": {
-                    0: [50, 52, 51, 53, 54],
-                    1: [49, 51, 50, 52, 53],
-                    2: [48, 47, 49, 50, 12],  # Injected outlier (12)
-                    3: [46, 48, 47, 49, 50],
-                    4: [45, 44, 46, 47, 48],
-                    5: [46, 47, 45, 48, 49],
-                    6: [60, 62, 61, 63, 64],
-                    7: [80, 82, 81, 83, 84],
-                    8: [111, 250, 105, 110, 108],  # Injected outlier (250)
-                    9: [120, 125, 122, 123, 124],
-                    10: [130, 135, 132, 134, 136],
-                    11: [140, 142, 141, 143, 144],
-                    12: [150, 148, 149, 151, 152],
-                    13: [140, 139, 141, 142, 143],
-                    14: [130, 128, 129, 131, 132],
-                    15: [120, 118, 119, 121, 122],
-                    16: [110, 108, 109, 111, 112],
-                    17: [100, 220, 102, 105, 106],  # Injected outlier (220)
-                    18: [90, 92, 91, 93, 94],
-                    19: [80, 78, 79, 81, 82],
-                    20: [70, 68, 69, 71, 72],
-                    21: [60, 59, 61, 62, 63],
-                    22: [55, 56, 54, 57, 58],
-                    23: [53, 52, 54, 55, 56]
-                }
-            }
+    def simulate_midweek_energy_readings(self, building_name_to_id):
+        buildings = ["Computer Science", "Physics", "Library"]
+        energy_types = {
+            "electric": ("kWh", 80, 160),
+            "water": ("litres", 150, 250),
+            "gas": ("m3", 2.5, 4.5)
         }
 
-        self.daily_data = self.build_daily_data()
+        start_day = datetime(2025, 4, 11)
+        intervals_per_day = 96
 
-    def detect_per_hour_iqr_anomalies(self, k=1.5):
-        hourly_data = self.hourly_data["Computer Science"]["electric"]
-        outlier_dict = {}
+        for building in buildings:
+            building_id = building_name_to_id[building]
+            for energy_type, (unit, low, high) in energy_types.items():
+                for interval in range(intervals_per_day):
+                    timestamp = start_day + timedelta(minutes=15 * interval)
+                    hour = timestamp.hour
+                    base = {
+                        "electric": 100 if 8 <= hour <= 18 else 60,
+                        "water": 200 if 7 <= hour <= 20 else 150,
+                        "gas": 3.5 if 6 <= hour <= 22 else 2.5
+                    }[energy_type]
+                    noise = random.uniform(-3, 3)
+                    value = round(base + noise, 2)
+                    self.raw_data.append((building_id, timestamp, energy_type, value, unit))
 
-        for hour, values in hourly_data.items():
-            values_array = np.array(values)
-            q1 = np.percentile(values_array, 25)
-            q3 = np.percentile(values_array, 75)
-            iqr = q3 - q1
-            lower = q1 - k * iqr
-            upper = q3 + k * iqr
-            for i, val in enumerate(values):
-                if val < lower or val > upper:
-                    if i not in outlier_dict:
-                        outlier_dict[i] = {}
-                    outlier_dict[i][hour] = val
+    def inject_known_anomalies(self):
+        updated = []
+        for (building_id, timestamp, energy_type, value, unit) in self.raw_data:
+            if (
+                (timestamp.hour == 8 and timestamp.minute == 0 and energy_type == "electric") or
+                (timestamp.hour == 14 and energy_type == "water") or
+                (timestamp.hour == 20 and energy_type == "gas")
+            ):
+                value = round(value + 75.0, 2)
+            updated.append((building_id, timestamp, energy_type, value, unit))
+        self.raw_data = updated
 
-        return outlier_dict
+    def detect_anomalies_iqr(self, k=1.5):
+        grouped = defaultdict(lambda: defaultdict(list))
+        timestamps = defaultdict(lambda: defaultdict(list))
 
-    def build_daily_data(self):
-        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-        daily = {}
-        outlier_dict = self.detect_per_hour_iqr_anomalies()
+        for building_id, timestamp, energy_type, value, unit in self.raw_data:
+            grouped[building_id][energy_type].append(value)
+            timestamps[building_id][energy_type].append(timestamp)
 
-        for i, day in enumerate(days):
-            values = []
-            for hour in range(24):
-                values.append(self.hourly_data["Computer Science"]["electric"][hour][i])
-            outlier_info = (
-                {"index": hour, "value": val}
-                for hour, val in outlier_dict.get(i, {}).items()
+        for building_id, utilities in grouped.items():
+            for energy_type, values in utilities.items():
+                values_array = np.array(values)
+                q1 = np.percentile(values_array, 25)
+                q3 = np.percentile(values_array, 75)
+                iqr = q3 - q1
+                lower = q1 - k * iqr
+                upper = q3 + k * iqr
+
+                for i, val in enumerate(values):
+                    if val < lower or val > upper:
+                        ts = timestamps[building_id][energy_type][i]
+                        self.anomaly_lookup.add((building_id, energy_type, ts))
+
+    def create_model_objects(self):
+        for building_id, timestamp, energy_type, value, unit in self.raw_data:
+            is_anomaly = (building_id, energy_type, timestamp) in self.anomaly_lookup
+            model_instance = BuildingEnergy(
+                building_id=building_id,
+                timestamp=timestamp,
+                energy_type=energy_type,
+                consumption_value=value,
+                unit=unit,
+                is_anomaly=is_anomaly
             )
-            daily[day] = {
-                "data": values,
-                "outliers": list(outlier_info)
-            }
+            self.processed_data.append(model_instance)
 
-        return daily
+    def commit_to_database(self):
+        db.session.add_all(self.processed_data)
+        db.session.commit()
 
-print(BuildingEnergyMonitoring().daily_data)
+# BuildingEnergyMonitoring = BuildingEnergyMonitoring()
+# print(BuildingEnergyMonitoring.processed_data)
 
 class CommunityEngagement:
     ### FR5 Logic ###

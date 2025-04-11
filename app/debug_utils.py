@@ -1,7 +1,7 @@
 from app import db
+from app.logic import BuildingEnergyMonitoring
+from app.models.building import Building
 from app.models.user import User
-import datetime
-
 
 def reset_db():
     db.drop_all()
@@ -26,4 +26,16 @@ def reset_db():
         db.session.add(user)
     db.session.commit()
 
-    print('Hello, World!')
+    buildings = [
+        {'name': 'Computer Science', 'location': 'Edgbaston Campus', 'total_area': 3200, 'energy_class': 'A'},
+        {'name': 'Physics', 'location': 'Edgbaston Campus', 'total_area': 3000, 'energy_class': 'B'},
+        {'name': 'Library', 'location': 'Edgbaston Campus', 'total_area': 4100, 'energy_class': 'A+'},
+    ]
+
+    for b in buildings:
+        building = Building(**b)
+        db.session.add(building)
+    db.session.commit()
+
+    BuildingEnergyMonitoring()
+
