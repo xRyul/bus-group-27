@@ -35,13 +35,13 @@ def reset_db():
     ]
 
     # activity_types = {
-    #     'cycling':{'name':'Cycled to Campus','points':10,'carbon_saved':2.5}
-    #     'public_transport': {'name': 'Used public transport', 'points': 5, 'carbon_saved': 1.2}
-    #     'recycling': {'name': 'Recycled materials', 'points': 3, 'carbon_saved': 0.8}
-    #     'reusable_container': {'name': 'Used Reusable Container', 'points': 2, 'carbon_saved': 0.3}
-    #     'event_participation': {'name': 'Attended Sustainability Event', 'points': 15, 'carbon_saved': 0.5}
-    #     'energy_saving': {'name': 'Reported Energy Waste', 'points': 8, 'carbon_saved': 5.0}
-    #     'water_saving': {'name': 'Reported Water Waste', 'points': 8, 'carbon_saved': 3.0}
+    #     'cycling':{'name':'Cycled to Campus','points':10,'carbon_saved':2.5},
+    #     'public_transport': {'name': 'Used public transport', 'points': 5, 'carbon_saved': 1.2},
+    #     'recycling': {'name': 'Recycled materials', 'points': 3, 'carbon_saved': 0.8},
+    #     'reusable_container': {'name': 'Used Reusable Container', 'points': 2, 'carbon_saved': 0.3},
+    #     'event_participation': {'name': 'Attended Sustainability Event', 'points': 15, 'carbon_saved': 0.5},
+    #     'energy_saving': {'name': 'Reported Energy Waste', 'points': 8, 'carbon_saved': 5.0},
+    #     'water_saving': {'name': 'Reported Water Waste', 'points': 8, 'carbon_saved': 3.0},
     #     'e-scooter': {'name': 'Used an e-scooter', 'points': 12, 'carbon_saved': 2.0}
     # }
 
