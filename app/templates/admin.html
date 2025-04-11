@@ -33,7 +33,7 @@
                         <th>Username</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Action</th>
+                        <th>Edit Role</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -42,25 +42,42 @@
                         <td>{{ user.id }}</td>
                         <td>{{ user.username | capitalize }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{% if user.role == 'Admin' %}
+                        <td>
+                            {% if user.role == 'Admin' %}
                             <span class="pill blue-pill">Admin</span>
                             {% else %}
-                            {{ user.role}}
+                            {{ user.role }}
                             {% endif %}
                         </td>
-                        <td>
-                            <button class="edit-button">Edit</button>
+
+                        {% if current_user.role == 'Admin' %}
+                        <td colspan="2">
+                            <form action="{{ url_for('edit_role', user_id=user.id) }}" method="POST" class="role-form">
+                                <select name="role" class="pill-dropdown">
+                                    <option value="Admin" {% if user.role=='Admin' %}selected{% endif %}>Admin</option>
+                                    <option value="Student" {% if user.role=='Student' %}selected{% endif %}>Student</option>
+                                    <option value="Staff" {% if user.role=='Staff' %}selected{% endif %}>Staff</option>
+                                    <option value="Facilities" {% if user.role=='Facilities' %}selected{% endif %}>Facilities</option>
+                                    <option value="ST" {% if user.role=='ST' %}selected{% endif %}>ST</option>
+                                    <option value="UL" {% if user.role=='UL' %}selected{% endif %}>UL</option>
+                                </select>
+                                <button type="submit" class="edit-button">Edit</button>
+                            </form>
                         </td>
+                        {% else %}
+                        <td colspan="2"><span class="muted">N/A</span></td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                     </tbody>
+
                 </table>
             </div>
         </div>
 
     </div>
 
-        <div class="score-card animate-fade-in mb-3">
+    <div class="score-card animate-fade-in mb-3">
         <div class="card-header">
             <h5>User Submissions Table</h5>
         </div>
@@ -86,9 +103,9 @@
                         <td>{{ submission.submission_date }}</td>
                         <td>{{ submission.username | capitalize }}</td>
                         <td>{{ submission.type }}</td>
-                        <td>{{ submission.proof | capitalize  }}</td>
+                        <td>{{ submission.proof | capitalize }}</td>
                         <td>
-                            <button class="edit-button">Approve</button>
+                            <button class="approve-button">Approve</button>
                             <button class="decline-button">Decline</button>
                         </td>
                     </tr>

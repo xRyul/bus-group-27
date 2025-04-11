@@ -90,7 +90,7 @@
     padding: 16px;
 }
 
-.edit-button {
+.approve-button {
     background-color: #28a745;
     color: white;
     border: none;
@@ -101,12 +101,12 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.edit-button:hover {
+.approve-button:hover {
     background-color: #218838;
     transform: scale(1.05);
 }
 
-.edit-button:focus {
+.approve-button:focus {
     outline: none;
 }
 
@@ -153,3 +153,37 @@
 .red-pill {
             background-color: red;
         }
+
+.role-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.pill-dropdown {
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    appearance: none;
+    text-align:center;
+}
+
+.edit-button {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+    background-color: #0056b3;
+}
+
+
+

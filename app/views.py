@@ -53,6 +53,25 @@ def admin():
 
     return render_template('admin.html', title="Admin", users=users,submissions=submissions)
 
+@app.route("/edit-role/<int:user_id>", methods=["POST"])
+@login_required
+def edit_role(user_id):
+    user = User.query.get(user_id)
+    new_role = request.form.get("role")
+
+    if user.role == 'Admin' and new_role != 'Admin':
+        admins = User.query.filter_by(role='Admin').count()
+        if admins <= 1:
+            flash('There must be at least one user with the Admin role.', 'error')
+            return redirect(url_for('admin'))
+
+    user.role = new_role
+    db.session.commit()
+    flash(f"{user.username}'s role updated to {new_role}")
+
+    return redirect(url_for("admin"))
+
+
 @app.route("/building-energy-monitoring")
 @login_required
 def building_energy_monitoring():
