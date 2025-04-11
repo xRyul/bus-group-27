@@ -28,16 +28,20 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if current_user.is_authenticated %}
+                {% if current_user.role not in ['Student', 'Staff'] %}
                 <li class="nav-item">
                     <a class="nav-link nav-link-modern" href="{{ url_for('building_energy_monitoring') }}">
                         <i class="bi bi-lightning-charge me-1"></i> Energy Dashboard
                     </a>
                 </li>
+                {% endif %}
+                {% if current_user.role in ['Admin','Student', 'Staff'] %}
                 <li class="nav-item">
                     <a class="nav-link nav-link-modern" href="{{ url_for('green_score') }}">
                         <i class="fa fa-leaf me-1"></i> Green Score
                     </a>
                 </li>
+                {% endif %}
                 {% if current_user.role == 'Admin' %}
                 <li class="nav-item">
                     <a class="nav-link nav-link-modern" href="{{ url_for('admin') }}">
