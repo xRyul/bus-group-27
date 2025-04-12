@@ -1,16 +1,12 @@
-import random
-from collections import defaultdict
-from datetime import datetime, timedelta
-import numpy as np
 import sqlalchemy as sa
 from sqlalchemy import func, extract
 from app import db
-
 from app.models.building import Building
 from app.models.building_energy import BuildingEnergy
 from app.models.sustainable_activity import SustainableActivity
 from app.models.user import User
 from app.models.user_points import UserPoints
+
 
 class SingletonMeta(type):
     _instances = {}
@@ -23,102 +19,10 @@ class SingletonMeta(type):
 
 class BuildingEnergyMonitoring(metaclass=SingletonMeta):
     def __init__(self):
-        self.raw_data = []
-        self.processed_data = []
-        self.anomaly_lookup = set()
+        # Simulated DATA is generated in the debug_utils.py
+        pass
 
-        self.simulate_midweek_energy_readings({
-            "Computer Science": 1,
-            "Physics": 2,
-            "Library": 3
-        })
-        self.inject_known_anomalies()
-        self.detect_anomalies_iqr()
-        self.create_model_objects()
-        self.commit_to_database()
-
-    def simulate_midweek_energy_readings(self, building_name_to_id):
-        buildings = ["Computer Science", "Physics", "Library"]
-        energy_types = {
-            "electric": ("kWh", 80, 160),
-            "water": ("litres", 150, 250),
-            "gas": ("m3", 2.5, 4.5)
-        }
-
-        start_day = datetime(2025, 4, 11)
-        intervals_per_day = 96
-
-        for building in buildings:
-            building_id = building_name_to_id[building]
-            for energy_type, (unit, low, high) in energy_types.items():
-                for interval in range(intervals_per_day):
-                    timestamp = start_day + timedelta(minutes=15 * interval)
-                    hour = timestamp.hour
-                    base = {
-                        "electric": 100 if 8 <= hour <= 18 else 60,
-                        "water": 200 if 7 <= hour <= 20 else 150,
-                        "gas": 3.5 if 6 <= hour <= 22 else 2.5
-                    }[energy_type]
-                    noise = random.uniform(-3, 3)
-                    value = round(base + noise, 2)
-                    self.raw_data.append((building_id, timestamp, energy_type, value, unit))
-
-    def inject_known_anomalies(self):
-        updated = []
-        for (building_id, timestamp, energy_type, value, unit) in self.raw_data:
-            if (
-                (timestamp.hour == 8 and timestamp.minute == 0 and energy_type == "electric") or
-                (timestamp.hour == 14 and energy_type == "water")
-            ):
-                # Exaggerate electric/water anomalies by multiplying
-                value = round(value * 2.5, 2) 
-            elif (timestamp.hour == 20 and energy_type == "gas"):
-                 # Exaggerate gas
-                 value = round(value + 5.0, 2) 
-            updated.append((building_id, timestamp, energy_type, value, unit))
-        self.raw_data = updated
-
-    def detect_anomalies_iqr(self, k=1.5):
-        grouped = defaultdict(lambda: defaultdict(list))
-        timestamps = defaultdict(lambda: defaultdict(list))
-
-        for building_id, timestamp, energy_type, value, unit in self.raw_data:
-            grouped[building_id][energy_type].append(value)
-            timestamps[building_id][energy_type].append(timestamp)
-
-        for building_id, utilities in grouped.items():
-            for energy_type, values in utilities.items():
-                values_array = np.array(values)
-                q1 = np.percentile(values_array, 25)
-                q3 = np.percentile(values_array, 75)
-                iqr = q3 - q1
-                lower = q1 - k * iqr
-                upper = q3 + k * iqr
-
-                for i, val in enumerate(values):
-                    if val < lower or val > upper:
-                        ts = timestamps[building_id][energy_type][i]
-                        self.anomaly_lookup.add((building_id, energy_type, ts))
-
-    def create_model_objects(self):
-        for building_id, timestamp, energy_type, value, unit in self.raw_data:
-            is_anomaly = (building_id, energy_type, timestamp) in self.anomaly_lookup
-            model_instance = BuildingEnergy(
-                building_id=building_id,
-                timestamp=timestamp,
-                energy_type=energy_type,
-                consumption_value=value,
-                unit=unit,
-                is_anomaly=is_anomaly
-            )
-            self.processed_data.append(model_instance)
-
-    def commit_to_database(self):
-        db.session.add_all(self.processed_data)
-        db.session.commit()
-
-    #  ------- FETCHING DATA ------- #
-    # Get all buildings ordered by name
+    # Return all buildings ordered by name
     def get_all_buildings(self):
         return db.session.scalars(sa.select(Building).order_by(Building.name)).all()
 
@@ -134,7 +38,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         
         # Fall back to first building in the list
         return buildings[0].id
-    
+
     # Validate a selected building ID and return a valid ID
     def validate_building_selection(self, selected_id, buildings):
         if not buildings:
@@ -144,9 +48,10 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         if selected_id in valid_building_ids:
             return selected_id
         
-        # If not valid - get default instead
+        # Not valid - get default instead
         return self.get_default_building_id(buildings)
-
+    
+    # Get hourly average energy consumption for a building and energy type
     def get_hourly_average(self, energy_type, building_id):
         avg_data = db.session.query(
             extract('hour', BuildingEnergy.timestamp).label('hour'),
@@ -161,6 +66,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         data_dict = {hour: avg for hour, avg in avg_data}
         return [data_dict.get(h, 0) for h in range(24)]
 
+    # Get anomalies for a specific building across all energy types
     def get_anomalies_for_building(self, building_id):
         anomaly_records = db.session.query(
             BuildingEnergy.timestamp,
@@ -174,7 +80,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
             BuildingEnergy.timestamp, BuildingEnergy.energy_type
         ).all()
 
-        # Prepare anomalies dictionary, keyed by energy type
+        # Anomalies dictionary, keyed by energy type
         anomalies_by_type = {'electric': [], 'gas': [], 'water': []}
         for timestamp, value, energy_type in anomaly_records:
             if energy_type in anomalies_by_type:
@@ -183,8 +89,9 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
                 
         return anomalies_by_type
 
-# BuildingEnergyMonitoring = BuildingEnergyMonitoring()
-# print(BuildingEnergyMonitoring.processed_data)
+    # Get total count of anomalies across all energy types
+    def get_anomaly_count(self, anomalies_by_type):
+        return sum(len(v) for v in anomalies_by_type.values())
 
 class CommunityEngagement:
     ### FR5 Logic ###
@@ -239,16 +146,13 @@ class CommunityEngagement:
             )
             db.session.add(self.user.points)
     
-    #Updated FR6 logic
+    # FR6 logic
     def award_points(self, activity: SustainableActivity):
-        if activity.points_award is not None:
-            return {"error": "points have already been awarded for activity."}, 400
-    
-        if activity.points_award is not None:
+        if activity.points_awarded is not None:
             return {"error": "Points have already been awarded for this activity."}, 400
     
-        # points_awarded = self.calculate_points(activity.carbon_saved) # Pylint Error: 
-        points_awarded = activity.carbon_saved * 10 # Placeholder logic as calculate_points() doesn't exist so i commented it out instead -> Award 10 points per kg CO2 saved
+        # Award 10 points per kg CO2 saved
+        points_awarded = activity.carbon_saved * 10
         activity.points_awarded = points_awarded
     
         if hasattr(self.user, 'points'):
@@ -262,3 +166,8 @@ class CommunityEngagement:
             )
             db.session.add(self.user.points)
             db.session.commit()
+
+        return {
+            "message": f"Awarded {points_awarded} points for {activity.activity_type}",
+            "total_points": self.user.points.total_points
+        }, 200

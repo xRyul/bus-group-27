@@ -3,7 +3,7 @@ from app import app
 from app.models.user import User
 from app.forms import ChooseForm, LoginForm, UserSubmission
 from flask_login import current_user, login_user, logout_user, login_required, fresh_login_required
-import sqlalchemy as sa
+
 from app import db
 from urllib.parse import urlsplit
 import csv
@@ -84,10 +84,11 @@ def building_energy_monitoring():
     buildings = bem.get_all_buildings()
     if not buildings:
         flash("No buildings found in the database.", "error")
-        return render_template('building_energy_monitoring.html', title="Building Energy Monitoring",
-                              buildings=[], selected_building_id=None,
-                              hourly_data_electric=[], hourly_data_gas=[], hourly_data_water=[],
-                              anomalies=[], anomaly_count=0)
+        return render_template('building_energy_monitoring.html', 
+                            title="Building Energy Monitoring",
+                            buildings=[], selected_building_id=None,
+                            hourly_data_electric=[], hourly_data_gas=[], 
+                            hourly_data_water=[], anomalies=[], anomaly_count=0)
 
     # Validate building selection
     selected_building_id = bem.validate_building_selection(
@@ -102,7 +103,7 @@ def building_energy_monitoring():
     
     # Get anomalies
     anomalies_by_type = bem.get_anomalies_for_building(selected_building_id)
-    anomaly_count = sum(len(v) for v in anomalies_by_type.values())
+    anomaly_count = bem.get_anomaly_count(anomalies_by_type)
 
     return render_template(
         'building_energy_monitoring.html',
