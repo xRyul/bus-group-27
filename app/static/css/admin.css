@@ -185,5 +185,16 @@
     background-color: #0056b3;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
+.animate-fade-in {
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 0.8s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
 

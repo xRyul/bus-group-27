@@ -9,7 +9,7 @@ from app.models.sustainable_activity import SustainableActivity
 from app.models.user import User
 
 from app.models.user_points import UserPoints
-from app.logic import BuildingEnergyMonitoring
+# from app.logic import BuildingEnergyMonitoring
 
 def reset_db():
     db.drop_all()
