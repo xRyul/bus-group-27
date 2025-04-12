@@ -54,12 +54,12 @@
                         <td colspan="2">
                             <form action="{{ url_for('edit_role', user_id=user.id) }}" method="POST" class="role-form">
                                 <select name="role" class="pill-dropdown">
-                                    <option value="Admin" {% if user.role=='Admin' %}selected{% endif %}>Admin</option>
-                                    <option value="Student" {% if user.role=='Student' %}selected{% endif %}>Student</option>
-                                    <option value="Staff" {% if user.role=='Staff' %}selected{% endif %}>Staff</option>
-                                    <option value="Facilities" {% if user.role=='Facilities' %}selected{% endif %}>Facilities</option>
-                                    <option value="ST" {% if user.role=='ST' %}selected{% endif %}>ST</option>
-                                    <option value="UL" {% if user.role=='UL' %}selected{% endif %}>UL</option>
+                                    <option value="Admin" {% if user.role = 'Admin' %}selected{% endif %}>Admin</option>
+                                    <option value="Student" {% if user.role = 'Student' %}selected{% endif %}>Student</option>
+                                    <option value="Staff" {% if user.role = 'Staff' %}selected{% endif %}>Staff</option>
+                                    <option value="Facilities" {% if user.role = 'Facilities' %}selected{% endif %}>Facilities</option>
+                                    <option value="ST" {% if user.role = 'ST' %}selected{% endif %}>ST</option>
+                                    <option value="UL" {% if user.role = 'UL' %}selected{% endif %}>UL</option>
                                 </select>
                                 <button type="submit" class="edit-button">Edit</button>
                             </form>

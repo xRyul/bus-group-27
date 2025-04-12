@@ -2,7 +2,10 @@ import random
 from collections import defaultdict
 from datetime import datetime, timedelta
 import numpy as np
+import sqlalchemy as sa
+from sqlalchemy import func, extract
 from app import db
+
 from app.models.building import Building
 from app.models.building_energy import BuildingEnergy
 from app.models.sustainable_activity import SustainableActivity
@@ -113,6 +116,72 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
     def commit_to_database(self):
         db.session.add_all(self.processed_data)
         db.session.commit()
+
+    #  ------- FETCHING DATA ------- #
+    # Get all buildings ordered by name
+    def get_all_buildings(self):
+        return db.session.scalars(sa.select(Building).order_by(Building.name)).all()
+
+    # Find the most appropriate default building ID from a list of buildings
+    def get_default_building_id(self, buildings):
+        if not buildings:
+            return None
+            
+        # Try to find Computer Science building first
+        cs_building = next((b for b in buildings if b.name == "Computer Science"), None)
+        if cs_building:
+            return cs_building.id
+        
+        # Fall back to first building in the list
+        return buildings[0].id
+    
+    # Validate a selected building ID and return a valid ID
+    def validate_building_selection(self, selected_id, buildings):
+        if not buildings:
+            return None
+            
+        valid_building_ids = {b.id for b in buildings}
+        if selected_id in valid_building_ids:
+            return selected_id
+        
+        # If not valid - get default instead
+        return self.get_default_building_id(buildings)
+
+    def get_hourly_average(self, energy_type, building_id):
+        avg_data = db.session.query(
+            extract('hour', BuildingEnergy.timestamp).label('hour'),
+            func.avg(BuildingEnergy.consumption_value).label('average_consumption')
+            ).filter(
+                BuildingEnergy.building_id == building_id,
+                BuildingEnergy.energy_type == energy_type
+            ).group_by(extract('hour', BuildingEnergy.timestamp)
+            ).order_by(extract('hour', BuildingEnergy.timestamp)
+            ).all()
+        # Ensure all 24 hours are present, default to 0
+        data_dict = {hour: avg for hour, avg in avg_data}
+        return [data_dict.get(h, 0) for h in range(24)]
+
+    def get_anomalies_for_building(self, building_id):
+        anomaly_records = db.session.query(
+            BuildingEnergy.timestamp,
+            BuildingEnergy.consumption_value,
+            BuildingEnergy.energy_type
+        ).filter(
+            BuildingEnergy.building_id == building_id,
+            BuildingEnergy.energy_type.in_(['electric', 'gas', 'water']),
+            BuildingEnergy.is_anomaly.is_(True)
+        ).order_by(
+            BuildingEnergy.timestamp, BuildingEnergy.energy_type
+        ).all()
+
+        # Prepare anomalies dictionary, keyed by energy type
+        anomalies_by_type = {'electric': [], 'gas': [], 'water': []}
+        for timestamp, value, energy_type in anomaly_records:
+            if energy_type in anomalies_by_type:
+                hour_index = timestamp.hour
+                anomalies_by_type[energy_type].append({"index": hour_index, "value": value})
+                
+        return anomalies_by_type
 
 # BuildingEnergyMonitoring = BuildingEnergyMonitoring()
 # print(BuildingEnergyMonitoring.processed_data)

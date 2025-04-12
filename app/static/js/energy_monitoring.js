@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             borderColor: 'transparent',
                             backgroundColor: 'transparent',
                             pointBackgroundColor: 'red',
-                            pointBorderColor: 'orange',
+                            pointBorderColor: 'red',
                             pointRadius: 6,
                             pointHoverRadius: 8,
                             showLine: false,
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             borderColor: 'transparent',
                             backgroundColor: 'transparent',
                             pointBackgroundColor: 'red',
-                            pointBorderColor: 'blue',
+                            pointBorderColor: 'red',
                             pointRadius: 6,
                             pointHoverRadius: 8,
                             showLine: false,
@@ -160,9 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                     }
                                     if (context.parsed.y !== null) {
                                         label += context.parsed.y.toFixed(1);
-                                    }
-                                    if (context.dataset.label.includes('Anomalies')) {
-                                        label += ' (Anomaly)';
                                     }
                                     return label;
                                 }
