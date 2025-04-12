@@ -258,8 +258,65 @@
                 
                 <!-- Daily Usage Pattern -->
                 <h6 class="mb-3">Daily Usage Pattern</h6>
-                <div style="position: relative; height: 250px; padding: 10px;">
-                    <canvas id="heatMapChart"></canvas>
+                <div class="simple-heatmap-container mb-4">
+                    <table class="simple-heatmap">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th colspan="6">Morning (00-11)</th>
+                                <th colspan="6">Afternoon (12-23)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mon</td>
+                                <td class="heat-low"></td><td class="heat-low"></td> <!-- 00-01, 02-03 -->
+                                <td class="heat-low"></td><td class="heat-med"></td> <!-- 04-05, 06-07 -->
+                                <td class="heat-high"></td><td class="heat-high"></td> <!-- 08-09, 10-11 -->
+                                <td class="heat-high"></td><td class="heat-high"></td> <!-- 12-13, 14-15 -->
+                                <td class="heat-med"></td><td class="heat-med"></td> <!-- 16-17, 18-19 -->
+                                <td class="heat-low"></td><td class="heat-low"></td> <!-- 20-21, 22-23 -->
+                            </tr>
+                            <tr>
+                                <td>Tue</td>
+                                <td class="heat-low"></td><td class="heat-low"></td>
+                                <td class="heat-low"></td><td class="heat-med"></td>
+                                <td class="heat-high"></td><td class="heat-high"></td>
+                                <td class="heat-high"></td><td class="heat-high"></td>
+                                <td class="heat-med"></td><td class="heat-med"></td>
+                                <td class="heat-low"></td><td class="heat-low"></td>
+                            </tr>
+                            <tr>
+                                <td>Wed</td>
+                                <td class="heat-low"></td><td class="heat-low"></td> <td class="heat-low"></td><td class="heat-med"></td> <td class="heat-high"></td><td class="heat-high"></td>
+                                <td class="heat-high"></td><td class="heat-high"></td> <td class="heat-med"></td><td class="heat-med"></td> <td class="heat-low"></td><td class="heat-low"></td>
+                            </tr>
+                            <tr>
+                                <td>Thu</td>
+                                <td class="heat-low"></td><td class="heat-low"></td> <td class="heat-low"></td><td class="heat-med"></td> <td class="heat-high"></td><td class="heat-high"></td>
+                                <td class="heat-high"></td><td class="heat-high"></td> <td class="heat-med"></td><td class="heat-med"></td> <td class="heat-low"></td><td class="heat-low"></td>
+                            </tr>
+                            <tr>
+                                <td>Fri</td>
+                                <td class="heat-low"></td><td class="heat-low"></td> <td class="heat-low"></td><td class="heat-med"></td> <td class="heat-high"></td><td class="heat-high"></td>
+                                <td class="heat-high"></td><td class="heat-high"></td> <td class="heat-med"></td><td class="heat-med"></td> <td class="heat-low"></td><td class="heat-low"></td>
+                            </tr>
+                            <tr>
+                                <td>Sat</td>
+                                <td class="heat-low"></td><td class="heat-low"></td> <!-- 00-01, 02-03 -->
+                                <td class="heat-low"></td><td class="heat-low"></td> <!-- 04-05, 06-07 -->
+                                <td class="heat-low"></td><td class="heat-med"></td> <!-- 08-09, 10-11 -->
+                                <td class="heat-med"></td><td class="heat-med"></td> <!-- 12-13, 14-15 -->
+                                <td class="heat-low"></td><td class="heat-low"></td> <!-- 16-17, 18-19 -->
+                                <td class="heat-low"></td><td class="heat-low"></td> <!-- 20-21, 22-23 -->
+                            </tr>
+                            <tr>
+                                <td>Sun</td>
+                                <td class="heat-low"></td><td class="heat-low"></td> <td class="heat-low"></td><td class="heat-low"></td> <td class="heat-low"></td><td class="heat-med"></td>
+                                <td class="heat-med"></td><td class="heat-med"></td> <td class="heat-low"></td><td class="heat-low"></td> <td class="heat-low"></td><td class="heat-low"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 
                 <!-- Mini Charts Row -->
@@ -414,127 +471,125 @@
         </div>
     </div>
 
-
-
-
-<!-- Report Issue Modal -->
-<div class="modal fade" id="reportIssueModal" tabindex="-1" aria-labelledby="reportIssueModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reportIssueModalLabel">Report Energy Issue</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="issueType" class="form-label">Issue Type</label>
-                        <select class="form-select" id="issueType" required>
-                            <option value="">Select issue type</option>
-                            <option value="lights">Lights left on</option>
-                            <option value="hvac">HVAC problems</option>
-                            <option value="water">Water leak</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="issueLocation" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="issueLocation" placeholder="Building and room number" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="issueDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="issueDescription" rows="3" required></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger">Submit Report</button>
+    <!-- Report Issue Modal -->
+    <div class="modal fade" id="reportIssueModal" tabindex="-1" aria-labelledby="reportIssueModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportIssueModalLabel">Report Energy Issue</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="issueType" class="form-label">Issue Type</label>
+                            <select class="form-select" id="issueType" required>
+                                <option value="">Select issue type</option>
+                                <option value="lights">Lights left on</option>
+                                <option value="hvac">HVAC problems</option>
+                                <option value="water">Water leak</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="issueLocation" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="issueLocation" placeholder="Building and room number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="issueDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="issueDescription" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger">Submit Report</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Configure Alerts Modal -->
-<div class="modal fade" id="alertConfigModal" tabindex="-1" aria-labelledby="alertConfigModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="alertConfigModalLabel">Configure Alerts</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="anomalyAlerts" checked>
-                            <label class="form-check-label" for="anomalyAlerts">Anomaly Detection Alerts</label>
+    <!-- Configure Alerts Modal -->
+    <div class="modal fade" id="alertConfigModal" tabindex="-1" aria-labelledby="alertConfigModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="alertConfigModalLabel">Configure Alerts</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="anomalyAlerts" checked>
+                                <label class="form-check-label" for="anomalyAlerts">Anomaly Detection Alerts</label>
+                            </div>
+                            <div class="form-text">Receive notifications when unusual energy usage is detected</div>
                         </div>
-                        <div class="form-text">Receive notifications when unusual energy usage is detected</div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="thresholdAlerts">
-                            <label class="form-check-label" for="thresholdAlerts">Threshold Alerts</label>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="thresholdAlerts">
+                                <label class="form-check-label" for="thresholdAlerts">Threshold Alerts</label>
+                            </div>
+                            <div class="form-text">Receive notifications when energy usage exceeds defined thresholds</div>
                         </div>
-                        <div class="form-text">Receive notifications when energy usage exceeds defined thresholds</div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="weeklyReports" checked>
-                            <label class="form-check-label" for="weeklyReports">Weekly Summary Reports</label>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="weeklyReports" checked>
+                                <label class="form-check-label" for="weeklyReports">Weekly Summary Reports</label>
+                            </div>
+                            <div class="form-text">Receive weekly email summaries of energy usage and trends</div>
                         </div>
-                        <div class="form-text">Receive weekly email summaries of energy usage and trends</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="alertEmail" class="form-label">Email for Notifications</label>
-                        <input type="email" class="form-control" id="alertEmail" placeholder="your@email.com">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-warning">Save Settings</button>
+                        <div class="mb-3">
+                            <label for="alertEmail" class="form-label">Email for Notifications</label>
+                            <input type="email" class="form-control" id="alertEmail" placeholder="your@email.com">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-warning">Save Settings</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Add Note Modal -->
-<div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addNoteModalLabel">Add Note to Timeline</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="noteDate" class="form-label">Date</label>
-                        <input type="date" class="form-control" id="noteDate" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="noteTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="noteTitle" placeholder="Brief title for your note" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="noteContent" class="form-label">Note</label>
-                        <textarea class="form-control" id="noteContent" rows="3" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="noteVisibility" checked>
-                            <label class="form-check-label" for="noteVisibility">
-                                Make visible to all users
-                            </label>
+    <!-- Add Note Modal -->
+    <div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addNoteModalLabel">Add Note to Timeline</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="noteDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="noteDate" required>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-info">Add Note</button>
+                        <div class="mb-3">
+                            <label for="noteTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="noteTitle" placeholder="Brief title for your note" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="noteContent" class="form-label">Note</label>
+                            <textarea class="form-control" id="noteContent" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="noteVisibility" checked>
+                                <label class="form-check-label" for="noteVisibility">
+                                    Make visible to all users
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-info">Add Note</button>
+                </div>
             </div>
         </div>
     </div>
@@ -542,17 +597,17 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- Include Chart.js -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Store data in data attributes -->
 <div id="chartData"
-     data-electric='{{ hourly_data_electric|tojson }}'
-     data-gas='{{ hourly_data_gas|tojson }}'
-     data-water='{{ hourly_data_water|tojson }}'
-     data-anomalies='{{ anomalies|tojson }}'
-     style="display: none;"></div>
+    data-electric='{{ hourly_data_electric|tojson }}'
+    data-gas='{{ hourly_data_gas|tojson }}'
+    data-water='{{ hourly_data_water|tojson }}'
+    data-anomalies='{{ anomalies|tojson }}'
+    style="display: none;"></div>
 
-<!-- Include dashboard JavaScript -->
+<!-- Dashboard JavaScript -->
 <script src="{{ url_for('static', filename='js/energy_monitoring.js') }}"></script>
 {% endblock %}

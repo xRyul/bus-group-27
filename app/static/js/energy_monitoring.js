@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Energy Monitoring Dashboard Loaded');
+    // console.log('Energy Monitoring Dashboard Loaded');
     
     // Setup UI animations
     setupAnimations();
@@ -18,21 +18,16 @@ document.addEventListener('DOMContentLoaded', function() {
         anomalies = JSON.parse(chartDataElement.dataset.anomalies || '[]');
     } catch (e) {
         console.error('Error parsing chart data:', e);
-        // Fallback data in case of parsing error (less likely now but good practice)
-        electricData = Array(24).fill(50 + Math.random() * 50); 
-        gasData = Array(24).fill(30 + Math.random() * 30);
-        waterData = Array(24).fill(10 + Math.random() * 10);
     }
     
     // Setup event listeners for dashboard controls
     setupDashboardControls();
     
-    // Function to initialize charts only if their elements exist
+    // Initialize charts only if their elements exist
     function initializeCharts() {
         // Main Chart - Energy Consumption Over Time
         const mainChartEl = document.getElementById('mainChart');
         if (mainChartEl) {
-            // Prepare anomaly data points
             const anomalyData = Array(24).fill(null);
             if (anomalies && anomalies.length > 0) {
                 anomalies.forEach(anomaly => {
@@ -41,10 +36,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             }
-            
-            // Use the data fetched from the backend
-            // const gasData = hourlyData.map(val => val * 0.6 + Math.random() * 10); // REMOVED SIMULATION
-            // const waterData = hourlyData.map(val => val * 0.3 + Math.random() * 5); // REMOVED SIMULATION
             
             const mainChartCtx = mainChartEl.getContext('2d');
             const mainChart = new Chart(mainChartCtx, {
@@ -55,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
                              '20:00', '21:00', '22:00', '23:00'],
                     datasets: [
                         {
-                            label: 'Electricity (kWh)', // Assuming kWh, adjust if unit varies
-                            data: electricData,       // Use electricData
+                            label: 'Electricity (kWh)',
+                            data: electricData,
                             borderColor: '#4CAF50',
                             backgroundColor: 'rgba(76, 175, 80, 0.1)',
                             borderWidth: 2,
@@ -67,8 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             pointHoverRadius: 5
                         },
                         {
-                            label: 'Gas (m3)', // Assuming m3 based on simulation logic, adjust if unit varies
-                            data: gasData,     // Use gasData
+                            label: 'Gas (m3)',
+                            data: gasData,
                             borderColor: '#FFB300',
                             backgroundColor: 'rgba(255, 179, 0, 0.1)',
                             borderWidth: 2,
@@ -80,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             hidden: true
                         },
                         {
-                            label: 'Water (litres)', // Assuming litres based on simulation logic, adjust if unit varies
-                            data: waterData,     // Use waterData
+                            label: 'Water (litres)',
+                            data: waterData, 
                             borderColor: '#00ACC1',
                             backgroundColor: 'rgba(0, 172, 193, 0.1)',
                             borderWidth: 2,
@@ -186,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // Export chart as image - now connected to the main Export Report button
+            // Export chart as image
             const downloadReportBtn = document.getElementById('downloadReportBtn');
             if (downloadReportBtn) {
                 downloadReportBtn.addEventListener('click', function() {
@@ -219,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (energyMixEl) {
             // Get the container, not just the canvas, to ensure context
             const energyMixContainer = energyMixEl.parentElement; 
-            if (energyMixContainer && energyMixContainer.offsetHeight > 0) { // Check container visibility/height
+            if (energyMixContainer && energyMixContainer.offsetHeight > 0) {
                 const energyMixCtx = energyMixEl.getContext('2d');
                 new Chart(energyMixCtx, {
                     type: 'doughnut',
@@ -371,20 +362,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup dashboard controls and event listeners
     function setupDashboardControls() {
-        // Building selector change event
+
         const buildingSelector = document.getElementById('buildingSelector');
         if (buildingSelector) {
             buildingSelector.addEventListener('change', function() {
-                console.log('Building changed to:', this.value);
-                // Here you would typically fetch new data for the selected building
-                // and update the charts and stats
                 
-                // For demo purposes, just show a loading state
                 document.querySelectorAll('.stat-value').forEach(el => {
                     el.innerHTML = '<div class="spinner-border spinner-border-sm text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>';
                 });
                 
-                // Simulate data loading
                 setTimeout(() => {
                     updateRandomStats();
                 }, 800);
@@ -401,7 +387,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     el.innerHTML = '<div class="spinner-border spinner-border-sm text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>';
                 });
                 
-                // Only show loading state for 500ms to avoid UI getting stuck
                 setTimeout(() => {
                     updateRandomStats();
                     updateEnvironmentalStats(); 
@@ -414,7 +399,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (dateRange) {
             dateRange.addEventListener('change', function() {
                 console.log('Date range changed to:', this.value);
-
             });
         }
         
@@ -453,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Function to update main stats with random values (for demo purposes)
+    // Update main stats with random values
     function updateRandomStats() {
         // Total consumption
         const consumptionValue = Math.floor(Math.random() * 1000) + 1500;
@@ -507,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
         anomalyChangeEl.className = 'stat-change negative';
     }
     
-    // Function to update environmental stats with random values
+    // Update environmental stats with random values
     function updateEnvironmentalStats() {
         // Energy Use Intensity
         const intensityValue = Math.floor(Math.random() * 50) + 100;
@@ -547,8 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 statChange.className = waterChange < 0 
                     ? 'stat-change positive' 
                     : 'stat-change negative';
-            } else if (index === 7) { // BREEAM Rating
-                // Keep BREEAM rating static as it doesn't change with time periods
+            } else if (index === 7) { // BREEAM Rating - static as it doesn't change with time periods
                 statValue.textContent = "Excellent";
                 statChange.innerHTML = `<i class="bi bi-check-circle"></i><span>Achieved 2010</span>`;
                 statChange.className = 'stat-change positive';
@@ -556,10 +539,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    
-    // Setup animations
+    // Animations
     function setupAnimations() {
-        // Trigger animations when elements come into view
         const animateOnScroll = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -569,7 +550,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }, { threshold: 0.1 });
         
-        // Apply to all animate-fade-in elements
         document.querySelectorAll('.animate-fade-in').forEach(element => {
             animateOnScroll.observe(element);
         });
@@ -577,157 +557,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     initializeCharts();
     
-    // Create heatmap chart for daily usage pattern
-    createHeatMapChart();
-    
-    // Create heatmap chart for daily usage pattern
-    function createHeatMapChart() {
-        const heatMapCanvas = document.getElementById('heatMapChart');
-        if (!heatMapCanvas) return;
-        
-        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        const hours = ['12am', '2am', '4am', '6am', '8am', '10am', '12pm', '2pm', '4pm', '6pm', '8pm', '10pm'];
-        const data = [];
-        
-        // Pattern: Higher usage during working hours on weekdays, lower on weekends
-        for (let day = 0; day < 7; day++) {
-            for (let hour = 0; hour < 24; hour++) {
-                // Calculate intensity based on patterns
-                let value = 0;
-                
-                // Weekday pattern (Mon-Fri)
-                if (day < 5) {
-                    // Morning ramp-up (7-10 AM)
-                    if (hour >= 7 && hour < 10) {
-                        value = 30 + (hour - 7) * 20;
-                    }
-                    // Working hours (10 AM - 4 PM)
-                    else if (hour >= 10 && hour < 16) {
-                        value = 80 + Math.random() * 20;
-                    }
-                    // Evening ramp-down (4-7 PM)
-                    else if (hour >= 16 && hour < 19) {
-                        value = 70 - (hour - 16) * 20;
-                    }
-                    // Night (minimal usage)
-                    else {
-                        value = 5 + Math.random() * 10;
-                    }
-                } 
-                // Weekend pattern (Sat-Sun)
-                else {
-                    // Daytime (10 AM - 6 PM)
-                    if (hour >= 10 && hour < 18) {
-                        value = 20 + Math.random() * 30;
-                    }
-                    // Night (minimal usage)
-                    else {
-                        value = 5 + Math.random() * 5;
-                    }
-                }
-                
-                // Add some randomness
-                value = Math.min(100, Math.max(0, value + (Math.random() * 10 - 5)));
-                
-                // Add data point
-                data.push({
-                    x: hour,
-                    y: day,
-                    v: Math.round(value)
-                });
-            }
-        }
-        
-        // Create the heatmap chart
-        new Chart(heatMapCanvas, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'Energy Usage',
-                    data: data,
-                    backgroundColor: function(context) {
-                        const value = context.raw.v;
-                        const alpha = Math.min(1, 0.1 + (value / 100) * 0.9);
-                        return `rgba(76, 175, 80, ${alpha})`;
-                    },
-                    pointRadius: 10,
-                    pointHoverRadius: 12,
-                    borderWidth: 1,
-                    borderColor: 'rgba(0, 0, 0, 0.1)'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        min: -0.5,
-                        max: 23.5,
-                        ticks: {
-                            stepSize: 2,
-                            callback: function(value) {
-                                if (value % 2 === 0 && value >= 0 && value < 24) {
-                                    return hours[value / 2];
-                                }
-                                return '';
-                            }
-                        },
-                        grid: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Time of Day'
-                        }
-                    },
-                    y: {
-                        type: 'linear',
-                        min: -0.5,
-                        max: 6.5,
-                        ticks: {
-                            stepSize: 1,
-                            callback: function(value) {
-                                if (value >= 0 && value < 7) {
-                                    return days[value];
-                                }
-                                return '';
-                            }
-                        },
-                        grid: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Day of Week'
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const data = context.raw;
-                                const day = days[data.y];
-                                const hour = data.x;
-                                const value = data.v;
-                                return `${day} at ${hour}:00 - Energy usage: ${value}%`;
-                            }
-                        }
-                    },
-                    legend: {
-                        display: false
-                    }
-                }
-            }
-        });
-    }
-    
-    // Log anomalies for debugging
-    if (anomalies && anomalies.length > 0) {
-        console.log('Anomalies found:', anomalies);
-    } else {
-        console.log('No anomalies data available or invalid format');
-    }
+    // // Log anomalies for debugging
+    // if (anomalies && anomalies.length > 0) {
+    //     console.log('Anomalies found:', anomalies);
+    // } else {
+    //     console.log('No anomalies data available or invalid format');
+    // }
 });

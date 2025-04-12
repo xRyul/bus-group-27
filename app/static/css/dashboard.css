@@ -1,268 +1,234 @@
-/* Dashboard specific styles */
-
-/* Dashboard container */
+/* Dashboard Specific Styles */
 .dashboard-container {
-    padding: 1.5rem;
+    padding: 2rem;
+    background-color: #f8f9fa; /* Light background for the whole dashboard */
 }
 
-/* Dashboard header */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6;
 }
 
 .dashboard-title {
-    font-size: 1.75rem;
+    font-size: 1.8rem;
     font-weight: 600;
-    margin-bottom: 0.25rem;
-    color: #333;
+    color: #343a40;
 }
 
 .dashboard-subtitle {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #6c757d;
-    margin-bottom: 0;
 }
 
 .dashboard-actions .btn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8rem;
+    margin-left: 0.5rem;
 }
 
-/* Dashboard controls */
 .dashboard-controls {
-    background-color: #f8f9fa;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
 }
 
 .control-label {
-    font-size: 0.75rem;
     font-weight: 500;
-    color: #6c757d;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+    color: #495057;
 }
 
 .filter-group {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.5rem;
 }
 
 .btn-filter {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-    border-radius: 0.25rem;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
     color: #495057;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.btn-filter:hover, .btn-filter:focus {
-    background-color: #e9ecef;
-    border-color: #ced4da;
+.btn-filter:hover {
+    background-color: #dee2e6;
 }
 
 .btn-check:checked + .btn-filter {
-    background-color: #4CAF50;
+    background-color: #4CAF50;/* Bootstrap primary blue */
+    color: #ffffff;
     border-color: #4CAF50;
-    color: white;
+}
+.btn-check:checked + .btn-filter i {
+    color: #ffffff; /* Ensure icon color contrasts with background */
 }
 
-/* Dashboard cards */
-.dashboard-card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-}
-
-.dashboard-card .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #eee;
-}
-
-.dashboard-card .card-header h5 {
-    margin-bottom: 0;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.dashboard-card .card-body {
-    padding: 1rem;
-}
-
-/* Stat cards */
+/* Stat Cards */
 .stat-card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    padding: 1rem;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem; /* Add space between cards */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure cards in a row have same height */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background-color: #4CAF50;
-}
-
-.stat-card.energy::before {
-    background-color: #4CAF50;
-}
-
-.stat-card.cost::before {
-    background-color: #2196F3;
-}
-
-.stat-card.carbon::before {
-    background-color: #607D8B;
-}
-
-.stat-card.alert::before {
-    background-color: #F44336;
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .stat-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 1.5rem;
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #4CAF50;
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
 }
 
+.stat-card.energy .stat-icon { background-color: rgba(76, 175, 80, 0.1); color: #4CAF50; } /* Green */
+.stat-card.cost .stat-icon { background-color: rgba(33, 150, 243, 0.1); color: #2196F3; } /* Blue */
+.stat-card.carbon .stat-icon { background-color: rgba(108, 117, 125, 0.1); color: #6c757d; } /* Gray */
+.stat-card.alert .stat-icon { background-color: rgba(255, 193, 7, 0.1); color: #ffc107; } /* Yellow */
+
 .stat-title {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #6c757d;
     margin-bottom: 0.25rem;
 }
 
 .stat-value {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 600;
+    color: #343a40;
     margin-bottom: 0.5rem;
 }
 
 .stat-change {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
 }
 
-.stat-change.positive {
-    color: #4CAF50;
+.stat-change i {
+    margin-right: 0.3rem;
 }
 
-.stat-change.negative {
-    color: #F44336;
+.stat-change.positive { color: #198754; } /* Bootstrap success green */
+.stat-change.negative { color: #dc3545; } /* Bootstrap danger red */
+
+/* Chart Container */
+.chart-container {
+    position: relative;
+    height: 350px; /* Adjust height as needed */
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Building info */
-.building-info-section {
+/* Building Info & Recommendations */
+.dashboard-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden; /* Ensure content stays within rounded corners */
+}
+
+.dashboard-card .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.building-info-column {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.dashboard-card .card-header h5 {
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.dashboard-card .card-body {
+    padding: 1.5rem;
 }
 
 .building-info-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    color: #495057;
 }
 
 .building-info-item i {
-    color: #4CAF50;
-    font-size: 1rem;
+    margin-right: 0.75rem;
+    color: #6c757d;
+    width: 20px; /* Align icons */
+    text-align: center;
 }
 
-/* Energy class visualization */
 .energy-class-bar {
     display: flex;
-    width: 100%;
-    margin: 1rem 0;
-    border-radius: 0.25rem;
+    height: 25px;
+    border-radius: 4px;
     overflow: hidden;
+    margin-bottom: 0.5rem;
+    border: 1px solid #dee2e6;
 }
 
 .energy-class-segment {
     flex: 1;
-    text-align: center;
-    padding: 0.5rem 0;
-    font-weight: 600;
-    color: white;
-    position: relative;
-}
-
-.energy-class-segment.active::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid currentColor;
-}
-
-/* Recommendations */
-.recommendation-item {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.recommendation-icon {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 0.8rem;
+}
+.energy-class-segment.active {
+    border: 2px solid #343a40; /* Highlight active class */
+    z-index: 1;
+}
+
+.recommendation-item {
+    display: flex;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+.recommendation-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.recommendation-icon {
+    font-size: 1.5rem;
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #4CAF50;
-    font-size: 1.25rem;
+    background-color: rgba(13, 110, 253, 0.1); /* Light blue background */
+    color: #0d6efd; /* Bootstrap primary blue */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
     flex-shrink: 0;
 }
 
-.recommendation-content {
-    flex: 1;
-}
-
 .recommendation-content h6 {
-    font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .recommendation-content p {
@@ -271,61 +237,90 @@
     margin-bottom: 0.5rem;
 }
 
-/* Chart container */
-.chart-container {
-    position: relative;
-    height: 300px;
-    width: 100%;
-}
-
 /* Animations */
 .animate-fade-in {
     opacity: 0;
-    animation: fadeIn 0.5s ease forwards;
+    transform: translateY(15px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
-.delay-1 {
-    animation-delay: 0.1s;
+.animate-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.delay-2 {
-    animation-delay: 0.2s;
+/* Add delays for staggered effect */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+.delay-4 { transition-delay: 0.4s; }
+
+
+/* Simple Heatmap Styles */
+.simple-heatmap-container {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.delay-3 {
-    animation-delay: 0.3s;
+.simple-heatmap {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Ensure columns are evenly spaced */
 }
 
-.delay-4 {
-    animation-delay: 0.4s;
+.simple-heatmap th, .simple-heatmap td {
+    border: 1px solid #eee;
+    text-align: center;
+    padding: 0; /* Remove padding for cell colors */
+    font-size: 0.8rem;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.simple-heatmap th {
+    background-color: #f8f9fa;
+    padding: 0.5rem 0.2rem; /* Add padding back for headers */
+    font-weight: 500;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .dashboard-actions {
-        margin-top: 1rem;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .stat-value {
-        font-size: 1.25rem;
-    }
+.simple-heatmap td {
+    height: 25px; /* Give cells height */
+    width: calc(100% / 13); /* Approximate width for 1 day label + 12 data cells */
+}
+.simple-heatmap td:first-child { /* Day label column */
+     background-color: #f8f9fa;
+     font-weight: 500;
+     padding: 0.3rem;
+     width: 60px; /* Fixed width for day labels */
+}
+
+
+/* Heatmap Color Classes */
+.simple-heatmap .heat-low {
+    background-color: #c8e6c9; /* Light Green */
+}
+.simple-heatmap .heat-med {
+    background-color: #a5d6a7; /* Medium Green */
+}
+.simple-heatmap .heat-high {
+    background-color: #81c784; /* Darker Green */
+}
+
+/* Heatmap Legend */
+.heatmap-legend {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+.legend-item span {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
 }
