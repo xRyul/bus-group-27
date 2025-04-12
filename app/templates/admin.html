@@ -116,4 +116,18 @@
         </div>
 
     </div>
-    {% endblock %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add JavaScript to handle the animate-fade-in class
+    document.addEventListener('DOMContentLoaded', function() {
+        const fadeElements = document.querySelectorAll('.animate-fade-in');
+        fadeElements.forEach(function(element) {
+            element.style.opacity = '1';
+        });
+    });
+</script>
+{% endblock %}

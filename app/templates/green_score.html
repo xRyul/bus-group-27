@@ -212,12 +212,20 @@
 
 
     </div>
+</div>
 
-    {% endblock %}
+{% endblock %}
 
-    {% block scripts %}
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/score.js') }}"></script>
-
-    {% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/score.js') }}"></script>
+<script>
+    // Add JavaScript to handle the animate-fade-in class
+    document.addEventListener('DOMContentLoaded', function() {
+        const fadeElements = document.querySelectorAll('.animate-fade-in');
+        fadeElements.forEach(function(element) {
+            element.style.opacity = '1';
+        });
+    });
+</script>
+{% endblock %}

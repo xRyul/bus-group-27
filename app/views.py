@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, send_file, send_from_directory, jsonify
 from app import app
+import sqlalchemy as sa
 from app.models.user import User
 from app.forms import ChooseForm, LoginForm, UserSubmission
 from flask_login import current_user, login_user, logout_user, login_required, fresh_login_required
@@ -14,21 +15,57 @@ from app.logic import BuildingEnergyMonitoring
 from app.models.building import Building
 from app.models.building_energy import BuildingEnergy
 
+from app.models.sustainable_activity import SustainableActivity
+from app.models.user_points import UserPoints
+from app.logic import CommunityEngagement
 
 @app.route("/")
 def home():
     return render_template('home.html', title="Home")
 
 @app.route("/green_score", methods=['GET', 'POST'])
+@login_required
 def green_score():
     now = datetime.now()
     last_updated = now.strftime("%H:%M:%S")
-    green_score = 850
+    
+    # Use service layer
+    community_engagement = CommunityEngagement(current_user)
+    
+    # Get actual user points from database
+    user_points = UserPoints.query.filter_by(user_id=current_user.id).first()
+    green_score = user_points.green_score if user_points else 0
+    
     form = UserSubmission()
     if form.validate_on_submit():
+        # Use the service layer to submit the activity
+        activity_type = form.activity_type.data
+        description = form.description.data
+        evidence = form.evidence.data if hasattr(form, 'evidence') else None
+        
+        result, status_code = community_engagement.submit_activity(
+            activity_type=activity_type,
+            description=description,
+            evidence=evidence
+        )
+        
+        if status_code == 201:
+            flash(result["message"], "success")
+        else:
+            flash(result["error"], "danger")
+            
         return redirect(url_for('green_score'))
-    return render_template('green_score.html', title="Green Score", last_updated=last_updated,
-                            green_score=green_score, form=form)
+        
+    # Get recent activities
+    recent_activities = SustainableActivity.query.filter_by(
+        user_id=current_user.id
+    ).order_by(SustainableActivity.timestamp.desc()).limit(5).all()
+    
+    return render_template('green_score.html', title="Green Score", 
+                        last_updated=last_updated,
+                        green_score=green_score, 
+                        recent_activities=recent_activities,
+                        form=form)
 
 @app.route("/admin")
 def admin():
@@ -74,6 +111,31 @@ def edit_role(user_id):
 
     return redirect(url_for("admin"))
 
+@app.route("/verify-activity/<int:activity_id>", methods=["POST"])
+@login_required
+def verify_activity(activity_id):
+    if current_user.role not in ['Admin', 'ST']:
+        flash("You don't have permission to verify activities", "danger")
+        return redirect(url_for('admin'))
+        
+    activity = SustainableActivity.query.get_or_404(activity_id)
+    carbon_saved = float(request.form.get("carbon_saved", 0))
+    
+    activity.status = 'verified'
+    activity.carbon_saved = carbon_saved
+    
+    # Use service to award points
+    user = User.query.get(activity.user_id)
+    community_engagement = CommunityEngagement(user)
+    result, status_code = community_engagement.award_points(activity)
+    
+    if status_code == 200:
+        flash(result["message"], "success")
+    else:
+        flash(result["error"], "danger")
+    
+    db.session.commit()
+    return redirect(url_for('admin'))
 
 @app.route("/building-energy-monitoring")
 @login_required

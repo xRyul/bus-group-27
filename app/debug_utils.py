@@ -16,9 +16,12 @@ def reset_db():
     db.create_all()
     
     create_users()
+
     create_buildings()
     generate_energy_data()
 
+    generate_mock_activities() 
+    generate_user_points()
 
 
 # ------------------- 1 ENERGY MONITORING ---------------------
@@ -172,37 +175,66 @@ def create_model_objects(raw_data, anomaly_lookup, processed_data):
 
 # ------------------- 2 SUSTAINABLE ACTIVITIES ---------------------
 
-# activity_types = {
-#     'cycling':{'name':'Cycled to Campus','points':10,'carbon_saved':2.5},
-#     'public_transport': {'name': 'Used public transport', 'points': 5, 'carbon_saved': 1.2},
-#     'recycling': {'name': 'Recycled materials', 'points': 3, 'carbon_saved': 0.8},
-#     'reusable_container': {'name': 'Used Reusable Container', 'points': 2, 'carbon_saved': 0.3},
-#     'event_participation': {'name': 'Attended Sustainability Event', 'points': 15, 'carbon_saved': 0.5},
-#     'energy_saving': {'name': 'Reported Energy Waste', 'points': 8, 'carbon_saved': 5.0},
-#     'water_saving': {'name': 'Reported Water Waste', 'points': 8, 'carbon_saved': 3.0},
-#     'e-scooter': {'name': 'Used an e-scooter', 'points': 12, 'carbon_saved': 2.0},
-# }
+activity_types = {
+    'cycling':{'name':'Cycled to Campus','points':10,'carbon_saved':2.5},
+    'public_transport': {'name': 'Used public transport', 'points': 5, 'carbon_saved': 1.2},
+    'recycling': {'name': 'Recycled materials', 'points': 3, 'carbon_saved': 0.8},
+    'reusable_container': {'name': 'Used Reusable Container', 'points': 2, 'carbon_saved': 0.3},
+    'event_participation': {'name': 'Attended Sustainability Event', 'points': 15, 'carbon_saved': 0.5},
+    'energy_saving': {'name': 'Reported Energy Waste', 'points': 8, 'carbon_saved': 5.0},
+    'water_saving': {'name': 'Reported Water Waste', 'points': 8, 'carbon_saved': 3.0},
+    'e-scooter': {'name': 'Used an e-scooter', 'points': 12, 'carbon_saved': 2.0},
+}
 
-# def generate_mock_activities(self, user_ids, count=50):
-#     activities = []
-#     activity_type = list(activity_types.keys())
-
-#     for _ in range(count):
-#         user_id = random.choice(user_ids)
-#         activity_type = random.choice(activity_types)
-#         description = f"Mock{activity_types[activity_type]['name']}"
-#         status = random.choice(['pending','verified','rejected'])
-
-#     days_ago = random.randint(0,30)
-#     timestamop = datetime.now() - timedelta(days=days_ago)
-#     activity = SustainableActivity(user_id=user_id, description=description,
-#                                 timestamp=timestamp, status=status)
-#     if status == 'verified':
-#         activity.points_awarded = activity_types[activity_type]['points']
-#         activity.carbon_saved = activity_types[activity_type]['carbon_saved']
-
-#         activities.append(activity)
+def generate_mock_activities(count=50):
+    activities = []
+    activity_keys = list(activity_types.keys())
+    users = User.query.all()
+    user_ids = [user.id for user in users]
+    
+    for _ in range(count):
+        user_id = random.choice(user_ids)
+        activity_key = random.choice(activity_keys)
+        activity_info = activity_types[activity_key]
+        description = f"Mock {activity_info['name']}"
+        status = random.choice(['pending', 'verified', 'rejected'])
         
-#     db.session.add_all(activities)
-#     db.session.commit()
+        days_ago = random.randint(0, 30)
+        timestamp = datetime.now() - timedelta(days=days_ago)
+        
+        activity = SustainableActivity(
+            user_id=user_id, 
+            activity_type=activity_key,
+            description=description,
+            timestamp=timestamp, 
+            status=status
+        )
+        
+        if status == 'verified':
+            activity.points_awarded = activity_info['points']
+            activity.carbon_saved = activity_info['carbon_saved']
+        
+        activities.append(activity)
+        
+    db.session.add_all(activities)
+    db.session.commit()
 
+def generate_user_points():
+    users = User.query.all()
+    for user in users:
+        # Calculate total points and green score for each user
+        activities = SustainableActivity.query.filter_by(
+            user_id=user.id, status='verified').all()
+        
+        total_points = sum(a.points_awarded or 0 for a in activities)
+        green_score = sum(a.carbon_saved or 0 for a in activities)
+        
+        # Create or update user points
+        user_points = UserPoints(
+            user_id=user.id,
+            total_points=total_points,
+            green_score=green_score
+        )
+        db.session.add(user_points)
+    
+    db.session.commit()
