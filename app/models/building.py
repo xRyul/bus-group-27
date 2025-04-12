@@ -1,8 +1,7 @@
-from app import db
-import datetime
+from dataclasses import dataclass
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from dataclasses import dataclass
+from app import db
 
 @dataclass
 class Building(db.Model):

@@ -1,9 +1,11 @@
-from app import db
 import datetime
+from dataclasses import dataclass
+
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from sqlalchemy import ForeignKey
-from dataclasses import dataclass
+
+from app import db
 
 @dataclass
 class BuildingEnergy(db.Model):
@@ -22,3 +24,4 @@ class BuildingEnergy(db.Model):
     
     def __repr__(self):
         return f'BuildingEnergy(id={self.id}, building_id={self.building_id}, timestamp={self.timestamp}, energy_type={self.energy_type}, value={self.consumption_value} {self.unit}, anomaly={self.is_anomaly})'
+    

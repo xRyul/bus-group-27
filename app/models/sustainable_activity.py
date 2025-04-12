@@ -1,9 +1,11 @@
-from app import db
+from dataclasses import dataclass
 import datetime
+
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from sqlalchemy import ForeignKey
-from dataclasses import dataclass
+
+from app import db
 
 @dataclass
 class SustainableActivity(db.Model):

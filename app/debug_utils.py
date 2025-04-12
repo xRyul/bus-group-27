@@ -42,7 +42,7 @@ def reset_db():
     #     'event_participation': {'name': 'Attended Sustainability Event', 'points': 15, 'carbon_saved': 0.5},
     #     'energy_saving': {'name': 'Reported Energy Waste', 'points': 8, 'carbon_saved': 5.0},
     #     'water_saving': {'name': 'Reported Water Waste', 'points': 8, 'carbon_saved': 3.0},
-    #     'e-scooter': {'name': 'Used an e-scooter', 'points': 12, 'carbon_saved': 2.0}
+    #     'e-scooter': {'name': 'Used an e-scooter', 'points': 12, 'carbon_saved': 2.0},
     # }
 
     # def generate_mock_activities(self, user_ids, count=50):

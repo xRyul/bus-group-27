@@ -1,9 +1,9 @@
-from app import db
 import datetime
+from dataclasses import dataclass
+from sqlalchemy import ForeignKey
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from sqlalchemy import ForeignKey
-from dataclasses import dataclass
+from app import db
 
 @dataclass
 class UserPoints(db.Model):

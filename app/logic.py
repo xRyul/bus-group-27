@@ -1,13 +1,13 @@
-import numpy as np
-from app.models.user import User
-from app.models.sustainable_activity import SustainableActivity
-from app.models.user_points import UserPoints
-from app import db
-from datetime import datetime, timedelta
-from app.models.building_energy import BuildingEnergy
-from app.models.building import Building
 import random
 from collections import defaultdict
+from datetime import datetime, timedelta
+import numpy as np
+from app import db
+from app.models.building import Building
+from app.models.building_energy import BuildingEnergy
+from app.models.sustainable_activity import SustainableActivity
+from app.models.user import User
+from app.models.user_points import UserPoints
 
 class SingletonMeta(type):
     _instances = {}
