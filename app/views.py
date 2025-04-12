@@ -10,7 +10,7 @@ import csv
 import io
 from datetime import datetime, time
 from sqlalchemy import func, extract
-from app.logic import BuildingEnergyMonitoring # Keep for potential future use or side effects, though not directly used for data retrieval now
+from app.logic import BuildingEnergyMonitoring
 from app.models.building import Building
 from app.models.building_energy import BuildingEnergy
 
@@ -78,65 +78,82 @@ def edit_role(user_id):
 @app.route("/building-energy-monitoring")
 @login_required
 def building_energy_monitoring():
-    # Get the Building ID for "Computer Science"
-    cs_building = db.session.scalar(sa.select(Building).where(Building.name == "Computer Science"))
-    
-    if not cs_building:
-        flash("Computer Science building data not found.", "error")
-        return render_template('building_energy_monitoring.html', title="Building Energy Monitoring", hourly_data=[], anomalies=[], anomaly_count=0)
+    # Get all buildings from the database
+    buildings = db.session.scalars(sa.select(Building).order_by(Building.name)).all()
+    if not buildings:
+        flash("No buildings found in the database.", "error")
+        # Empty lists/defaults for template rendering
+        return render_template('building_energy_monitoring.html', title="Building Energy Monitoring",
+                               buildings=[], selected_building_id=None,
+                               hourly_data_electric=[], hourly_data_gas=[], hourly_data_water=[],
+                               anomalies=[], anomaly_count=0)
 
-    building_id = cs_building.id
+    # Get the selected building ID
+    selected_building_id = request.args.get('building_id', type=int)
 
-    # Helper function to query average hourly data for a given energy type
-    def get_hourly_average(energy_type):
+    # Default to the first building e.g., Computer Science if it exists and is first alphabetically
+    # if no ID is provided or the ID is invalid
+    valid_building_ids = {b.id for b in buildings}
+    if selected_building_id not in valid_building_ids:
+        cs_building = next((b for b in buildings if b.name == "Computer Science"), None)
+        if cs_building:
+            selected_building_id = cs_building.id
+        else:
+            # Fallback to the first building in the list if CS not found
+            selected_building_id = buildings[0].id
+
+    # Helper: Query average hourly data for a given energy type and building
+    def get_hourly_average(energy_type, building_id):
         avg_data = db.session.query(
             extract('hour', BuildingEnergy.timestamp).label('hour'),
-                func.avg(BuildingEnergy.consumption_value).label('average_consumption')
+            func.avg(BuildingEnergy.consumption_value).label('average_consumption')
             ).filter(
                 BuildingEnergy.building_id == building_id,
-                BuildingEnergy.energy_type == energy_type,
-                BuildingEnergy.is_anomaly.is_(True)
+                BuildingEnergy.energy_type == energy_type
             ).group_by(extract('hour', BuildingEnergy.timestamp)
             ).order_by(extract('hour', BuildingEnergy.timestamp)
             ).all()
-        # Prepare list (ensure all 24 hours are present, default to 0)
+        # Ensure all 24 hours are present, default to 0
         data_dict = {hour: avg for hour, avg in avg_data}
         return [data_dict.get(h, 0) for h in range(24)]
 
-    # Query average hourly consumption for electric, gas, and water
-    hourly_data_electric = get_hourly_average('electric')
-    hourly_data_gas = get_hourly_average('gas')
-    hourly_data_water = get_hourly_average('water')
+    # Query average hourly consumption for electric, gas, and water for the selected building
+    hourly_data_electric = get_hourly_average('electric', selected_building_id)
+    hourly_data_gas = get_hourly_average('gas', selected_building_id)
+    hourly_data_water = get_hourly_average('water', selected_building_id)
 
-    # Query anomalies for electric only
-    # If anomalies for gas/water are needed later, this query can be adjusted
+    # Query anomalies for ALL energy types for the selected building
     anomaly_records = db.session.query(
         BuildingEnergy.timestamp,
-        BuildingEnergy.consumption_value
+        BuildingEnergy.consumption_value,
+        BuildingEnergy.energy_type
     ).filter(
-        BuildingEnergy.building_id == building_id,
-        BuildingEnergy.energy_type == 'electric', 
+        BuildingEnergy.building_id == selected_building_id,
+        BuildingEnergy.energy_type.in_(['electric', 'gas', 'water']),
         BuildingEnergy.is_anomaly.is_(True)
     ).order_by(
-        BuildingEnergy.timestamp
+        BuildingEnergy.timestamp, BuildingEnergy.energy_type
     ).all()
 
-    # Prepare anomalies list in the format expected by the chart
-    anomalies = []
-    for timestamp, value in anomaly_records:
-        # Calculate the index based on the timestamp e.g. hour
-        hour_index = timestamp.hour
-        anomalies.append({"index": hour_index, "value": value})
+    # Prepare anomalies dictionary, keyed by energy type
+    anomalies_by_type = {'electric': [], 'gas': [], 'water': []}
+    for timestamp, value, energy_type in anomaly_records:
+        if energy_type in anomalies_by_type:
+            hour_index = timestamp.hour
+            anomalies_by_type[energy_type].append({"index": hour_index, "value": value}) 
 
-    anomaly_count = len(anomalies)
+    # Calculate total anomaly count across types
+    anomaly_count = sum(len(v) for v in anomalies_by_type.values())
 
     return render_template(
         'building_energy_monitoring.html',
         title="Building Energy Monitoring",
+        buildings=buildings,
+        selected_building_id=selected_building_id,
         hourly_data_electric=hourly_data_electric,
         hourly_data_gas=hourly_data_gas,
         hourly_data_water=hourly_data_water,
-        anomalies=anomalies,
+        anomalies=anomalies_by_type,
         anomaly_count=anomaly_count
     )
 

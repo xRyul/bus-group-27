@@ -65,10 +65,13 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         for (building_id, timestamp, energy_type, value, unit) in self.raw_data:
             if (
                 (timestamp.hour == 8 and timestamp.minute == 0 and energy_type == "electric") or
-                (timestamp.hour == 14 and energy_type == "water") or
-                (timestamp.hour == 20 and energy_type == "gas")
+                (timestamp.hour == 14 and energy_type == "water")
             ):
-                value = round(value + 75.0, 2)
+                # Exaggerate electric/water anomalies by multiplying
+                value = round(value * 2.5, 2) 
+            elif (timestamp.hour == 20 and energy_type == "gas"):
+                 # Exaggerate gas
+                 value = round(value + 5.0, 2) 
             updated.append((building_id, timestamp, energy_type, value, unit))
         self.raw_data = updated
 
@@ -175,7 +178,8 @@ class CommunityEngagement:
         if activity.points_award is not None:
             return {"error": "Points have already been awarded for this activity."}, 400
     
-        points_awarded = self.calculate_points(activity.carbon_saved)
+        # points_awarded = self.calculate_points(activity.carbon_saved) # Pylint Error: 
+        points_awarded = activity.carbon_saved * 10 # Placeholder logic as calculate_points() doesn't exist so i commented it out instead -> Award 10 points per kg CO2 saved
         activity.points_awarded = points_awarded
     
         if hasattr(self.user, 'points'):

@@ -33,10 +33,14 @@
             <div class="col-md-2">
                 <label for="buildingSelector" class="control-label small">Building</label>
                 <select class="form-select form-select-sm" id="buildingSelector">
-                    <option value="all">All Buildings</option>
-                    <option value="computer-science" selected>Computer Science</option>
-                    <option value="library">Library</option>
-                    <option value="student-center">Student Center</option>
+                    {# Dynamically populate buildings from the backend #}
+                    {% for building in buildings %}
+                        <option value="{{ building.id }}" {% if building.id == selected_building_id %}selected{% endif %}>
+                            {{ building.name }}
+                        </option>
+                    {% else %}
+                        <option value="" disabled>No buildings available</option>
+                    {% endfor %}
                 </select>
             </div>
             

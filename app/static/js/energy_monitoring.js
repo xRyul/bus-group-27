@@ -9,13 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let electricData = [];
     let gasData = [];
     let waterData = [];
-    let anomalies = [];
+    let anomaliesByType = {};
     
     try {
         electricData = JSON.parse(chartDataElement.dataset.electric || '[]');
         gasData = JSON.parse(chartDataElement.dataset.gas || '[]');
         waterData = JSON.parse(chartDataElement.dataset.water || '[]');
-        anomalies = JSON.parse(chartDataElement.dataset.anomalies || '[]');
+        anomaliesByType = JSON.parse(chartDataElement.dataset.anomalies || '{}'); 
     } catch (e) {
         console.error('Error parsing chart data:', e);
     }
@@ -28,14 +28,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // Main Chart - Energy Consumption Over Time
         const mainChartEl = document.getElementById('mainChart');
         if (mainChartEl) {
-            const anomalyData = Array(24).fill(null);
-            if (anomalies && anomalies.length > 0) {
-                anomalies.forEach(anomaly => {
-                    if (anomaly && typeof anomaly.index === 'number') {
-                        anomalyData[anomaly.index] = anomaly.value;
-                    }
-                });
-            }
+            // Helper function to prepare anomaly data for a specific type
+            const prepareAnomalyData = (type) => {
+                const data = Array(24).fill(null);
+                if (anomaliesByType && anomaliesByType[type] && anomaliesByType[type].length > 0) {
+                    anomaliesByType[type].forEach(anomaly => {
+                        if (anomaly && typeof anomaly.index === 'number') {
+                            // Plot anomaly point using its actual value from the backend
+                            data[anomaly.index] = anomaly.value; 
+                        }
+                    });
+                }
+                return data;
+            };
+
+            const electricAnomalyData = prepareAnomalyData('electric');
+            const gasAnomalyData = prepareAnomalyData('gas');
+            const waterAnomalyData = prepareAnomalyData('water');
             
             const mainChartCtx = mainChartEl.getContext('2d');
             const mainChart = new Chart(mainChartCtx, {
@@ -81,11 +90,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             pointBackgroundColor: '#00ACC1',
                             pointRadius: 3,
                             pointHoverRadius: 5,
-                            hidden: true
+                            hidden: true // Gas starts hidden
                         },
                         {
-                            label: 'Anomalies',
-                            data: anomalyData,
+                            label: 'Electric Anomalies',
+                            data: electricAnomalyData,
                             borderColor: 'transparent',
                             backgroundColor: 'transparent',
                             pointBackgroundColor: 'red',
@@ -93,7 +102,34 @@ document.addEventListener('DOMContentLoaded', function() {
                             pointRadius: 6,
                             pointHoverRadius: 8,
                             showLine: false,
-                            pointStyle: 'triangle'
+                            pointStyle: 'triangle',
+                            hidden: false
+                        },
+                        {
+                            label: 'Gas Anomalies',
+                            data: gasAnomalyData,
+                            borderColor: 'transparent',
+                            backgroundColor: 'transparent',
+                            pointBackgroundColor: 'red',
+                            pointBorderColor: 'orange',
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            showLine: false,
+                            pointStyle: 'triangle',
+                            hidden: true
+                        },
+                        {
+                            label: 'Water Anomalies',
+                            data: waterAnomalyData,
+                            borderColor: 'transparent',
+                            backgroundColor: 'transparent',
+                            pointBackgroundColor: 'red',
+                            pointBorderColor: 'blue',
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            showLine: false,
+                            pointStyle: 'triangle',
+                            hidden: true
                         }
                     ]
                 },
@@ -124,6 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                     }
                                     if (context.parsed.y !== null) {
                                         label += context.parsed.y.toFixed(1);
+                                    }
+                                    if (context.dataset.label.includes('Anomalies')) {
+                                        label += ' (Anomaly)';
                                     }
                                     return label;
                                 }
@@ -190,17 +229,20 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Connect energy type filters to chart visibility
             document.getElementById('electricity').addEventListener('change', function() {
-                mainChart.data.datasets[0].hidden = !this.checked;
+                mainChart.data.datasets[0].hidden = !this.checked; // Electric line
+                mainChart.data.datasets[3].hidden = !this.checked; // Electric anomalies
                 mainChart.update();
             });
             
             document.getElementById('gas').addEventListener('change', function() {
-                mainChart.data.datasets[1].hidden = !this.checked;
+                mainChart.data.datasets[1].hidden = !this.checked; // Gas line
+                mainChart.data.datasets[4].hidden = !this.checked; // Gas anomalies
                 mainChart.update();
             });
             
             document.getElementById('water').addEventListener('change', function() {
-                mainChart.data.datasets[2].hidden = !this.checked;
+                mainChart.data.datasets[2].hidden = !this.checked; // Water line
+                mainChart.data.datasets[5].hidden = !this.checked; // Water anomalies
                 mainChart.update();
             });
         }
@@ -362,18 +404,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup dashboard controls and event listeners
     function setupDashboardControls() {
-
         const buildingSelector = document.getElementById('buildingSelector');
         if (buildingSelector) {
             buildingSelector.addEventListener('change', function() {
-                
-                document.querySelectorAll('.stat-value').forEach(el => {
-                    el.innerHTML = '<div class="spinner-border spinner-border-sm text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>';
-                });
-                
-                setTimeout(() => {
-                    updateRandomStats();
-                }, 800);
+                const selectedBuildingId = this.value;
+                if (selectedBuildingId) {
+                    // Redirect to the same page with the selected building ID as a query parameter
+                    window.location.href = `${window.location.pathname}?building_id=${selectedBuildingId}`;
+                }
             });
         }
         
