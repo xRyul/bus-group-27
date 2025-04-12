@@ -8,8 +8,11 @@ from app import db
 from urllib.parse import urlsplit
 import csv
 import io
-from datetime import datetime
-from app.logic import BuildingEnergyMonitoring
+from datetime import datetime, time
+from sqlalchemy import func, extract
+from app.logic import BuildingEnergyMonitoring # Keep for potential future use or side effects, though not directly used for data retrieval now
+from app.models.building import Building
+from app.models.building_energy import BuildingEnergy
 
 
 @app.route("/")
@@ -75,33 +78,61 @@ def edit_role(user_id):
 @app.route("/building-energy-monitoring")
 @login_required
 def building_energy_monitoring():
-    # Initialize the BuildingEnergyMonitoring class
-    bem = BuildingEnergyMonitoring()
+    # Get the Building ID for "Computer Science"
+    cs_building = db.session.scalar(sa.select(Building).where(Building.name == "Computer Science"))
     
-    # Get hourly data for the Computer Science building
-    hourly_data = []
-    for hour in range(24):
-        # Get the average value for each hour (excluding anomalies)
-        values = bem.hourly_data["Computer Science"]["electric"][hour]
-        # Filter out anomalies for average calculation
-        filtered_values = [v for v in values if v not in [12, 250, 220]]  # Known anomalies
-        hourly_data.append(sum(filtered_values) / len(filtered_values))
-    
-    # Get anomalies
+    if not cs_building:
+        flash("Computer Science building data not found.", "error")
+        return render_template('building_energy_monitoring.html', title="Building Energy Monitoring", hourly_data=[], anomalies=[], anomaly_count=0)
+
+    building_id = cs_building.id
+
+    # Query average hourly electric consumption, excluding anomalies
+    hourly_avg_data = db.session.query(
+        extract('hour', BuildingEnergy.timestamp).label('hour'),
+        func.avg(BuildingEnergy.consumption_value).label('average_consumption')
+    ).filter(
+        BuildingEnergy.building_id == building_id,
+        BuildingEnergy.energy_type == 'electric',
+        BuildingEnergy.is_anomaly == False  # Exclude anomalies from average
+    ).group_by(
+        extract('hour', BuildingEnergy.timestamp)
+    ).order_by(
+        extract('hour', BuildingEnergy.timestamp)
+    ).all()
+
+    # Prepare hourly_data list (ensure all 24 hours are present, even if no data)
+    hourly_data_dict = {hour: avg for hour, avg in hourly_avg_data}
+    hourly_data = [hourly_data_dict.get(h, 0) for h in range(24)] # Default to 0 if no data for an hour
+
+    # Query anomalies for the specific building and energy type
+    anomaly_records = db.session.query(
+        BuildingEnergy.timestamp,
+        BuildingEnergy.consumption_value
+    ).filter(
+        BuildingEnergy.building_id == building_id,
+        BuildingEnergy.energy_type == 'electric',
+        BuildingEnergy.is_anomaly == True
+    ).order_by(
+        BuildingEnergy.timestamp
+    ).all()
+
+    # Prepare anomalies list in the format expected by the chart
+    # Assuming the chart needs hour index and value
     anomalies = []
-    outlier_dict = bem.detect_per_hour_iqr_anomalies()
-    for day_index, day_outliers in outlier_dict.items():
-        for hour, value in day_outliers.items():
-            anomalies.append({"index": int(hour), "value": value})
-    
-    # Count total anomalies
+    for timestamp, value in anomaly_records:
+        # Calculate the index based on the timestamp (e.g., hour or interval index if needed)
+        # For simplicity, using hour here. Adjust if chart needs a different index.
+        hour_index = timestamp.hour 
+        anomalies.append({"index": hour_index, "value": value})
+
     anomaly_count = len(anomalies)
-    
+
     return render_template(
         'building_energy_monitoring.html', 
         title="Building Energy Monitoring",
-        hourly_data=hourly_data,
-        anomalies=anomalies,
+        hourly_data=hourly_data, # List of 24 average values
+        anomalies=anomalies,     # List of anomaly dicts {index, value}
         anomaly_count=anomaly_count
     )
 
