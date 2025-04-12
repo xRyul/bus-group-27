@@ -546,9 +546,11 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Store data in data attributes -->
-<div id="chartData" 
-     data-hourly='{{ hourly_data|tojson }}' 
-     data-anomalies='{{ anomalies|tojson }}' 
+<div id="chartData"
+     data-electric='{{ hourly_data_electric|tojson }}'
+     data-gas='{{ hourly_data_gas|tojson }}'
+     data-water='{{ hourly_data_water|tojson }}'
+     data-anomalies='{{ anomalies|tojson }}'
      style="display: none;"></div>
 
 <!-- Include dashboard JavaScript -->

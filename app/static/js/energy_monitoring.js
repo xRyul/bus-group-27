@@ -6,16 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Get data from data attributes
     const chartDataElement = document.getElementById('chartData');
-    let hourlyData = [];
+    let electricData = [];
+    let gasData = [];
+    let waterData = [];
     let anomalies = [];
     
     try {
-        hourlyData = JSON.parse(chartDataElement.dataset.hourly || '[]');
+        electricData = JSON.parse(chartDataElement.dataset.electric || '[]');
+        gasData = JSON.parse(chartDataElement.dataset.gas || '[]');
+        waterData = JSON.parse(chartDataElement.dataset.water || '[]');
         anomalies = JSON.parse(chartDataElement.dataset.anomalies || '[]');
     } catch (e) {
         console.error('Error parsing chart data:', e);
-        // Fallback data in case of parsing error
-        hourlyData = [50, 49, 48, 46, 45, 46, 60, 80, 110, 120, 130, 140, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 55, 53];
+        // Fallback data in case of parsing error (less likely now but good practice)
+        electricData = Array(24).fill(50 + Math.random() * 50); 
+        gasData = Array(24).fill(30 + Math.random() * 30);
+        waterData = Array(24).fill(10 + Math.random() * 10);
     }
     
     // Setup event listeners for dashboard controls
@@ -36,9 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // Generate some sample data for gas and water
-            const gasData = hourlyData.map(val => val * 0.6 + Math.random() * 10);
-            const waterData = hourlyData.map(val => val * 0.3 + Math.random() * 5);
+            // Use the data fetched from the backend
+            // const gasData = hourlyData.map(val => val * 0.6 + Math.random() * 10); // REMOVED SIMULATION
+            // const waterData = hourlyData.map(val => val * 0.3 + Math.random() * 5); // REMOVED SIMULATION
             
             const mainChartCtx = mainChartEl.getContext('2d');
             const mainChart = new Chart(mainChartCtx, {
@@ -49,8 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
                              '20:00', '21:00', '22:00', '23:00'],
                     datasets: [
                         {
-                            label: 'Electricity (kWh)',
-                            data: hourlyData,
+                            label: 'Electricity (kWh)', // Assuming kWh, adjust if unit varies
+                            data: electricData,       // Use electricData
                             borderColor: '#4CAF50',
                             backgroundColor: 'rgba(76, 175, 80, 0.1)',
                             borderWidth: 2,
@@ -61,8 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             pointHoverRadius: 5
                         },
                         {
-                            label: 'Gas (kWh equivalent)',
-                            data: gasData,
+                            label: 'Gas (m3)', // Assuming m3 based on simulation logic, adjust if unit varies
+                            data: gasData,     // Use gasData
                             borderColor: '#FFB300',
                             backgroundColor: 'rgba(255, 179, 0, 0.1)',
                             borderWidth: 2,
@@ -74,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             hidden: true
                         },
                         {
-                            label: 'Water (m³)',
-                            data: waterData,
+                            label: 'Water (litres)', // Assuming litres based on simulation logic, adjust if unit varies
+                            data: waterData,     // Use waterData
                             borderColor: '#00ACC1',
                             backgroundColor: 'rgba(0, 172, 193, 0.1)',
                             borderWidth: 2,

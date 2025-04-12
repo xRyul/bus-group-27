@@ -87,31 +87,37 @@ def building_energy_monitoring():
 
     building_id = cs_building.id
 
-    # Query average hourly electric consumption, excluding anomalies
-    hourly_avg_data = db.session.query(
-        extract('hour', BuildingEnergy.timestamp).label('hour'),
-        func.avg(BuildingEnergy.consumption_value).label('average_consumption')
-    ).filter(
-        BuildingEnergy.building_id == building_id,
-        BuildingEnergy.energy_type == 'electric',
-        BuildingEnergy.is_anomaly == False  # Exclude anomalies from average
-    ).group_by(
-        extract('hour', BuildingEnergy.timestamp)
-    ).order_by(
-        extract('hour', BuildingEnergy.timestamp)
-    ).all()
+    # Helper function to query average hourly data for a given energy type
+    def get_hourly_average(energy_type):
+        avg_data = db.session.query(
+            extract('hour', BuildingEnergy.timestamp).label('hour'),
+            func.avg(BuildingEnergy.consumption_value).label('average_consumption')
+        ).filter(
+            BuildingEnergy.building_id == building_id,
+            BuildingEnergy.energy_type == energy_type,
+            BuildingEnergy.is_anomaly == False
+        ).group_by(
+            extract('hour', BuildingEnergy.timestamp)
+        ).order_by(
+            extract('hour', BuildingEnergy.timestamp)
+        ).all()
+        # Prepare list (ensure all 24 hours are present, default to 0)
+        data_dict = {hour: avg for hour, avg in avg_data}
+        return [data_dict.get(h, 0) for h in range(24)]
 
-    # Prepare hourly_data list (ensure all 24 hours are present, even if no data)
-    hourly_data_dict = {hour: avg for hour, avg in hourly_avg_data}
-    hourly_data = [hourly_data_dict.get(h, 0) for h in range(24)] # Default to 0 if no data for an hour
+    # Query average hourly consumption for electric, gas, and water
+    hourly_data_electric = get_hourly_average('electric')
+    hourly_data_gas = get_hourly_average('gas')
+    hourly_data_water = get_hourly_average('water')
 
-    # Query anomalies for the specific building and energy type
+    # Query anomalies for electric only (as per previous logic and JS chart)
+    # If anomalies for gas/water are needed later, this query can be adjusted
     anomaly_records = db.session.query(
         BuildingEnergy.timestamp,
         BuildingEnergy.consumption_value
     ).filter(
         BuildingEnergy.building_id == building_id,
-        BuildingEnergy.energy_type == 'electric',
+        BuildingEnergy.energy_type == 'electric', # Only electric anomalies shown currently
         BuildingEnergy.is_anomaly == True
     ).order_by(
         BuildingEnergy.timestamp
@@ -129,10 +135,12 @@ def building_energy_monitoring():
     anomaly_count = len(anomalies)
 
     return render_template(
-        'building_energy_monitoring.html', 
+        'building_energy_monitoring.html',
         title="Building Energy Monitoring",
-        hourly_data=hourly_data, # List of 24 average values
-        anomalies=anomalies,     # List of anomaly dicts {index, value}
+        hourly_data_electric=hourly_data_electric, # Pass electric data
+        hourly_data_gas=hourly_data_gas,           # Pass gas data
+        hourly_data_water=hourly_data_water,       # Pass water data
+        anomalies=anomalies,                       # List of electric anomaly dicts {index, value}
         anomaly_count=anomaly_count
     )
 
