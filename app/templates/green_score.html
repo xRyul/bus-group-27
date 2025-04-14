@@ -48,56 +48,18 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% for points, user in top_10 %}
                             <tr>
-                                <td>🥇</td>
-                                <td>Tom</td>
-                                <td>980</td>
+                                <td>
+                                    {% if loop.index == 1 %}🥇
+                                    {% elif loop.index == 2 %}🥈
+                                    {% elif loop.index == 3 %}🥉
+                                    {% else %}{{ loop.index }}{% endif %}
+                                </td>
+                                <td>{{ user.username | capitalize }}</td>
+                                <td>{{ points.green_score }}</td>
                             </tr>
-                            <tr>
-                                <td>🥈</td>
-                                <td>Brad</td>
-                                <td>945</td>
-                            </tr>
-                            <tr>
-                                <td>🥉</td>
-                                <td>Steve</td>
-                                <td>910</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Alice</td>
-                                <td>890</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>John</td>
-                                <td>875</td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>Emma</td>
-                                <td>860</td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>Amy</td>
-                                <td>850</td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>Sara</td>
-                                <td>825</td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>Mike</td>
-                                <td>810</td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>Linda</td>
-                                <td>800</td>
-                            </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -106,14 +68,25 @@
         </div>
 
         <div class="col-md-8">
-            <div class="score-card animate-fade-in mb-3">
+            <div class="score-card animate-fade-in">
                 <div class="card-header">
-                    <h5>This Weeks Score Overview</h5>
+                    <h5>Recent Activity</h5>
                 </div>
                 <div class="card-body">
-                    <div class="weekly-container animate-fade-in">
-                        <canvas id="weeklyChart"></canvas>
+                    {% for activity in recent_activities %}
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <div class="activity-name">{{ activity.activity_type }}</div>
+                            <div class="activity-points">+{{ activity.points_awarded }} pts</div>
+                        </div>
+                        <div class="activity-footer">
+                            ♻️ {{ activity.carbon_saved }} kg CO₂ saved
+                        </div>
+                        <div class="activity-status-pill {{ activity.status | lower }}">
+                            {{ activity.status }}
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -128,7 +101,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="row mb-5">
             <div class="col-md-2">

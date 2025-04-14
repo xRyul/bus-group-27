@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% import 'bootstrap_wtf.html' as wtf %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/score.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+<div class="admin-container">
+
+    <div class="admin-header">
+        <div>
+            <h1 class="admin-title">Administration Page</h1>
+            <p class="admin-subtitle">Manage Users and Review User Submissions</p>
+        </div>
+    </div>
+
+    <nav>
+        <div class="sub_nav">
+            <a href="{{ url_for('admin') }}" class="nav-link">Manage Users</a> /
+            <a href="{{ url_for('user_submissions') }}" class="nav-link">Manage User Activity</a>
+        </div>
+    </nav>
+
+    <div class="score-card animate-fade-in mb-3">
+        <div class="card-header">
+            <h5>User Submissions</h5>
+        </div>
+        <div class="card-body">
+            <div class="user-container animate-fade-in">
+                <table class="user-table animate-fade-in">
+                    <thead>
+                    <tr>
+                        <th>Submission Date</th>
+                        <th>Username</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for submission in submissions %}
+                    <tr>
+                        <td>{{ submission.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ submission.user.username | capitalize }}</td>
+                        <td>{{ submission.activity_type }}</td>
+                        <td>
+                            <span class="status-pill">{{ submission.status | capitalize }}</span>
+                        </td>
+                        <td>
+                            <form action="{{ url_for('update_status', submission_id=submission.id, status='verified') }}"
+                                  method="POST" style="display: inline-block;">
+                                <button type="submit" class="approve-button">Approve</button>
+                            </form>
+                            <form action="{{ url_for('update_status', submission_id=submission.id, status='rejected') }}"
+                                  method="POST" style="display: inline-block;">
+                                <button type="submit" class="decline-button">Decline</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -35,6 +35,13 @@ def green_score():
     # Get actual user points from database
     user_points = UserPoints.query.filter_by(user_id=current_user.id).first()
     green_score = user_points.green_score if user_points else 0
+    top_10 = (
+        db.session.query(UserPoints, User)
+        .join(User, UserPoints.user_id == User.id)
+        .order_by(UserPoints.green_score.desc())
+        .limit(10)
+        .all()
+    )
     
     form = UserSubmission()
     if form.validate_on_submit():
@@ -55,15 +62,17 @@ def green_score():
             flash(result["error"], "danger")
             
         return redirect(url_for('green_score'))
-        
-    # Get recent activities
-    recent_activities = SustainableActivity.query.filter_by(
-        user_id=current_user.id
-    ).order_by(SustainableActivity.timestamp.desc()).limit(5).all()
-    
+
+    recent_activities = (SustainableActivity.query
+        .filter(SustainableActivity.user_id == current_user.id)
+        .order_by(SustainableActivity.timestamp.desc())
+        .limit(3)
+        .all())
+
     return render_template('green_score.html', title="Green Score", 
                         last_updated=last_updated,
-                        green_score=green_score, 
+                        green_score=green_score,
+                        top_10 = top_10,
                         recent_activities=recent_activities,
                         form=form)
 
@@ -71,33 +80,23 @@ def green_score():
 def admin():
     users = User.query.all()
 
-    submissions = [
-        {'submission_date': '2025-04-01', 'username': 'amy', 'type': 'Recycling', 'proof': 'image'},
-        {'submission_date': '2025-04-02', 'username': 'tom', 'type': 'Attending Event', 'proof': 'video'},
-        {'submission_date': '2025-04-03', 'username': 'yin', 'type': 'Energy Saving', 'proof': 'image'},
-        {'submission_date': '2025-04-04', 'username': 'tariq', 'type': 'Waste Reporting', 'proof': 'video'},
-        {'submission_date': '2025-04-05', 'username': 'jo', 'type': 'Walking or Biking', 'proof': 'image'},
+    return render_template('admin.html', title="Admin", users=users)
 
-        {'submission_date': '2025-04-06', 'username': 'amy', 'type': 'Water Conservation', 'proof': 'video'},
-        {'submission_date': '2025-04-07', 'username': 'tom', 'type': 'Recycling', 'proof': 'image'},
-        {'submission_date': '2025-04-08', 'username': 'yin', 'type': 'Waste Reporting', 'proof': 'video'},
-        {'submission_date': '2025-04-09', 'username': 'tariq', 'type': 'Energy Saving', 'proof': 'image'},
-        {'submission_date': '2025-04-10', 'username': 'jo', 'type': 'Attending Event', 'proof': 'video'},
+@app.route("/user_submissions")
+def user_submissions():
+    submissions = SustainableActivity.query.filter_by(status='pending').all()
 
-        {'submission_date': '2025-04-11', 'username': 'amy', 'type': 'Walking or Biking', 'proof': 'image'},
-        {'submission_date': '2025-04-12', 'username': 'tom', 'type': 'Water Conservation', 'proof': 'video'},
-        {'submission_date': '2025-04-13', 'username': 'yin', 'type': 'Recycling', 'proof': 'image'},
-        {'submission_date': '2025-04-14', 'username': 'tariq', 'type': 'Attending Event', 'proof': 'video'},
-        {'submission_date': '2025-04-15', 'username': 'jo', 'type': 'Waste Reporting', 'proof': 'image'}
-    ]
-
-    return render_template('admin.html', title="Admin", users=users,submissions=submissions)
+    return render_template('user_submissions.html', title="User Submissions", submissions = submissions)
 
 @app.route("/edit-role/<int:user_id>", methods=["POST"])
 @login_required
 def edit_role(user_id):
     user = User.query.get(user_id)
     new_role = request.form.get("role")
+
+    if current_user.id == user.id and new_role != 'Admin':
+        flash("You cannot demote yourself from the Admin role.", 'error')
+        return redirect(url_for('admin'))
 
     if user.role == 'Admin' and new_role != 'Admin':
         admins = User.query.filter_by(role='Admin').count()
@@ -110,6 +109,20 @@ def edit_role(user_id):
     flash(f"{user.username}'s role updated to {new_role}")
 
     return redirect(url_for("admin"))
+
+
+@app.route('/update_status/<int:submission_id>/<status>', methods=['POST'])
+def update_status(submission_id, status):
+    submission = SustainableActivity.query.get(submission_id)
+    if submission:
+        if status in ['verified', 'rejected']:
+            submission.status = status
+            db.session.commit()
+
+            flash(f"The submission has been updated to {status}.", "success")
+        else:
+            flash("Submission not found.", "danger")
+    return redirect(url_for('user_submissions'))
 
 @app.route("/verify-activity/<int:activity_id>", methods=["POST"])
 @login_required

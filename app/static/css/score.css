@@ -218,3 +218,70 @@ textarea.form-control {
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
 }
+
+.activity-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100px;
+  position: relative;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.activity-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.activity-points {
+  font-size: 14px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.activity-footer {
+  font-size: 12px;
+  color: #666;
+  text-align: right;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+}
+
+.activity-status-pill {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    font-size: 10px;
+    color: #fff;
+    border-radius: 20px;
+    text-transform: capitalize
+}
+
+.activity-status-pill.verified {
+    background-color: green;
+}
+
+.activity-status-pill.pending {
+    background-color: gold;
+    color: #333;
+}
+
+.activity-status-pill.rejected {
+    background-color: red;
+}

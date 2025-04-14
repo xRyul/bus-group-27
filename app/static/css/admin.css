@@ -164,11 +164,18 @@
 .pill-dropdown {
     padding: 6px 12px;
     border-radius: 20px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
+    border: none;
+    background-color: #007BFF;
+    color: white;
     font-size: 14px;
+    text-align: center;
     appearance: none;
-    text-align:center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pill-dropdown:hover {
+    background-color: #0056b3;
 }
 
 .edit-button {
@@ -198,3 +205,25 @@
     animation-fill-mode: forwards;
 }
 
+.sub_nav {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sub_nav a {
+    color: blue;
+    text-decoration: none;
+}
+
+.sub_nav a:hover {
+    text-decoration: underline;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 50px;
+    background-color: gold;
+    color: black;
+}

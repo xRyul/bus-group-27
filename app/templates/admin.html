@@ -16,15 +16,19 @@
         </div>
     </div>
 
+    <nav>
+        <div class="sub_nav">
+            <a href="{{ url_for('admin') }}" class="nav-link">Manage Users</a> /
+            <a href="{{ url_for('user_submissions') }}" class="nav-link">Manage User Activity</a>
+        </div>
+    </nav>
+
+
     <div class="score-card animate-fade-in mb-3">
         <div class="card-header">
-            <h5>User Table</h5>
+            <h5>Users</h5>
         </div>
         <div class="card-body">
-            <div class="user-container">
-                <span class="user-sub">Manage User Roles</span>
-            </div>
-
             <div class="user-container animate-fade-in">
                 <table class="user-table animate-fade-in">
                     <thead>
@@ -53,61 +57,19 @@
                         {% if current_user.role == 'Admin' %}
                         <td colspan="2">
                             <form action="{{ url_for('edit_role', user_id=user.id) }}" method="POST" class="role-form">
-                                <select name="role" class="pill-dropdown">
-                                    <option value="Admin" {% if user.role == 'Admin' %}selected{% endif %}>Admin</option>
-                                    <option value="Student" {% if user.role == 'Student' %}selected{% endif %}>Student</option>
-                                    <option value="Staff" {% if user.role == 'Staff' %}selected{% endif %}>Staff</option>
-                                    <option value="Facilities" {% if user.role == 'Facilities' %}selected{% endif %}>Facilities</option>
-                                    <option value="ST" {% if user.role == 'ST' %}selected{% endif %}>ST</option>
-                                    <option value="UL" {% if user.role == 'UL' %}selected{% endif %}>UL</option>
+                                <select name="role" class="pill-dropdown" onchange="this.form.submit()">
+                                    <option value="Admin" {% if user.role=='Admin' %}selected{% endif %}>Admin</option>
+                                    <option value="Student" {% if user.role=='Student' %}selected{% endif %}>Student</option>
+                                    <option value="Staff" {% if user.role=='Staff' %}selected{% endif %}>Staff</option>
+                                    <option value="Facilities" {% if user.role=='Facilities' %}selected{% endif %}>Facilities</option>
+                                    <option value="ST" {% if user.role=='ST' %}selected{% endif %}>ST</option>
+                                    <option value="UL" {% if user.role=='UL' %}selected{% endif %}>UL</option>
                                 </select>
-                                <button type="submit" class="edit-button">Edit</button>
                             </form>
                         </td>
                         {% else %}
                         <td colspan="2"><span class="muted">N/A</span></td>
                         {% endif %}
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="score-card animate-fade-in mb-3">
-        <div class="card-header">
-            <h5>User Submissions Table</h5>
-        </div>
-        <div class="card-body">
-            <div class="user-container">
-                <span class="user-sub">Manage User Submissions</span>
-            </div>
-
-            <div class="user-container animate-fade-in">
-                <table class="user-table animate-fade-in">
-                    <thead>
-                    <tr>
-                        <th>Submission Date</th>
-                        <th>Username</th>
-                        <th>Type</th>
-                        <th>Proof</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for submission in submissions %}
-                    <tr>
-                        <td>{{ submission.submission_date }}</td>
-                        <td>{{ submission.username | capitalize }}</td>
-                        <td>{{ submission.type }}</td>
-                        <td>{{ submission.proof | capitalize }}</td>
-                        <td>
-                            <button class="approve-button">Approve</button>
-                            <button class="decline-button">Decline</button>
-                        </td>
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -117,7 +79,4 @@
 
     </div>
 </div>
-
 {% endblock %}
-
-

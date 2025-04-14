@@ -1,6 +1,6 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, HiddenField, StringField, PasswordField, BooleanField, SelectField
+from wtforms import SubmitField, HiddenField, StringField, PasswordField, BooleanField, SelectField, FileField
 from wtforms.fields.numeric import IntegerField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, EqualTo, NumberRange, ValidationError, Email, Optional, Length
@@ -18,8 +18,20 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
+
+activity_choices = [
+    'Cycled to Campus',
+    'Used public transport',
+    'Recycled materials',
+    'Used Reusable Container',
+    'Attended Sustainability Event',
+    'Reported Energy Waste',
+    'Reported Water Waste',
+    'Used an e-scooter'
+]
+
 class UserSubmission(FlaskForm):
-    name = StringField('Activity Name', validators=[DataRequired()])
-    type = StringField('Activity Type', validators=[DataRequired()])
+    activity_type = SelectField('Activity Type', choices=activity_choices, validators=[DataRequired()])
     description = TextAreaField('Description')
+    evidence = FileField('Upload Evidence')
     upload = SubmitField('Upload')
