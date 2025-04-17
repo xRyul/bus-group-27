@@ -203,3 +203,73 @@ class CommunityEngagement:
             "message": f"Awarded {points_awarded} points for {activity.activity_type}",
             "total_points": self.user.points.total_points,
         }, 200
+
+    # New methods for admin/user operations
+
+    def get_user_points(self, user_id=None):
+        """Get point information for a user"""
+        user_id = user_id or self.user.id
+        user_points = UserPoints.query.filter_by(user_id=user_id).first()
+        return user_points.green_score if user_points else 0
+
+    def get_top_users(self, limit=10):
+        """Get top users by green score"""
+        return (
+            db.session.query(UserPoints, User)
+            .join(User, UserPoints.user_id == User.id)
+            .order_by(UserPoints.green_score.desc())
+            .limit(limit)
+            .all()
+        )
+
+    def get_recent_activities(self, user_id=None, limit=3):
+        """Get recent activities for a user"""
+        user_id = user_id or self.user.id
+        return (
+            SustainableActivity.query.filter(SustainableActivity.user_id == user_id)
+            .order_by(SustainableActivity.timestamp.desc())
+            .limit(limit)
+            .all()
+        )
+
+    @staticmethod
+    def get_pending_submissions():
+        """Get all pending activity submissions"""
+        return SustainableActivity.query.filter_by(status="pending").all()
+
+    @staticmethod
+    def update_activity_status(activity_id, status):
+        """Update status of a sustainable activity"""
+        if status not in ["verified", "rejected"]:
+            return {"error": "Invalid status value"}, 400
+
+        activity = SustainableActivity.query.get(activity_id)
+        if not activity:
+            return {"error": "Activity not found"}, 404
+
+        activity.status = status
+        db.session.commit()
+        return {"message": f"Activity status updated to {status}"}, 200
+
+    @staticmethod
+    def update_user_role(user_id, new_role, current_user_id=None):
+        """Update a user's role with validation"""
+        user = User.query.get(user_id)
+        if not user:
+            return {"error": "User not found"}, 404
+
+        # Prevent self-demotion from Admin
+        if current_user_id == user.id and new_role != "Admin" and user.role == "Admin":
+            return {"error": "You cannot demote yourself from the Admin role"}, 400
+
+        # Ensure at least one admin exists
+        if user.role == "Admin" and new_role != "Admin":
+            admins = User.query.filter_by(role="Admin").count()
+            if admins <= 1:
+                return {
+                    "error": "There must be at least one user with the Admin role"
+                }, 400
+
+        user.role = new_role
+        db.session.commit()
+        return {"message": f"User role updated to {new_role}"}, 200
