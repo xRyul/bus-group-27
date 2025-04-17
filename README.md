@@ -4,12 +4,15 @@
 
 
 ## Assignment 2 Requirements: 
-* **THREE** core features.
+* **THREE** core features.
   * Building Energy Monitoring (FR2), Community Engagement (FR5, FR6)
-* **ONE** design pattern.
-  * Singleton
-* **TWO** class relationships (Association, Inheritance, etc.).  
-* **ONE positive** & **ONE negative** test case per feature.  
+* **ONE** design pattern.
+  * Singleton implemented in `BuildingEnergyMonitoring` class to ensure a single instance manages energy data across the application
+    * Aligns with Building-Energy one-to-many association by providing centralized control over energy data
+  * Note: `CommunityEngagement` intentionally does not use Singleton as it needs multiple instances (one per user) to handle user-specific activities
+    * Aligns with User-Activity one-to-many association and User-Points one-to-one aggregation
+* **TWO** class relationships (Association, Inheritance, etc.).  
+* **ONE positive** & **ONE negative** test case per feature.  
 * Use Git for version control (mandatory, log needed).  
 * Simulate external systems (mocking/hard-coding).  
 
@@ -23,7 +26,7 @@ Originally posted by Wendy on [TEAMS](https://teams.microsoft.com/l/message/19:c
 1.  **Do I have to implement the entire system described in Assignment 1?**
     No. You only need to implement a working prototype of the most critical three features of your design to demonstrate feasibility.
 
-2.  **What are considered “critical features”?**
+2.  **What are considered "critical features"?**
     These are the core functionalities your system can't work without, those that form the backbone of your application and were emphasised in your design.
 
 3.  **Can I change my original design from Assignment 1?**
@@ -90,12 +93,15 @@ https://canvas.bham.ac.uk/courses/78939/assignments/512861
 		- Building can have multiple energy readings. Each BuildingEnergy reading belongs to exactly one Building.
 		- `Building.energy_readings` references all associated energy readings.
 		- `BuildingEnergy.building` references the parent building.
+		- Managed by Singleton `BuildingEnergyMonitoring` class for centralized control
 	- **One-to-many** between Users and SustainableActivities:
 		- User can have multiple sustainable activities. Each SustainableActivity belongs to exactly one User
 		- `User.activities` references all associated activities
 		- `SustainableActivity.user` references the parent user
+		- Managed by multiple `CommunityEngagement` instances (one per user)
 - **Aggregation**:
 	- **One-to-one** between Users and UserPoints:
 		- User can have one associated UserPoints record. Each UserPoints record belongs to exactly one User.
 		- `User.points` references the associated UserPoints record.
 		- `UserPoints.user` references the parent user.
+		- Managed by user-specific `CommunityEngagement` instances
