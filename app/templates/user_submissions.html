@@ -44,7 +44,7 @@
                     <tr>
                         <td>{{ submission.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                         <td>{{ submission.user.username | capitalize }}</td>
-                        <td>{{ submission.activity_type }}</td>
+                        <td>{{ submission.display_name }}</td>
                         <td>
                             <span class="status-pill">{{ submission.status | capitalize }}</span>
                         </td>

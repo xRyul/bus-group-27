@@ -76,7 +76,7 @@
                     {% for activity in recent_activities %}
                     <div class="activity-card">
                         <div class="activity-header">
-                            <div class="activity-name">{{ activity.activity_type }}</div>
+                            <div class="activity-name">{{ activity.display_name }}</div>
                             <div class="activity-points">+{{ activity.points_awarded }} pts</div>
                         </div>
                         <div class="activity-footer">

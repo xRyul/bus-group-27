@@ -110,6 +110,24 @@ class CommunityEngagement:
     def __init__(self, user: User):
         self.user = user
 
+    def add_display_names_to_activities(self, activities, activity_types_dict):
+        # Handle both single activity and list of activities
+        if not isinstance(activities, list):
+            activities = [activities]
+
+        for activity in activities:
+            # Convert internal db code to display name if it exists in the dictionary
+            if activity.activity_type in activity_types_dict:
+                activity.display_name = activity_types_dict[activity.activity_type][
+                    "name"
+                ]
+            else:
+                # Keep original value if not found in dictionary
+                # Example: "cycling" -> "Cycled to Campus", but "unknown_activity" stays as "unknown_activity"
+                activity.display_name = activity.activity_type
+
+        return activities
+
     def log_activity(self, activity: SustainableActivity):
         if not self.user or not activity:
             return {"error": "Invalid user or activity"}, 400

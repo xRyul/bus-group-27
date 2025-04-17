@@ -23,6 +23,7 @@ from flask_login import (
 )
 
 from app import app, db
+from app.debug_utils import activity_types
 from app.forms import ChooseForm, LoginForm, UserSubmission
 from app.logic import BuildingEnergyMonitoring, CommunityEngagement
 from app.models.building import Building
@@ -82,6 +83,11 @@ def green_score():
         .all()
     )
 
+    # Convert activity codes to display names
+    community_engagement.add_display_names_to_activities(
+        recent_activities, activity_types
+    )
+
     return render_template(
         "green_score.html",
         title="Green Score",
@@ -103,6 +109,11 @@ def admin():
 @app.route("/user_submissions")
 def user_submissions():
     submissions = SustainableActivity.query.filter_by(status="pending").all()
+
+    # Convert activity codes to display names
+    # Create a community engagement service instance (user can be None for this operation)
+    community_engagement = CommunityEngagement(None)
+    community_engagement.add_display_names_to_activities(submissions, activity_types)
 
     return render_template(
         "user_submissions.html", title="User Submissions", submissions=submissions
@@ -162,6 +173,10 @@ def verify_activity(activity_id):
     # Use service to award points
     user = User.query.get(activity.user_id)
     community_engagement = CommunityEngagement(user)
+
+    # Add display name to activity (for logging/flash messages if needed)
+    community_engagement.add_display_names_to_activities(activity, activity_types)
+
     result, status_code = community_engagement.award_points(activity)
 
     if status_code == 200:

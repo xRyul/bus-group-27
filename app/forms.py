@@ -24,6 +24,7 @@ from wtforms.validators import (
 )
 
 from app import db
+from app.debug_utils import activity_types
 from app.models.user import User
 
 
@@ -38,16 +39,8 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Sign In")
 
 
-activity_choices = [
-    "Cycled to Campus",
-    "Used public transport",
-    "Recycled materials",
-    "Used Reusable Container",
-    "Attended Sustainability Event",
-    "Reported Energy Waste",
-    "Reported Water Waste",
-    "Used an e-scooter",
-]
+# Convert activity_types dictionary defined in debug_utils.py to a list of tuples for the form
+activity_choices = [(code, info["name"]) for code, info in activity_types.items()]
 
 
 class UserSubmission(FlaskForm):
