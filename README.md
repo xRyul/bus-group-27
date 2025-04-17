@@ -2,22 +2,74 @@
 
 <img width="1062" alt="image" src="https://github.com/user-attachments/assets/f7bbd2db-f173-446a-9723-d47d64429664" />
 
+## System Description
+GreenCampus is an integrated digital platform that helps universities track, manage, and reduce their environmental impact while engaging the campus community in sustainability efforts. The system bridges the gap between institutional sustainability reporting and community engagement by combining building energy monitoring with user-submitted sustainable activities and incentives. This prototype demonstrates the feasibility of three core features: Building Energy Monitoring Dashboard (FR2), Sustainable Activity Submission (FR5), and Point/GreenScore Awarding (FR6).
 
-## Assignment 2 Requirements: 
-* **THREE** core features.
-  * Building Energy Monitoring (FR2), Community Engagement (FR5, FR6)
-* **ONE** design pattern.
-  * Singleton implemented in `BuildingEnergyMonitoring` class to ensure a single instance manages energy data across the application
-    * Aligns with Building-Energy one-to-many association by providing centralized control over energy data
-  * Note: `CommunityEngagement` intentionally does not use Singleton as it needs multiple instances (one per user) to handle user-specific activities
-    * Aligns with User-Activity one-to-many association and User-Points one-to-one aggregation
-* **TWO** class relationships (Association, Inheritance, etc.).  
-* **ONE positive** & **ONE negative** test case per feature.  
-* Use Git for version control (mandatory, log needed).  
-* Simulate external systems (mocking/hard-coding).  
+## How to run
+
+...
+
+## Technologies Used
+- **Backend**: Python 3.11, Flask (Web Framework), SQLAlchemy (ORM)
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap 5, Chart.js/Plotly
+- **Database**: SQLite, SQLAlchemy ORM
+- **Testing**: Pytest
+- **Version Control**: Git
+
+## Implemented Features
+1. **Building Energy Monitoring Dashboard (FR2)**
+   - Displays building energy consumption data with visualizations
+   - Identifies and displays anomalies in energy usage patterns
+   - Shows historical data and trends
+
+2. **Sustainable Activity Submission & Verification (FR5)**
+   - Allows users to submit sustainable activities
+   - Provides an interface for admin verification
+   - Manages activity status (pending, verified, rejected)
+
+3. **Point/GreenScore Awarding for Activities (FR6)**
+   - Awards points to users based on verified activities
+   - Calculates carbon impact (GreenScore)
+   - Displays user rankings and leaderboards
+
+
+## Contribution Table based on commit history
+| Contributor | Percentage | Work Completed |
+|-------------|------------|----------------|
+| Daniel Alesko (xRyul) | 60% | - System architecture design (MVCS)<br>- Building Energy Monitoring Dashboard (FR2) implementation<br>- Frontend development (HTML, CSS, JS)<br>- Data visualization and anomaly detection<br>- Refactoring for architecture compliance<br>- Project setup and configuration |
+| Charles Ottey (Yztto) | 20% | - Green Score UI implementation<br>- Admin interface and user management<br>- User Submission functionality<br>- Activity tracking and leaderboard<br>- Form handling and validation |
+| Jessiah Buamah | 10% | - Community Engagement logic (FR5, FR6)<br>- Activity submission and verification<br>- Points calculation logic<br>- Data model design for sustainable activities |
+| Jamie Chappell | 10% | - Building Energy Monitoring logic<br>- Anomaly detection algorithm<br>- Service layer architecture<br>- Controller design |
+
+
+
+# ALL BELOW IS NOT PART OF SUBMISSION: DELETE
+
+<details><summary><b>Assignment 2 Requirements:</b></summary>
+
+- **THREE** core features.
+- **ONE** design pattern.
+- **TWO** class relationships (Association, Inheritance, etc.).  
+- **ONE positive** & **ONE negative** test case per feature.  
+- Use Git for version control (mandatory, log needed).  
+- Simulate external systems (mocking/hard-coding).  
+
+**Submission Deliverables:**
+-   **Source Code:** Well-organized, commented.
+-   **README.md:**
+    -   Brief system description & purpose (max 200 words).
+    -   Step-by-step run instructions.
+    -   List of languages, frameworks, tools used.
+    -   Summary of implemented functionalities.
+    -   Contribution table (percentage, specific work, signed).
+-   **Git Log:** Exported log (`git log > gitlog.txt`).
+-   **Demo Video:** Max 4 mins (AVI, MP4, MOV). Explain implementation, show key aspects satisfaction, discuss methodology/design principles/architecture.
+
+</details>
+
 
 <details>
-<summary><h2>  FAQ</h2></summary>
+<summary><b>FAQ by Wendy</b></summary>
 
 Originally posted by Wendy on [TEAMS](https://teams.microsoft.com/l/message/19:c7e55754082d45c794c3479aa0668614@thread.tacv2/1743249969522?tenantId=b024cacf-dede-4241-a15c-3c97d553e9f3&groupId=57e159d8-1648-4d26-a608-848d07a94a88&parentMessageId=1743249969522&teamName=BUS%202024%20Support%20Students%20-%20Teaching&channelName=Assignment%20-Part2%20Queries&createdTime=1743249969522)
 
@@ -82,10 +134,25 @@ https://canvas.bham.ac.uk/courses/78939/assignments/512861
 
 </details>
 
-## Dependencies:
-- Frontend: Bootstrap + Charts.js/ Plotly
-- Backend: Python + Flask
-- Database: SQL + SQLAlchemy ORM
+
+<details>
+<summary><b>Architecture</b></summary>
+
+MVC Architecture with Service Layer (MVCS)
+- **Model** (app/models/): Data structures using SQLAlchemy ORM, entity relationships and defines database schema
+- **View** (app/templates/): HTML templates with Jinja2, presents data to users and handles UI
+- **Controller** (app/views.py): Flask routes that handle HTTP requests, coordination between components, manages form submission and validation, renders templates with appropriate data
+- **Service** (app/logic.py): Contains the actual logic for operaitions for BuildingEnergyMonitoring and CommunityEngagement; Processes data transformations. 
+</details>
+
+<details>
+<summary><b>Design Patterns and Relationships</b></summary>
+
+### Design Pattern
+- **Singleton** implemented in `BuildingEnergyMonitoring` class to ensure a single instance manages energy data across the application
+  - Aligns with Building-Energy one-to-many association by providing centralized control over energy data
+- Note: `CommunityEngagement` intentionally does not use Singleton as it needs multiple instances (one per user) to handle user-specific activities
+  - Aligns with User-Activity one-to-many association and User-Points one-to-one aggregation
 
 ### Relationship types:
 - **Association:** Defined the following bidirectional relationships using `ForeignKey` and `relationship()` with `back_populates`:
@@ -105,3 +172,4 @@ https://canvas.bham.ac.uk/courses/78939/assignments/512861
 		- `User.points` references the associated UserPoints record.
 		- `UserPoints.user` references the parent user.
 		- Managed by user-specific `CommunityEngagement` instances
+</details>
