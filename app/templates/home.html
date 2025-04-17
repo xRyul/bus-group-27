@@ -60,7 +60,7 @@
 
 <!-- Getting Started Section -->
 <div class="row mb-5">
-    <div class="col-md-6">
+    <div class="{% if not current_user.is_authenticated %}col-md-6{% else %}col-md-12{% endif %}">
         <div class="modern-card">
             <div class="card-header">
                 <h5><i class="bi bi-info-circle"></i> About GreenCampus</h5>
@@ -101,7 +101,8 @@
             </div>
         </div>
     </div>
-    
+
+    {% if not current_user.is_authenticated %}
     <div class="col-md-6">
         <div class="modern-card">
             <div class="card-header">
@@ -117,6 +118,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 
 <!-- GreenScore Section -->
