@@ -166,7 +166,7 @@ class CommunityEngagement:
                 user_id=self.user.id,
                 activity_type=activity_type,
                 description=description,
-                evidence=evidence,
+                evidence=evidence or "",
                 status="pending",
             )
             db.session.add(activity)
