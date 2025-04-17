@@ -44,8 +44,8 @@ def green_score():
     now = datetime.now()
     last_updated = now.strftime("%H:%M:%S")
 
-    # Use service layer
-    community_engagement = CommunityEngagement(current_user)
+    # Use service layer - convert current_user to User type for type checking
+    community_engagement = CommunityEngagement(User.query.get(current_user.id))
 
     # Get user points and top 10 users using service layer
     green_score = community_engagement.get_user_points()
@@ -56,7 +56,13 @@ def green_score():
         # Use the service layer to submit the activity
         activity_type = form.activity_type.data
         description = form.description.data
-        evidence = form.evidence.data if hasattr(form, "evidence") else None
+
+        # Handle evidence - convert None to empty string to satisfy type requirements
+        evidence = (
+            form.evidence.data
+            if hasattr(form, "evidence") and form.evidence.data
+            else ""
+        )
 
         result, status_code = community_engagement.submit_activity(
             activity_type=activity_type, description=description, evidence=evidence
@@ -161,19 +167,23 @@ def verify_activity(activity_id):
 
     # Use service to award points
     user = User.query.get(activity.user_id)
-    community_engagement = CommunityEngagement(user)
+    if user:
+        community_engagement = CommunityEngagement(user)
 
-    # Add display name to activity (for logging/flash messages if needed)
-    community_engagement.add_display_names_to_activities(activity, activity_types)
+        # Add display name to activity (for logging/flash messages if needed)
+        community_engagement.add_display_names_to_activities(activity, activity_types)
 
-    result, status_code = community_engagement.award_points(activity)
+        result, status_code = community_engagement.award_points(activity)
 
-    if status_code == 200:
-        flash(result["message"], "success")
+        if status_code == 200:
+            flash(result["message"], "success")
+        else:
+            flash(result["error"], "danger")
+
+        db.session.commit()
     else:
-        flash(result["error"], "danger")
+        flash("User not found", "danger")
 
-    db.session.commit()
     return redirect(url_for("admin"))
 
 

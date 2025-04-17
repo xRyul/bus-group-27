@@ -1,3 +1,5 @@
+from typing import Optional
+
 import sqlalchemy as sa
 from sqlalchemy import extract, func
 
@@ -107,7 +109,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
 class CommunityEngagement:
     ### FR5 Logic ###
-    def __init__(self, user: User):
+    def __init__(self, user: Optional[User] = None):
         self.user = user
 
     def add_display_names_to_activities(self, activities, activity_types_dict):
@@ -144,14 +146,21 @@ class CommunityEngagement:
         self._update_user_points(activity)
         db.session.commit()
 
+        total_points = 0
+        if self.user and hasattr(self.user, "points") and self.user.points:
+            total_points = self.user.points.total_points
+
         return {
             "message": f"Activity logged. {activity.points_awarded} points awarded.",
-            "total_points": self.user.points.total_points,
+            "total_points": total_points,
         }, 200
 
     def submit_activity(
-        self, activity_type: str, description: str = "", evidence: str = None
+        self, activity_type: str, description: str = "", evidence: Optional[str] = None
     ):
+        if not self.user:
+            return {"error": "User not authenticated"}, 401
+
         try:
             activity = SustainableActivity(
                 user_id=self.user.id,
@@ -167,6 +176,9 @@ class CommunityEngagement:
             return {"error": str(e)}, 400
 
     def _update_user_points(self, activity: SustainableActivity):
+        if not self.user:
+            return
+
         if hasattr(self.user, "points") and self.user.points:
             self.user.points.total_points += activity.points_awarded
             self.user.points.green_score += activity.carbon_saved
@@ -180,35 +192,48 @@ class CommunityEngagement:
 
     # FR6 logic
     def award_points(self, activity: SustainableActivity):
+        if not self.user:
+            return {"error": "Invalid user"}, 400
+
         if activity.points_awarded is not None:
             return {"error": "Points have already been awarded for this activity."}, 400
 
-        # Award 10 points per kg CO2 saved
-        points_awarded = activity.carbon_saved * 10
+        # Award 10 points per kg CO2 saved (ensure int conversion)
+        points_awarded = int(activity.carbon_saved * 10)
         activity.points_awarded = points_awarded
 
-        if hasattr(self.user, "points"):
+        total_points = 0
+        if hasattr(self.user, "points") and self.user.points:
             self.user.points.total_points += points_awarded
             self.user.points.green_score += activity.carbon_saved
+            total_points = self.user.points.total_points
         else:
-            self.user.points = UserPoints(
+            new_points = UserPoints(
                 total_points=points_awarded,
                 green_score=activity.carbon_saved,
                 user_id=self.user.id,
             )
-            db.session.add(self.user.points)
+            self.user.points = new_points
+            db.session.add(new_points)
             db.session.commit()
+            total_points = points_awarded
 
         return {
             "message": f"Awarded {points_awarded} points for {activity.activity_type}",
-            "total_points": self.user.points.total_points,
+            "total_points": total_points,
         }, 200
 
     # New methods for admin/user operations
 
     def get_user_points(self, user_id=None):
         """Get point information for a user"""
-        user_id = user_id or self.user.id
+        if not self.user and not user_id:
+            return 0
+
+        user_id = user_id or (self.user.id if self.user else None)
+        if not user_id:
+            return 0
+
         user_points = UserPoints.query.filter_by(user_id=user_id).first()
         return user_points.green_score if user_points else 0
 
@@ -224,7 +249,13 @@ class CommunityEngagement:
 
     def get_recent_activities(self, user_id=None, limit=3):
         """Get recent activities for a user"""
-        user_id = user_id or self.user.id
+        if not self.user and user_id is None:
+            return []
+
+        user_id = user_id or (self.user.id if self.user else None)
+        if user_id is None:
+            return []
+
         return (
             SustainableActivity.query.filter(SustainableActivity.user_id == user_id)
             .order_by(SustainableActivity.timestamp.desc())
