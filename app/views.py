@@ -47,16 +47,9 @@ def green_score():
     # Use service layer
     community_engagement = CommunityEngagement(current_user)
 
-    # Get actual user points from database
-    user_points = UserPoints.query.filter_by(user_id=current_user.id).first()
-    green_score = user_points.green_score if user_points else 0
-    top_10 = (
-        db.session.query(UserPoints, User)
-        .join(User, UserPoints.user_id == User.id)
-        .order_by(UserPoints.green_score.desc())
-        .limit(10)
-        .all()
-    )
+    # Get user points and top 10 users using service layer
+    green_score = community_engagement.get_user_points()
+    top_10 = community_engagement.get_top_users(10)
 
     form = UserSubmission()
     if form.validate_on_submit():
@@ -76,12 +69,8 @@ def green_score():
 
         return redirect(url_for("green_score"))
 
-    recent_activities = (
-        SustainableActivity.query.filter(SustainableActivity.user_id == current_user.id)
-        .order_by(SustainableActivity.timestamp.desc())
-        .limit(3)
-        .all()
-    )
+    # Get recent activities using service layer
+    recent_activities = community_engagement.get_recent_activities(limit=3)
 
     # Convert activity codes to display names
     community_engagement.add_display_names_to_activities(
@@ -108,11 +97,11 @@ def admin():
 
 @app.route("/user_submissions")
 def user_submissions():
-    submissions = SustainableActivity.query.filter_by(status="pending").all()
+    # Use service layer to get pending submissions
+    community_engagement = CommunityEngagement()
+    submissions = community_engagement.get_pending_submissions()
 
     # Convert activity codes to display names
-    # Create a community engagement service instance (user can be None for this operation)
-    community_engagement = CommunityEngagement(None)
     community_engagement.add_display_names_to_activities(submissions, activity_types)
 
     return render_template(
@@ -123,37 +112,37 @@ def user_submissions():
 @app.route("/edit-role/<int:user_id>", methods=["POST"])
 @login_required
 def edit_role(user_id):
-    user = User.query.get(user_id)
     new_role = request.form.get("role")
 
-    if current_user.id == user.id and new_role != "Admin":
-        flash("You cannot demote yourself from the Admin role.", "error")
-        return redirect(url_for("admin"))
+    # Use service layer to update user role
+    community_engagement = CommunityEngagement()
+    result, status_code = community_engagement.update_user_role(
+        user_id, new_role, current_user.id
+    )
 
-    if user.role == "Admin" and new_role != "Admin":
-        admins = User.query.filter_by(role="Admin").count()
-        if admins <= 1:
-            flash("There must be at least one user with the Admin role.", "error")
-            return redirect(url_for("admin"))
-
-    user.role = new_role
-    db.session.commit()
-    flash(f"{user.username}'s role updated to {new_role}")
+    if status_code == 200:
+        user = User.query.get(user_id)
+        username = user.username if user else f"User {user_id}"
+        flash(f"{username}'s role updated to {new_role}")
+    else:
+        flash(result["error"], "error")
 
     return redirect(url_for("admin"))
 
 
 @app.route("/update_status/<int:submission_id>/<status>", methods=["POST"])
 def update_status(submission_id, status):
-    submission = SustainableActivity.query.get(submission_id)
-    if submission:
-        if status in ["verified", "rejected"]:
-            submission.status = status
-            db.session.commit()
+    # Use service layer to update activity status
+    community_engagement = CommunityEngagement()
+    result, status_code = community_engagement.update_activity_status(
+        submission_id, status
+    )
 
-            flash(f"The submission has been updated to {status}.", "success")
-        else:
-            flash("Submission not found.", "danger")
+    if status_code == 200:
+        flash(f"The submission has been updated to {status}.", "success")
+    else:
+        flash(result["error"], "danger")
+
     return redirect(url_for("user_submissions"))
 
 
