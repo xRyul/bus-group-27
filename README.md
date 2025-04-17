@@ -2,12 +2,20 @@
 
 <img width="1062" alt="image" src="https://github.com/user-attachments/assets/f7bbd2db-f173-446a-9723-d47d64429664" />
 
-LIVE DEMO at: http://green-campus.me/ and https://bus-group-27.onrender.com/
 
 ## System Description
 GreenCampus is an integrated digital platform that helps universities track, manage, and reduce their environmental impact while engaging the campus community in sustainability efforts. The system bridges the gap between institutional sustainability reporting and community engagement by combining building energy monitoring with user-submitted sustainable activities and incentives. This prototype demonstrates the feasibility of three core features: Building Energy Monitoring Dashboard (FR2), Sustainable Activity Submission (FR5), and Point/GreenScore Awarding (FR6).
 
 ## How to run
+
+### Live Demo
+The live version of the project is accessible through two URLs:
+- [http://green-campus.me/](http://green-campus.me/)
+- [https://bus-group-27.onrender.com/](https://bus-group-27.onrender.com/)
+
+It is deployed using a custom domain `green-campus.me` registered through Namecheap, hosted on Render.com with automatic SSL certificate management. CI/CD pipeline is configured to build and deploy on commits to the `main` branch.
+
+### Local Setup
 
 ...
 
@@ -17,6 +25,7 @@ GreenCampus is an integrated digital platform that helps universities track, man
 - **Database**: SQLite, SQLAlchemy ORM
 - **Testing**: Pytest
 - **Version Control**: Git
+- **Deployment**: Render.com (hosting platform), Namecheap (domain registration)
 
 ## Implemented Features
 1. **Building Energy Monitoring Dashboard (FR2)**
@@ -35,11 +44,11 @@ GreenCampus is an integrated digital platform that helps universities track, man
    - Displays user rankings and leaderboards
 
 
-## Contribution Table based on commit history
+## Contribution table based on commit history
 | Contributor | Percentage | Work Completed |
 |-------------|------------|----------------|
-| Daniel Alesko (xRyul) | 60% | - System architecture design (MVCS)<br>- Building Energy Monitoring Dashboard (FR2) implementation<br>- Frontend development (HTML, CSS, JS)<br>- Data visualization and anomaly detection<br>- Refactoring for architecture compliance<br>- Project setup and configuration |
-| Charles Ottey (Yztto) | 20% | - Green Score UI implementation<br>- Admin interface and user management<br>- User Submission functionality<br>- Activity tracking and leaderboard<br>- Form handling and validation |
+| Daniel Alesko (xRyul) | 60% | - System architecture design (MVCS)<br>- Building Energy Monitoring Dashboard (FR2) implementation<br>- Refactoring for architecture compliance<br>- Base model and class relationship setup <br>- Frontend development (HTML, CSS, JS)<br>- Data visualization and anomaly detection<br>- Project and CI/CD pipeline setup<br>- Domain registration `green-campus.me`<br>- Automated deployment via `render.com`|
+| Charley Ottey (Yztto) | 20% | - Green Score UI implementation<br>- Admin interface and user management<br>- User Submission functionality<br>- Activity tracking and leaderboard<br>- Form handling and validation |
 | Jessiah Buamah | 10% | - Community Engagement logic (FR5, FR6)<br>- Activity submission and verification<br>- Points calculation logic<br>- Data model design for sustainable activities |
 | Jamie Chappell | 10% | - Building Energy Monitoring logic<br>- Anomaly detection algorithm<br>- Service layer architecture<br>- Controller design |
 
