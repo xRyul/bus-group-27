@@ -2,6 +2,8 @@
 
 <img width="1062" alt="image" src="https://github.com/user-attachments/assets/f7bbd2db-f173-446a-9723-d47d64429664" />
 
+LIVE DEMO at: http://green-campus.me/ and https://bus-group-27.onrender.com/
+
 ## System Description
 GreenCampus is an integrated digital platform that helps universities track, manage, and reduce their environmental impact while engaging the campus community in sustainability efforts. The system bridges the gap between institutional sustainability reporting and community engagement by combining building energy monitoring with user-submitted sustainable activities and incentives. This prototype demonstrates the feasibility of three core features: Building Energy Monitoring Dashboard (FR2), Sustainable Activity Submission (FR5), and Point/GreenScore Awarding (FR6).
 
@@ -138,7 +140,7 @@ https://canvas.bham.ac.uk/courses/78939/assignments/512861
 <details>
 <summary><b>Architecture</b></summary>
 
-MVC Architecture with Service Layer (MVCS)
+### MVC Architecture with Service Layer (MVCS)
 - **Model** (app/models/): Data structures using SQLAlchemy ORM, entity relationships and defines database schema
 - **View** (app/templates/): HTML templates with Jinja2, presents data to users and handles UI
 - **Controller** (app/views.py): Flask routes that handle HTTP requests, coordination between components, manages form submission and validation, renders templates with appropriate data
