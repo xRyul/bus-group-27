@@ -49,4 +49,4 @@ class UserSubmission(FlaskForm):
     )
     description = TextAreaField("Description")
     evidence = FileField("Upload Evidence")
-    upload = SubmitField("Upload")
+    submit = SubmitField("Submit")
