@@ -106,6 +106,164 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
     def get_anomaly_count(self, anomalies_by_type):
         return sum(len(v) for v in anomalies_by_type.values())
 
+    # Calculate total energy consumption for a building (electric + gas)
+    def calculate_total_consumption(
+        self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None
+    ):
+        # The hourly_data already contains the average hourly consumption for each hour
+        # We don't need to multiply by 24 again as the values are already per hour
+
+        # Debug: Print hourly data
+        print(f"Hourly electric data: {hourly_data_electric}")
+        print(f"Hourly gas data: {hourly_data_gas}")
+
+        # Daily consumption - sum of hourly values
+        # Each value in hourly_data represents the average consumption for that hour
+        # So the daily total is just the sum of all hourly values
+        total_electric_daily = sum(hourly_data_electric)
+        total_gas_daily = sum(hourly_data_gas)
+
+        print(f"Daily electric total: {total_electric_daily}")
+        print(f"Daily gas total: {total_gas_daily}")
+
+        # Scale based on selected time period
+        scaling_factors = {
+            "day": 1,
+            "week": 7,
+            "month": 30,
+            "year": 365,
+            "custom": custom_days if custom_days is not None else 1,
+        }
+
+        scaling = scaling_factors.get(time_period, 1)
+        print(f"Time period: {time_period}, Scaling factor: {scaling}")
+
+        total_electric = total_electric_daily * scaling
+        total_gas = total_gas_daily * scaling
+
+        print(f"Scaled electric total: {total_electric}")
+        print(f"Scaled gas total: {total_gas}")
+
+        # Convert gas (m3) to kWh using approximate conversion factor
+        gas_to_kwh = total_gas * 10.55
+        print(f"Gas converted to kWh: {gas_to_kwh}")
+
+        # Final total
+        final_total = round(total_electric + gas_to_kwh)
+        print(f"Final total consumption: {final_total} kWh")
+
+        # Return total in kWh
+        return final_total
+
+    # Calculate estimated cost based on consumption
+    def calculate_estimated_cost(
+        self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None
+    ):
+        # Get total consumption for the time period
+        total_electric_daily = sum(hourly_data_electric)
+        total_gas_daily = sum(hourly_data_gas)
+
+        # Scale based on selected time period
+        scaling_factors = {
+            "day": 1,
+            "week": 7,
+            "month": 30,
+            "year": 365,
+            "custom": custom_days if custom_days is not None else 1,
+        }
+
+        scaling = scaling_factors.get(time_period, 1)
+
+        total_electric = total_electric_daily * scaling
+        total_gas = total_gas_daily * scaling
+        gas_to_kwh = total_gas * 10.55
+
+        # Approximate rates: £0.15 per kWh for electricity, £0.05 per kWh for gas
+        return round(total_electric * 0.15 + gas_to_kwh * 0.05, 2)
+
+    # Calculate carbon footprint based on consumption
+    def calculate_carbon_footprint(
+        self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None
+    ):
+        # Get total consumption for the time period
+        total_electric_daily = sum(hourly_data_electric)
+        total_gas_daily = sum(hourly_data_gas)
+
+        # Scale based on selected time period
+        scaling_factors = {
+            "day": 1,
+            "week": 7,
+            "month": 30,
+            "year": 365,
+            "custom": custom_days if custom_days is not None else 1,
+        }
+
+        scaling = scaling_factors.get(time_period, 1)
+
+        total_electric = total_electric_daily * scaling
+        total_gas = total_gas_daily * scaling
+        gas_to_kwh = total_gas * 10.55
+
+        # UK grid average emissions factors:
+        # ~0.23 kg CO2 per kWh of electricity
+        # ~0.18 kg CO2 per kWh of gas
+        return round(total_electric * 0.23 + gas_to_kwh * 0.18)
+
+    # Calculate energy intensity (kWh/m²/yr)
+    def calculate_energy_intensity(
+        self, total_consumption, building_area, time_period="day", custom_days=None
+    ):
+        if not building_area:
+            return 0
+
+        # Energy intensity should always be per year for comparison purposes
+        # If total_consumption is not already annual, scale it
+        if time_period != "year":
+            # Scale consumption to annual based on time period
+            scaling_factors = {
+                "day": 365,
+                "week": 52,
+                "month": 12,
+                "year": 1,
+                "custom": 365 / custom_days if custom_days else 365,
+            }
+            scaling = scaling_factors.get(time_period, 365)
+            annual_consumption = total_consumption * scaling
+        else:
+            annual_consumption = total_consumption
+
+        return round(annual_consumption / building_area)
+
+    # Estimate renewable energy percentage based on building energy class
+    def estimate_renewable_percentage(self, energy_class):
+        renewable_mapping = {"A+": 45, "A": 35, "B": 25, "C": 15, "D": 10, "E": 5}
+        return renewable_mapping.get(energy_class, 15)
+
+    # Calculate water intensity (L/m²/yr)
+    def calculate_water_intensity(
+        self, hourly_data_water, building_area, time_period="day", custom_days=None
+    ):
+        if not building_area:
+            return 0
+
+        # Daily water consumption - sum of hourly values
+        total_water_daily = sum(hourly_data_water)
+
+        # Scale to annual based on time period
+        scaling_factors = {
+            "day": 365,
+            "week": 52,
+            "month": 12,
+            "year": 1,
+            "custom": 365 / custom_days if custom_days else 365,
+        }
+
+        scaling = scaling_factors.get(time_period, 365)
+        annual_water = total_water_daily * scaling
+
+        # Return water intensity in L/m²/yr
+        return round(annual_water / building_area)
+
 
 class CommunityEngagement:
     ### FR5 Logic ###

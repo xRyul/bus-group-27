@@ -198,6 +198,15 @@ def building_energy_monitoring():
             hourly_data_water=[],
             anomalies=[],
             anomaly_count=0,
+            total_consumption=0,
+            estimated_cost=0,
+            carbon_footprint=0,
+            energy_intensity=0,
+            renewable_percent=0,
+            water_intensity=0,
+            time_period="day",
+            custom_start_date=None,
+            custom_end_date=None,
         )
 
     # Validate building selection
@@ -219,6 +228,63 @@ def building_energy_monitoring():
     anomalies_by_type = bem.get_anomalies_for_building(selected_building_id)
     anomaly_count = bem.get_anomaly_count(anomalies_by_type)
 
+    # Get the selected time period from the frontend
+    time_period = request.args.get("time_period", "day")
+    custom_days = None
+    custom_start_date = request.args.get("start_date")
+    custom_end_date = request.args.get("end_date")
+
+    # Handle custom date range
+    if time_period == "custom" and custom_start_date and custom_end_date:
+        try:
+            from datetime import datetime
+
+            start_date = datetime.strptime(custom_start_date, "%Y-%m-%d")
+            end_date = datetime.strptime(custom_end_date, "%Y-%m-%d")
+            # Calculate number of days in custom range
+            custom_days = (
+                end_date - start_date
+            ).days + 1  # +1 to include both start and end dates
+
+            if custom_days <= 0:
+                # Invalid date range, default to 1 day
+                custom_days = 1
+                flash("Invalid date range. Using default values.", "warning")
+        except ValueError:
+            # If dates are invalid, default to 1 day
+            custom_days = 1
+            flash("Invalid date format. Using default values.", "warning")
+
+    # Validate time period
+    if time_period not in ["day", "week", "month", "year", "custom"]:
+        time_period = "day"  # Default to day if invalid value
+
+    # Calculate additional metrics for summary cards using service methods
+    building_area = (
+        selected_building.total_area
+        if selected_building and selected_building.total_area
+        else 3000
+    )
+    energy_class = selected_building.energy_class if selected_building else "C"
+
+    # Calculate metrics using service methods with time period
+    total_consumption = bem.calculate_total_consumption(
+        hourly_data_electric, hourly_data_gas, time_period, custom_days
+    )
+    estimated_cost = bem.calculate_estimated_cost(
+        hourly_data_electric, hourly_data_gas, time_period, custom_days
+    )
+    carbon_footprint = bem.calculate_carbon_footprint(
+        hourly_data_electric, hourly_data_gas, time_period, custom_days
+    )
+    energy_intensity = bem.calculate_energy_intensity(
+        total_consumption, building_area, time_period, custom_days
+    )
+    renewable_percent = bem.estimate_renewable_percentage(energy_class)
+    water_intensity = bem.calculate_water_intensity(
+        hourly_data_water, building_area, time_period, custom_days
+    )
+
     return render_template(
         "building_energy_monitoring.html",
         title="Building Energy Monitoring",
@@ -230,6 +296,15 @@ def building_energy_monitoring():
         hourly_data_water=hourly_data_water,
         anomalies=anomalies_by_type,
         anomaly_count=anomaly_count,
+        total_consumption=total_consumption,
+        estimated_cost=estimated_cost,
+        carbon_footprint=carbon_footprint,
+        energy_intensity=energy_intensity,
+        renewable_percent=renewable_percent,
+        water_intensity=water_intensity,
+        time_period=time_period,
+        custom_start_date=custom_start_date,
+        custom_end_date=custom_end_date,
     )
 
 

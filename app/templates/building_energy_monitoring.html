@@ -173,10 +173,10 @@
                         </div>
                         <div class="stat-title">Total Consumption</div>
                     </div>
-                    <div class="stat-value">2,450 kWh</div>
+                    <div class="stat-value">{{ total_consumption }} kWh</div>
                     <div class="stat-change positive">
                         <i class="bi bi-arrow-down"></i>
-                        <span>5.2% from previous</span>
+                        <span>{% if time_period == 'day' %}Daily{% elif time_period == 'week' %}Weekly{% elif time_period == 'month' %}Monthly{% elif time_period == 'year' %}Annual{% elif time_period == 'custom' %}Custom Range{% else %}Daily{% endif %}{% if time_period == 'custom' and custom_start_date and custom_end_date %}: {{ custom_start_date }} to {{ custom_end_date }}{% endif %}</span>
                     </div>
                 </div>
             </div>
@@ -190,10 +190,10 @@
                         </div>
                         <div class="stat-title">Estimated Cost</div>
                     </div>
-                    <div class="stat-value">$367.50</div>
+                    <div class="stat-value">£{{ estimated_cost }}</div>
                     <div class="stat-change positive">
                         <i class="bi bi-arrow-down"></i>
-                        <span>3.8% from previous</span>
+                        <span>{% if time_period == 'day' %}Daily{% elif time_period == 'week' %}Weekly{% elif time_period == 'month' %}Monthly{% elif time_period == 'year' %}Annual{% elif time_period == 'custom' %}Custom Range{% else %}Daily{% endif %} Cost{% if time_period == 'custom' and custom_start_date and custom_end_date %}: {{ custom_start_date|truncate(5, True, '') }} to {{ custom_end_date|truncate(5, True, '') }}{% endif %}</span>
                     </div>
                 </div>
             </div>
@@ -207,10 +207,10 @@
                         </div>
                         <div class="stat-title">Carbon Footprint</div>
                     </div>
-                    <div class="stat-value">980 kg CO₂</div>
+                    <div class="stat-value">{{ carbon_footprint }} kg CO₂</div>
                     <div class="stat-change positive">
                         <i class="bi bi-arrow-down"></i>
-                        <span>4.5% from previous</span>
+                        <span>{% if time_period == 'day' %}Daily{% elif time_period == 'week' %}Weekly{% elif time_period == 'month' %}Monthly{% elif time_period == 'year' %}Annual{% elif time_period == 'custom' %}Custom Range{% else %}Daily{% endif %} Emissions{% if time_period == 'custom' and custom_start_date and custom_end_date %}: {{ custom_start_date|truncate(5, True, '') }} to {{ custom_end_date|truncate(5, True, '') }}{% endif %}</span>
                     </div>
                 </div>
             </div>
@@ -241,10 +241,10 @@
                         </div>
                         <div class="stat-title">Energy Intensity</div>
                     </div>
-                    <div class="stat-value">127 kWh/m²/yr</div>
+                    <div class="stat-value">{{ energy_intensity }} kWh/m²/yr</div>
                     <div class="stat-change positive">
                         <i class="bi bi-arrow-down"></i>
-                        <span>8% below target</span>
+                        <span>Annual Estimate</span>
                     </div>
                 </div>
             </div>
@@ -258,10 +258,10 @@
                         </div>
                         <div class="stat-title">Renewable Energy</div>
                     </div>
-                    <div class="stat-value">32%</div>
-                    <div class="stat-change negative">
-                        <i class="bi bi-arrow-up"></i>
-                        <span>18% to target</span>
+                    <div class="stat-value">{{ renewable_percent }}%</div>
+                    <div class="stat-change {{ 'positive' if renewable_percent >= 30 else 'negative' }}">
+                        <i class="{{ 'bi bi-arrow-up' if renewable_percent >= 30 else 'bi bi-arrow-down' }}"></i>
+                        <span>{{ 50 - renewable_percent }}% to target</span>
                     </div>
                 </div>
             </div>
@@ -275,10 +275,10 @@
                         </div>
                         <div class="stat-title">Water Intensity</div>
                     </div>
-                    <div class="stat-value">45 L/m²/yr</div>
+                    <div class="stat-value">{{ water_intensity }} L/m²/yr</div>
                     <div class="stat-change positive">
                         <i class="bi bi-arrow-down"></i>
-                        <span>12% below baseline</span>
+                        <span>Annual Estimate</span>
                     </div>
                 </div>
             </div>
@@ -655,156 +655,12 @@
 <!-- Dashboard JavaScript -->
 <script src="{{ url_for('static', filename='js/energy_monitoring.js') }}"></script>
 
-<!-- Filter Toggles JS -->
+<!-- Energy type toggle JS - keep this part as it's specific to this page -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Energy Type Toggle
-        const energyTypeToggle = document.getElementById('energyTypeToggle');
-        const energyTypeFilters = document.querySelector('.energy-type-filters');
-        
-        if (energyTypeToggle) {
-            energyTypeToggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                energyTypeFilters.classList.toggle('active');
-                // Close time period dropdown if open
-                timePeriodFilters.classList.remove('active');
-            });
-        }
-        
-        // Time Period Dropdown
-        const timePeriodButton = document.getElementById('timePeriodButton');
-        const timePeriodFilters = document.querySelector('.time-period-filters');
-        const timePeriodOptions = document.querySelectorAll('.time-period-option');
-        const customDateOption = document.getElementById('customDateOption');
-        const customDateModal = new bootstrap.Modal(document.getElementById('customDateModal'));
-        const radioInputs = {
-            day: document.getElementById('day'),
-            week: document.getElementById('week'),
-            month: document.getElementById('month'),
-            year: document.getElementById('year'),
-            custom: document.getElementById('custom')
-        };
-        
-        // Date fields
-        const startDateField = document.getElementById('startDate');
-        const endDateField = document.getElementById('endDate');
-        const applyCustomDateBtn = document.getElementById('applyCustomDate');
-        
-        // Set default dates (today and a week from today)
-        const today = new Date();
-        const nextWeek = new Date();
-        nextWeek.setDate(today.getDate() + 7);
-        
-        if (startDateField && endDateField) {
-            startDateField.valueAsDate = today;
-            endDateField.valueAsDate = nextWeek;
-        }
-        
-        // Set the initial active option
-        const initialValue = 'day'; // Default to day
-        const initialOption = document.querySelector(`.time-period-option[data-value="${initialValue}"]`);
-        if (initialOption) {
-            initialOption.classList.add('active');
-        }
-        
-        // Setup date formatting helper
-        function formatDate(date) {
-            return date.toISOString().split('T')[0];
-        }
-        
-        if (timePeriodButton) {
-            timePeriodButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                timePeriodFilters.classList.toggle('active');
-                // Close energy type dropdown if open
-                energyTypeFilters.classList.remove('active');
-            });
-        }
-        
-        // Handle option selection
-        timePeriodOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const value = this.dataset.value;
-                const icon = this.dataset.icon;
-                const label = this.dataset.label;
-                
-                // If it's the custom option, show the modal
-                if (value === 'custom') {
-                    // Close the dropdown
-                    timePeriodFilters.classList.remove('active');
-                    
-                    // Show custom date modal
-                    customDateModal.show();
-                    return;
-                }
-                
-                // Update the button content
-                timePeriodButton.innerHTML = `
-                    <i class="bi ${icon}"></i>
-                    <span class="time-label">${label}</span>
-                    <i class="bi bi-chevron-down ms-1"></i>
-                `;
-                
-                // Update active class
-                timePeriodOptions.forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Update the hidden radio input
-                if (radioInputs[value]) {
-                    radioInputs[value].checked = true;
-                    // Trigger a change event if needed by other code
-                    radioInputs[value].dispatchEvent(new Event('change'));
-                }
-                
-                // Close the dropdown
-                timePeriodFilters.classList.remove('active');
-            });
-        });
-        
-        // Handle custom date application
-        if (applyCustomDateBtn) {
-            applyCustomDateBtn.addEventListener('click', function() {
-                // Get the start and end dates
-                const startDate = startDateField.value;
-                const endDate = endDateField.value;
-                
-                if (!startDate || !endDate) {
-                    alert('Please select both start and end dates.');
-                    return;
-                }
-                
-                // Update the button content to show the date range
-                const startFormatted = new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                const endFormatted = new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                
-                timePeriodButton.innerHTML = `
-                    <i class="bi bi-calendar-range"></i>
-                    <span class="time-label">${startFormatted} - ${endFormatted}</span>
-                    <i class="bi bi-chevron-down ms-1"></i>
-                `;
-                
-                // Update active class
-                timePeriodOptions.forEach(opt => opt.classList.remove('active'));
-                customDateOption.classList.add('active');
-                
-                // Update the hidden radio input
-                radioInputs.custom.checked = true;
-                radioInputs.custom.dispatchEvent(new Event('change'));
-                
-                // Hide the modal
-                customDateModal.hide();
-            });
-        }
-        
-        // Close the dropdowns when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!energyTypeFilters.contains(e.target)) {
-                energyTypeFilters.classList.remove('active');
-            }
-            if (!timePeriodFilters.contains(e.target)) {
-                timePeriodFilters.classList.remove('active');
-            }
-        });
+        // This section is now handled by energy_monitoring.js
+        // The time period selection, dropdown functionality, and custom date handling
+        // are all consolidated in the setupDashboardControls function in the main JS file
     });
 </script>
 {% endblock %}

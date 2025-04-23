@@ -412,28 +412,248 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Time period radio buttons
-        const timePeriodRadios = document.querySelectorAll('input[name="timePeriod"]');
-        timePeriodRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                console.log('Time period changed to:', this.id);
-
-                document.querySelectorAll('.stat-value').forEach(el => {
-                    el.innerHTML = '<div class="spinner-border spinner-border-sm text-secondary" role="status"><span class="visually-hidden">Loading...</span></div>';
-                });
+        // Time Period Dropdown handling
+        const timePeriodButton = document.getElementById('timePeriodButton');
+        const timePeriodFilters = document.querySelector('.time-period-filters');
+        const timePeriodOptions = document.querySelectorAll('.time-period-option');
+        const customDateOption = document.getElementById('customDateOption');
+        const customDateModal = document.getElementById('customDateModal') ? 
+            new bootstrap.Modal(document.getElementById('customDateModal')) : null;
+        
+        // Date fields for custom range
+        const startDateField = document.getElementById('startDate');
+        const endDateField = document.getElementById('endDate');
+        const applyCustomDateBtn = document.getElementById('applyCustomDate');
+        
+        // Set default dates (today and a week from today) if fields exist
+        if (startDateField && endDateField) {
+            const today = new Date();
+            const nextWeek = new Date();
+            nextWeek.setDate(today.getDate() + 7);
+            
+            startDateField.valueAsDate = today;
+            endDateField.valueAsDate = nextWeek;
+        }
+        
+        // Hidden radio inputs for compatibility with existing code
+        const radioInputs = {
+            day: document.getElementById('day'),
+            week: document.getElementById('week'),
+            month: document.getElementById('month'),
+            year: document.getElementById('year'),
+            custom: document.getElementById('custom')
+        };
+        
+        // Helper function to get current time period from URL
+        function getCurrentTimePeriod() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('time_period') || 'day';
+        }
+        
+        // Helper function to get custom dates from URL if they exist
+        function getCustomDates() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const startDate = urlParams.get('start_date');
+            const endDate = urlParams.get('end_date');
+            return { startDate, endDate };
+        }
+        
+        // Initialize button based on current time period
+        function initializeTimePeriodButton() {
+            if (!timePeriodButton) return; // Exit if button doesn't exist
+            
+            const currentPeriod = getCurrentTimePeriod();
+            
+            // If custom period is selected, we need to display the date range
+            if (currentPeriod === 'custom') {
+                const { startDate, endDate } = getCustomDates();
                 
-                setTimeout(() => {
-                    updateRandomStats();
-                    updateEnvironmentalStats(); 
-                }, 500);
+                if (startDate && endDate) {
+                    // Set the date fields in the modal
+                    if (startDateField) startDateField.value = startDate;
+                    if (endDateField) endDateField.value = endDate;
+                    
+                    // Format dates for display
+                    const startFormatted = new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    const endFormatted = new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    
+                    // Update button content
+                    timePeriodButton.innerHTML = `
+                        <i class="bi bi-calendar-range"></i>
+                        <span class="time-label">${startFormatted} - ${endFormatted}</span>
+                        <i class="bi bi-chevron-down ms-1"></i>
+                    `;
+                    
+                    // Update active class
+                    timePeriodOptions.forEach(opt => opt.classList.remove('active'));
+                    if (customDateOption) customDateOption.classList.add('active');
+                    
+                    // Update radio button
+                    if (radioInputs.custom) {
+                        radioInputs.custom.checked = true;
+                    }
+                    
+                    return;
+                }
+            }
+            
+            // For non-custom periods
+            const periodOption = document.querySelector(`.time-period-option[data-value="${currentPeriod}"]`);
+            
+            if (periodOption) {
+                // Update active class
+                timePeriodOptions.forEach(opt => opt.classList.remove('active'));
+                periodOption.classList.add('active');
+                
+                // Update button content
+                const icon = periodOption.dataset.icon;
+                const label = periodOption.dataset.label;
+                
+                timePeriodButton.innerHTML = `
+                    <i class="bi ${icon}"></i>
+                    <span class="time-label">${label}</span>
+                    <i class="bi bi-chevron-down ms-1"></i>
+                `;
+                
+                // Update radio button
+                if (radioInputs[currentPeriod]) {
+                    radioInputs[currentPeriod].checked = true;
+                }
+            }
+        }
+        
+        // Initialize the button on page load
+        initializeTimePeriodButton();
+        
+        // Toggle time period dropdown
+        if (timePeriodButton && timePeriodFilters) {
+            timePeriodButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                timePeriodFilters.classList.toggle('active');
+                // Close energy type dropdown if open
+                const energyTypeFilters = document.querySelector('.energy-type-filters');
+                if (energyTypeFilters) energyTypeFilters.classList.remove('active');
             });
+        }
+        
+        // Handle option selection in time period dropdown
+        if (timePeriodOptions) {
+            timePeriodOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const value = this.dataset.value;
+                    const icon = this.dataset.icon;
+                    const label = this.dataset.label;
+                    
+                    // If it's the custom option, show the modal
+                    if (value === 'custom' && customDateModal) {
+                        // Close the dropdown
+                        timePeriodFilters.classList.remove('active');
+                        
+                        // Show custom date modal
+                        customDateModal.show();
+                        return;
+                    }
+                    
+                    // Update the button content
+                    timePeriodButton.innerHTML = `
+                        <i class="bi ${icon}"></i>
+                        <span class="time-label">${label}</span>
+                        <i class="bi bi-chevron-down ms-1"></i>
+                    `;
+                    
+                    // Update active class
+                    timePeriodOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update the hidden radio input
+                    if (radioInputs[value]) {
+                        radioInputs[value].checked = true;
+                        // Trigger a change event if needed by other code
+                        radioInputs[value].dispatchEvent(new Event('change'));
+                    }
+                    
+                    // Close the dropdown
+                    timePeriodFilters.classList.remove('active');
+                    
+                    // Redirect to same page with time_period parameter
+                    let currentUrl = new URL(window.location.href);
+                    let searchParams = currentUrl.searchParams;
+                    searchParams.set('time_period', value);
+                    window.location.href = currentUrl.toString();
+                });
+            });
+        }
+        
+        // Apply custom date range button handler
+        if (applyCustomDateBtn) {
+            applyCustomDateBtn.addEventListener('click', function() {
+                // Get the start and end dates
+                const startDate = startDateField.value;
+                const endDate = endDateField.value;
+                
+                if (!startDate || !endDate) {
+                    alert('Please select both start and end dates.');
+                    return;
+                }
+                
+                // Update the button content to show the date range
+                const startFormatted = new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const endFormatted = new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                
+                timePeriodButton.innerHTML = `
+                    <i class="bi bi-calendar-range"></i>
+                    <span class="time-label">${startFormatted} - ${endFormatted}</span>
+                    <i class="bi bi-chevron-down ms-1"></i>
+                `;
+                
+                // Update active class
+                timePeriodOptions.forEach(opt => opt.classList.remove('active'));
+                if (customDateOption) customDateOption.classList.add('active');
+                
+                // Update the hidden radio input
+                if (radioInputs.custom) {
+                    radioInputs.custom.checked = true;
+                    radioInputs.custom.dispatchEvent(new Event('change'));
+                }
+                
+                // Hide the modal
+                if (customDateModal) customDateModal.hide();
+                
+                // Redirect to same page with custom date parameters
+                let currentUrl = new URL(window.location.href);
+                let searchParams = currentUrl.searchParams;
+                searchParams.set('time_period', 'custom');
+                searchParams.set('start_date', startDate);
+                searchParams.set('end_date', endDate);
+                window.location.href = currentUrl.toString();
+            });
+        }
+        
+        // Close the dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (timePeriodFilters && !timePeriodFilters.contains(e.target) && 
+                !timePeriodButton.contains(e.target)) {
+                timePeriodFilters.classList.remove('active');
+            }
+            
+            const energyTypeFilters = document.querySelector('.energy-type-filters');
+            const energyTypeToggle = document.getElementById('energyTypeToggle');
+            if (energyTypeFilters && !energyTypeFilters.contains(e.target) && 
+                energyTypeToggle && !energyTypeToggle.contains(e.target)) {
+                energyTypeFilters.classList.remove('active');
+            }
         });
         
-        // Date range picker
-        const dateRange = document.getElementById('dateRange');
-        if (dateRange) {
-            dateRange.addEventListener('change', function() {
-                console.log('Date range changed to:', this.value);
+        // Energy Type Toggle
+        const energyTypeToggle = document.getElementById('energyTypeToggle');
+        const energyTypeFilters = document.querySelector('.energy-type-filters');
+        
+        if (energyTypeToggle && energyTypeFilters) {
+            energyTypeToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                energyTypeFilters.classList.toggle('active');
+                // Close time period dropdown if open
+                if (timePeriodFilters) timePeriodFilters.classList.remove('active');
             });
         }
         
