@@ -396,6 +396,49 @@
         width: 35px;
         height: 35px;
     }
+    
+    /* Mobile-specific styles for building info */
+    .building-info-icon {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+    
+    .building-details-hover:hover .building-info-content {
+        width: 100%;
+        max-width: none;
+        left: 0;
+        right: 0;
+        position: absolute;
+        top: 38px;
+        height: auto;
+        min-height: 80px;
+        flex-wrap: wrap;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 1050;
+    }
+    
+    .building-primary-info, .building-meta, .building-rating {
+        margin: 5px 0;
+        padding: 5px 0;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        width: 100%;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .building-rating {
+        border-bottom: none;
+    }
+    
+    .meta-item {
+        margin-right: 10px;
+        margin-bottom: 5px;
+    }
+    
+    .building-info-bar {
+        position: relative;
+    }
 }
 
 /* Custom column width for 8 cards in a row */
@@ -513,39 +556,24 @@
     }
 }
 
-/* Building Info Bar & Dropdown Styles */
+/* Building Info Bar with Dropdown & Collapsible Details */
 .building-info-bar {
-    border-radius: 0;
-    padding: 0.5rem 0;
-    box-shadow: none;
     border-bottom: 1px solid #e9ecef;
     margin-bottom: 1.5rem;
+    padding: 0.5rem 0;
     position: relative;
     z-index: 10;
 }
 
-.building-primary-info {
-    display: flex;
-    align-items: center;
-    margin-right: 2rem;
-    flex-wrap: wrap;
+/* Ensure dropdown and info icon are aligned */
+.building-info-bar .d-flex.align-items-center {
+    height: 38px; /* Match the height of the dropdown button */
 }
 
-.building-primary-info i {
-    color: #4CAF50;
-    font-size: 1.2rem;
-}
-
-.building-primary-info .dropdown {
-    position: relative;
-    z-index: 20;
-}
-
-/* Building name button styles */
+/* Building Name Dropdown Styles */
 .building-name {
     font-weight: 600;
     color: #333;
-    margin-right: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
     padding: 0.25rem 0.5rem;
@@ -556,6 +584,7 @@
     align-items: center;
     font-size: 1rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    height: 38px;
 }
 
 .building-name:hover, .building-name:focus {
@@ -571,6 +600,108 @@
     color: #4CAF50;
 }
 
+/* Collapsible Building Details */
+.building-selector-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.building-details-hover {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.building-info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 38px;
+    width: 38px;
+    color: var(--bs-primary);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.building-info-icon:hover {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.building-info-content {
+    position: absolute;
+    top: 0;
+    left: 38px;
+    width: 0;
+    height: 38px;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 0 4px 4px 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.building-details-hover:hover .building-info-content {
+    width: calc(100% - 50px);
+    max-width: 1100px;
+    padding: 0 15px;
+    opacity: 1;
+}
+
+.building-primary-info, .building-meta, .building-rating {
+    display: flex;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.building-primary-info p {
+    margin: 0;
+    font-weight: 500;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.rating-label {
+    margin-right: 8px;
+    font-weight: 500;
+}
+
+.rating-pills {
+    display: flex;
+    gap: 3px;
+}
+
+.rating-pill {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.rating-pill.active {
+    background-color: var(--bs-success);
+    color: white;
+}
+
+/* Dropdown Menu Styles */
 .dropdown-menu {
     margin-top: 0.5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -589,114 +720,4 @@
 
 .dropdown-item:active {
     background-color: #4CAF50;
-}
-
-.location {
-    color: #6c757d;
-    font-size: 0.9rem;
-    margin-bottom: 0;
-    margin-left: 0.5rem;
-}
-
-.building-meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.meta-item {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 1.5rem;
-    color: #555;
-    font-size: 0.9rem;
-}
-
-.meta-item i {
-    color: #6c757d;
-    margin-right: 0.25rem;
-}
-
-/* Dropdown Styles */
-.dropdown-item.active {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #4CAF50;
-}
-
-.dropdown-item:active {
-    background-color: #4CAF50;
-}
-
-.building-rating {
-    display: flex;
-    align-items: center;
-}
-
-.rating-label {
-    font-size: 0.9rem;
-    color: #555;
-    margin-right: 0.5rem;
-}
-
-.rating-pills {
-    display: flex;
-}
-
-.rating-pill {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #fff;
-    border-radius: 3px;
-    margin-right: 2px;
-}
-
-.rating-pill:nth-child(1) {
-    background-color: #4CAF50;
-}
-
-.rating-pill:nth-child(2) {
-    background-color: #8BC34A;
-}
-
-.rating-pill:nth-child(3) {
-    background-color: #FFEB3B;
-    color: #333;
-}
-
-.rating-pill:nth-child(4) {
-    background-color: #FFC107;
-    color: #333;
-}
-
-.rating-pill:nth-child(5) {
-    background-color: #F44336;
-}
-
-.rating-pill.active {
-    outline: 2px solid #333;
-    outline-offset: -1px;
-}
-
-@media (max-width: 992px) {
-    .building-primary-info {
-        margin-bottom: 0.5rem;
-    }
-    
-    .building-meta {
-        margin-bottom: 0.5rem;
-    }
-    
-    .meta-item {
-        margin-right: 1rem;
-        margin-bottom: 0.25rem;
-    }
-    
-    .building-rating {
-        margin-left: 0 !important;
-    }
 }

@@ -192,6 +192,7 @@ def building_energy_monitoring():
             title="Building Energy Monitoring",
             buildings=[],
             selected_building_id=None,
+            selected_building=None,
             hourly_data_electric=[],
             hourly_data_gas=[],
             hourly_data_water=[],
@@ -202,6 +203,11 @@ def building_energy_monitoring():
     # Validate building selection
     selected_building_id = bem.validate_building_selection(
         request.args.get("building_id", type=int), buildings
+    )
+
+    # Get the selected building object
+    selected_building = next(
+        (b for b in buildings if b.id == selected_building_id), None
     )
 
     # Get energy data
@@ -218,6 +224,7 @@ def building_energy_monitoring():
         title="Building Energy Monitoring",
         buildings=buildings,
         selected_building_id=selected_building_id,
+        selected_building=selected_building,
         hourly_data_electric=hourly_data_electric,
         hourly_data_gas=hourly_data_gas,
         hourly_data_water=hourly_data_water,

@@ -89,50 +89,54 @@
         </div>
     </div>
     
-    <!-- Building Quick Info -->
+    <!-- Building Quick Info - Dropdown + Collapsible Details -->
     <div class="row">
         <div class="col-12">
-            <div class="building-info-bar animate-fade-in">
-                <div class="d-flex align-items-center building-info-content">
-                    <div class="building-primary-info">
-                        <i class="bi bi-building me-2"></i>
-                        <div class="dropdown">
-                            <button class="building-name dropdown-toggle" type="button" id="buildingDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                {% if selected_building %}{{ selected_building.name }}{% else %}Computer Science Building{% endif %}
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="buildingDropdown">
-                                <li><h6 class="dropdown-header">Select Building</h6></li>
-                                {% for building in buildings %}
-                                <li>
-                                    <a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" 
-                                       href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
-                                        {{ building.name }}
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
+            <div class="building-info-bar">
+                <div class="d-flex align-items-center w-100">
+                    <!-- Building Selector (Always Visible) -->
+                    <div class="dropdown me-3">
+                        <button class="building-name dropdown-toggle" type="button" id="buildingDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if selected_building %}{{ selected_building.name }}{% else %}Computer Science Building{% endif %}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="buildingDropdown">
+                            <li><h6 class="dropdown-header">Select Building</h6></li>
+                            {% for building in buildings %}
+                            <li>
+                                <a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" 
+                                   href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
+                                    {{ building.name }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <!-- Building Info Icon and Collapsible Details -->
+                    <div class="building-details-hover">
+                        <div class="building-info-icon">
+                            <i class="bi bi-info-circle"></i>
                         </div>
-                        <p class="location">
-                            <i class="bi bi-geo-alt-fill"></i> 
-                            {% if selected_building and selected_building.location %}{{ selected_building.location }}{% else %}Edgbaston{% endif %}
-                        </p>
-                    </div>
-                    <div class="building-meta">
-                        <span class="meta-item"><i class="bi bi-rulers me-1"></i>{% if selected_building and selected_building.total_area %}{{ selected_building.total_area }}{% else %}15,000{% endif %} m²</span>
-                        <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built 2010</span>
-                        <span class="meta-item"><i class="bi bi-people me-1"></i>~450 people</span>
-                    </div>
-                    <div class="building-rating ms-auto">
-                        <span class="rating-label">Energy Class:</span>
-                        <div class="rating-pills">
-                            {% set energy_class = selected_building.energy_class if selected_building and selected_building.energy_class else 'C' %}
-                            <span class="rating-pill {% if energy_class == 'A' %}active{% endif %}">A</span>
-                            <span class="rating-pill {% if energy_class == 'B' %}active{% endif %}">B</span>
-                            <span class="rating-pill {% if energy_class == 'C' %}active{% endif %}">C</span>
-                            <span class="rating-pill {% if energy_class == 'D' %}active{% endif %}">D</span>
-                            <span class="rating-pill {% if energy_class == 'E' %}active{% endif %}">E</span>
-                            <span class="rating-pill {% if energy_class == 'F' %}active{% endif %}">F</span>
-                            <span class="rating-pill {% if energy_class == 'G' %}active{% endif %}">G</span>
+                        <div class="building-info-content">
+                            <div class="building-primary-info">
+                                <p class="location"><i class="bi bi-geo-alt-fill"></i> {% if selected_building and selected_building.location %}{{ selected_building.location }}{% else %}Edgbaston{% endif %}</p>
+                            </div>
+                            <div class="building-meta">
+                                <span class="meta-item"><i class="bi bi-rulers me-1"></i>{% if selected_building and selected_building.total_area %}{{ selected_building.total_area }}{% else %}15,000{% endif %} m²</span>
+                                <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built 2010</span>
+                                <span class="meta-item"><i class="bi bi-people me-1"></i>~450 people</span>
+                            </div>
+                            <div class="building-rating">
+                                <span class="rating-label">Class:</span>
+                                <div class="rating-pills">
+                                    {% set energy_class = selected_building.energy_class if selected_building and selected_building.energy_class else 'C' %}
+                                    <span class="rating-pill {% if energy_class == 'A+' or energy_class == 'A' %}active{% endif %}">A</span>
+                                    <span class="rating-pill {% if energy_class == 'B' %}active{% endif %}">B</span>
+                                    <span class="rating-pill {% if energy_class == 'C' %}active{% endif %}">C</span>
+                                    <span class="rating-pill {% if energy_class == 'D' %}active{% endif %}">D</span>
+                                    <span class="rating-pill {% if energy_class == 'E' %}active{% endif %}">E</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
