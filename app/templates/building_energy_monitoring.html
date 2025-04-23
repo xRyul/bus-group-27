@@ -29,34 +29,10 @@
     <!-- Dashboard Controls -->
     <div class="dashboard-controls animate-fade-in">
         <div class="row align-items-end">
-            <!-- Energy Type Filters -->
-            <div class="col-md-3">
-                <label class="control-label small">Energy Type</label>
-                <div class="filter-group">
-                    <input type="checkbox" class="btn-check" id="electricity" autocomplete="off" checked>
-                    <label class="btn btn-sm btn-filter" for="electricity" data-bs-toggle="tooltip" title="Electricity">
-                        <i class="bi bi-lightning-charge"></i>
-                    </label>
-                    
-                    <input type="checkbox" class="btn-check" id="gas" autocomplete="off">
-                    <label class="btn btn-sm btn-filter" for="gas" data-bs-toggle="tooltip" title="Gas">
-                        <i class="bi bi-fire"></i>
-                    </label>
-                    
-                    <input type="checkbox" class="btn-check" id="water" autocomplete="off">
-                    <label class="btn btn-sm btn-filter" for="water" data-bs-toggle="tooltip" title="Water">
-                        <i class="bi bi-droplet"></i>
-                    </label>
-                    
-                    <input type="checkbox" class="btn-check" id="renewable" autocomplete="off">
-                    <label class="btn btn-sm btn-filter" for="renewable" data-bs-toggle="tooltip" title="Renewable">
-                        <i class="bi bi-sun"></i>
-                    </label>
-                </div>
-            </div>
+            <!-- Energy Type Filters moved to be next to building selector -->
             
             <!-- Time Period Controls -->
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <label class="control-label small">Time Period</label>
                 <div class="filter-group">
                     <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
@@ -82,7 +58,7 @@
             </div>
             
             <!-- Date Range Picker -->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="dateRange" class="control-label small">Date Range</label>
                 <input type="date" class="form-control form-control-sm" id="dateRange">
             </div>
@@ -110,6 +86,31 @@
                             </li>
                             {% endfor %}
                         </ul>
+                    </div>
+                    
+                    <!-- Energy Type Filters (Moved here from dashboard controls) -->
+                    <div class="me-3">
+                        <div class="filter-group">
+                            <input type="checkbox" class="btn-check" id="electricity" autocomplete="off" checked>
+                            <label class="btn btn-sm btn-filter" for="electricity" data-bs-toggle="tooltip" title="Electricity">
+                                <i class="bi bi-lightning-charge"></i>
+                            </label>
+                            
+                            <input type="checkbox" class="btn-check" id="gas" autocomplete="off">
+                            <label class="btn btn-sm btn-filter" for="gas" data-bs-toggle="tooltip" title="Gas">
+                                <i class="bi bi-fire"></i>
+                            </label>
+                            
+                            <input type="checkbox" class="btn-check" id="water" autocomplete="off">
+                            <label class="btn btn-sm btn-filter" for="water" data-bs-toggle="tooltip" title="Water">
+                                <i class="bi bi-droplet"></i>
+                            </label>
+                            
+                            <input type="checkbox" class="btn-check" id="renewable" autocomplete="off">
+                            <label class="btn btn-sm btn-filter" for="renewable" data-bs-toggle="tooltip" title="Renewable">
+                                <i class="bi bi-sun"></i>
+                            </label>
+                        </div>
                     </div>
                     
                     <!-- Building Info Icon and Collapsible Details -->
