@@ -1,14 +1,10 @@
-/* Custom styles for GreenCampus */
-
-/* General styles */
 body {
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     color: #333;
     line-height: 1.6;
-    padding-top: 70px; /* Add padding for fixed navbar */
+    padding-top: 70px;
 }
 
-/* Modern Navbar */
 .navbar-modern {
     background-color: transparent !important;
     transition: all 0.3s ease;
@@ -88,7 +84,6 @@ body {
     box-shadow: none;
 }
 
-/* Hero section */
 .hero-section {
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
     background-size: cover;
@@ -120,7 +115,6 @@ body {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Modern cards */
 .modern-card {
     border: none;
     border-radius: 1rem;
@@ -147,14 +141,12 @@ body {
     padding: 1.5rem;
 }
 
-/* Feature icons */
 .feature-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
     color: #4CAF50;
 }
 
-/* Action buttons */
 .btn-green {
     background: linear-gradient(135deg, #4CAF50, #2E7D32);
     border: none;
@@ -173,7 +165,6 @@ body {
     color: white;
 }
 
-/* List group styling */
 .custom-list-group .list-group-item {
     border: none;
     border-radius: 0.5rem;
@@ -187,7 +178,6 @@ body {
     transform: translateX(5px);
 }
 
-/* GreenScore section */
 .greenscore-section {
     background-color: #f8f9fa;
     border-radius: 1rem;
@@ -209,7 +199,6 @@ body {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Progress bars */
 .progress {
     height: 0.8rem;
     border-radius: 1rem;
@@ -224,7 +213,6 @@ body {
     background: linear-gradient(90deg, #4CAF50, #1B5E20);
 }
 
-/* Animations */
 .fade-in {
     opacity: 0;
     transform: translateY(20px);
@@ -236,7 +224,6 @@ body {
     transform: translateY(0);
 }
 
-/* Animation for elements with animate-fade-in class */
 .animate-fade-in {
     opacity: 0;
     transform: translateY(10px);
@@ -249,7 +236,6 @@ body {
     transform: translateY(0);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .hero-title {
         font-size: 2.5rem;
@@ -261,5 +247,54 @@ body {
     
     .hero-section {
         padding: 4rem 0;
+    }
+    
+    /* Fix for navbar on mobile */
+    .navbar-collapse {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 0.5rem;
+    }
+    
+    /* Make buttons full-width on mobile */
+    .dashboard-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    
+    .dashboard-actions .btn {
+        margin-left: 0;
+        width: 100%;
+        text-align: left;
+    }
+    
+    /* Full-width containers on mobile */
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Fix card layouts on mobile */
+    .modern-card, .score-card, .stat-card {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    /* Adjust dashboard header on mobile */
+    .dashboard-header, .score-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .dashboard-header > div, .score-header > div {
+        width: 100%;
+        margin-bottom: 1rem;
     }
 }

@@ -285,3 +285,66 @@ textarea.form-control {
 .activity-status-pill.rejected {
     background-color: red;
 }
+
+/* Mobile Responsiveness Improvements */
+@media (max-width: 768px) {
+    .score-container {
+        padding: 1rem 0.5rem;
+    }
+    
+    .score-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .score-title {
+        font-size: 1.5rem;
+    }
+    
+    /* Ensure activity cards display properly on small screens */
+    .activity-card {
+        height: auto;
+        min-height: 120px;
+    }
+    
+    .activity-footer {
+        position: relative;
+        bottom: 0;
+        right: 0;
+        margin-top: 1rem;
+        text-align: left;
+    }
+    
+    .activity-status-pill {
+        position: relative;
+        display: inline-block;
+        margin-top: 0.5rem;
+        left: 0;
+    }
+    
+    .achievement-card {
+        padding: 0.5rem;
+    }
+    
+    .achievement-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .achievement-icon i {
+        font-size: 20px;
+    }
+    
+    .achievement-text {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    .form-container {
+        padding: 0.5rem;
+    }
+    
+    textarea.form-control {
+        min-height: 150px;
+    }
+}
