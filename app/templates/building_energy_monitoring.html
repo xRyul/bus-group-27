@@ -97,16 +97,19 @@
                     <div class="building-primary-info">
                         <i class="bi bi-building me-2"></i>
                         <div class="dropdown">
-                            <span class="building-name dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="building-name dropdown-toggle" type="button" id="buildingDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 {% if selected_building %}{{ selected_building.name }}{% else %}Computer Science Building{% endif %}
-                            </span>
-                            <ul class="dropdown-menu">
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="buildingDropdown">
                                 <li><h6 class="dropdown-header">Select Building</h6></li>
                                 {% for building in buildings %}
-                                <li><a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">{{ building.name }}</a></li>
+                                <li>
+                                    <a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" 
+                                       href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
+                                        {{ building.name }}
+                                    </a>
+                                </li>
                                 {% endfor %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-search"></i> Search buildings...</a></li>
                             </ul>
                         </div>
                         <p class="location">
