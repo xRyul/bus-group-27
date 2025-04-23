@@ -20,7 +20,17 @@
 <body>
 <nav class="navbar navbar-expand-sm navbar-modern">
     <div class="container">
-        <a class="navbar-brand navbar-brand-modern" href="{{ url_for('home') }}">GreenCampus</a>
+        <a class="navbar-brand navbar-brand-modern" href="{% if current_user.is_authenticated %}
+                    {% if current_user.role == 'Admin' %}
+                        {{ url_for('admin') }}
+                    {% elif current_user.role in ['Student', 'Staff'] %}
+                        {{ url_for('green_score') }}
+                    {% else %}
+                        {{ url_for('building_energy_monitoring') }}
+                    {% endif %}
+                {% else %}
+                    {{ url_for('home') }}
+                {% endif %}">GreenCampus</a>
         <button class="navbar-toggler navbar-toggler-modern" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
