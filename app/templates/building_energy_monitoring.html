@@ -97,10 +97,11 @@
                     <div class="building-primary-info">
                         <i class="bi bi-building me-2"></i>
                         <div class="dropdown">
-                            <h3 class="building-name dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="building-name dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 {% if selected_building %}{{ selected_building.name }}{% else %}Computer Science Building{% endif %}
-                            </h3>
+                            </span>
                             <ul class="dropdown-menu">
+                                <li><h6 class="dropdown-header">Select Building</h6></li>
                                 {% for building in buildings %}
                                 <li><a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">{{ building.name }}</a></li>
                                 {% endfor %}
@@ -114,18 +115,9 @@
                         </p>
                     </div>
                     <div class="building-meta">
-                        <div class="meta-item">
-                            <span class="meta-label">Area</span>
-                            <span class="meta-value">{% if selected_building and selected_building.total_area %}{{ selected_building.total_area }}{% else %}15,000{% endif %} m²</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Built</span>
-                            <span class="meta-value">{% if selected_building %}2010{% else %}1982{% endif %}</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Occupancy</span>
-                            <span class="meta-value">{% if selected_building %}85{% else %}85{% endif %}%</span>
-                        </div>
+                        <span class="meta-item"><i class="bi bi-rulers me-1"></i>{% if selected_building and selected_building.total_area %}{{ selected_building.total_area }}{% else %}15,000{% endif %} m²</span>
+                        <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built 2010</span>
+                        <span class="meta-item"><i class="bi bi-people me-1"></i>~450 people</span>
                     </div>
                     <div class="building-rating ms-auto">
                         <span class="rating-label">Energy Class:</span>
