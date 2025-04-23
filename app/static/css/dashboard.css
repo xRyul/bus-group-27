@@ -429,26 +429,50 @@
 
 /* Compact card styles for 8-in-a-row layout */
 .stat-card-compact {
-    padding: 1rem 0.75rem;
+    padding: 0.75rem 0.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-.stat-card-compact .stat-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 1.1rem;
+.stat-card-compact .stat-header {
+    display: flex;
+    align-items: center;
     margin-bottom: 0.5rem;
 }
 
+.stat-card-compact .stat-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0;
+}
+
 .stat-card-compact .stat-title {
-    font-size: 0.8rem;
-    margin-bottom: 0.2rem;
+    font-size: 0.75rem;
+    margin-bottom: 0;
+    margin-left: 0.25rem;
+    line-height: 1.1;
 }
 
 .stat-card-compact .stat-value {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 0.3rem;
+    font-weight: 700;
 }
 
 .stat-card-compact .stat-change {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+}
+
+/* Row of cards spacing */
+.card-row-8 {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+}
+
+.card-row-8 > div {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
 }

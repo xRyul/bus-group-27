@@ -7,9 +7,7 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db, login
-from app.models.sustainable_activity import (
-    SustainableActivity,  # For the 'activities' relationship
-)
+from app.models.sustainable_activity import SustainableActivity
 from app.models.user_points import UserPoints  # For the 'points' relationship
 
 
