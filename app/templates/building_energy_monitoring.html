@@ -107,41 +107,26 @@
     <!-- Building Quick Info -->
     <div class="row mb-3 mt-2">
         <div class="col-12">
-            <div class="building-quick-info animate-fade-in">
-                <div class="row align-items-center">
-                    <div class="col-md-5">
-                        <div class="d-flex align-items-center">
-                            <i class="bi bi-building me-2 building-icon"></i>
-                            <div>
-                                <h6 class="building-name mb-0">Computer Science Building</h6>
-                                <span class="building-location"><i class="bi bi-geo-alt-fill me-1"></i>Edgbaston</span>
-                            </div>
-                        </div>
+            <div class="building-info-bar animate-fade-in">
+                <div class="d-flex align-items-center building-info-content">
+                    <div class="building-primary-info">
+                        <i class="bi bi-building me-2"></i>
+                        <span class="building-name">Computer Science Building</span>
+                        <span class="building-location"><i class="bi bi-geo-alt-fill mx-1"></i>Edgbaston</span>
                     </div>
-                    <div class="col-md-7">
-                        <div class="d-flex building-quick-stats">
-                            <div class="quick-stat">
-                                <span class="quick-stat-label">Area</span>
-                                <span class="quick-stat-value">100,000 m²</span>
-                            </div>
-                            <div class="quick-stat">
-                                <span class="quick-stat-label">Built</span>
-                                <span class="quick-stat-value">2010</span>
-                            </div>
-                            <div class="quick-stat">
-                                <span class="quick-stat-label">Occupancy</span>
-                                <span class="quick-stat-value">~450 people</span>
-                            </div>
-                            <div class="quick-stat">
-                                <span class="quick-stat-label">Energy Class</span>
-                                <div class="quick-rating">
-                                    <span class="rating-segment">A</span>
-                                    <span class="rating-segment active">B</span>
-                                    <span class="rating-segment">C</span>
-                                    <span class="rating-segment">D</span>
-                                    <span class="rating-segment">E</span>
-                                </div>
-                            </div>
+                    <div class="building-meta">
+                        <span class="meta-item"><i class="bi bi-rulers me-1"></i>100,000 m²</span>
+                        <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built 2010</span>
+                        <span class="meta-item"><i class="bi bi-people me-1"></i>~450 people</span>
+                    </div>
+                    <div class="building-rating ms-auto">
+                        <span class="rating-label">Energy Class:</span>
+                        <div class="rating-pills">
+                            <span class="rating-pill">A</span>
+                            <span class="rating-pill active">B</span>
+                            <span class="rating-pill">C</span>
+                            <span class="rating-pill">D</span>
+                            <span class="rating-pill">E</span>
                         </div>
                     </div>
                 </div>
@@ -397,57 +382,8 @@
 
     <!-- Building Information and AI Recommendations Section -->
     <div class="row mb-5">
-        <!-- Building Information Column -->
-        <div class="col-md-6">
-            <div class="dashboard-card h-100 animate-fade-in">
-                <div class="card-header">
-                    <h5><i class="bi bi-building"></i> Building Information</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="building-info-section">
-                                <div class="building-info-column">
-                                    <h6 class="mb-3">Computer Science Building</h6>
-                                    <div class="building-info-item">
-                                        <i class="bi bi-geo-alt"></i>
-                                        <span>Edgbaston</span>
-                                    </div>
-                                    <div class="building-info-item">
-                                        <i class="bi bi-rulers"></i>
-                                        <span>Total Area: 100,000 m²</span>
-                                    </div>
-                                    <div class="building-info-item">
-                                        <i class="bi bi-calendar3"></i>
-                                        <span>Built: 2010</span>
-                                    </div>
-                                    <div class="building-info-item">
-                                        <i class="bi bi-people"></i>
-                                        <span>Occupancy: ~450 people</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <!-- Energy Class Visualization -->
-                            <h6 class="mb-2">Energy Class Rating</h6>
-                            <div class="energy-class-bar">
-                                <div class="energy-class-segment" style="background-color: #4CAF50;">A</div>
-                                <div class="energy-class-segment active" style="background-color: #8BC34A;">B</div>
-                                <div class="energy-class-segment" style="background-color: #FFEB3B; color: #333;">C</div>
-                                <div class="energy-class-segment" style="background-color: #FFC107; color: #333;">D</div>
-                                <div class="energy-class-segment" style="background-color: #F44336;">E</div>
-                            </div>
-                            <p class="small text-muted mt-2">Building is performing well but has potential for improvement to reach Class A.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         <!-- AI Recommendations Column -->
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="dashboard-card h-100 animate-fade-in">
                 <div class="card-header">
                     <h5><i class="bi bi-lightbulb"></i> AI Efficiency Recommendations</h5>
@@ -456,58 +392,64 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <div class="recommendation-item">
-                        <div class="recommendation-icon">
-                            <i class="bi bi-thermometer-half"></i>
-                        </div>
-                        <div class="recommendation-content">
-                            <h6>Optimize HVAC Schedule</h6>
-                            <p>Adjust HVAC operating hours to match building occupancy patterns. Potential savings: 15-20%.</p>
-                            <div class="d-flex gap-2 mt-2">
-                                <button class="btn btn-sm btn-outline-success">Implement</button>
-                                <button class="btn btn-sm btn-outline-secondary">Details</button>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="bi bi-thermometer-half"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h6>Optimize HVAC Schedule</h6>
+                                    <p>Adjust HVAC operating hours to match building occupancy patterns. Potential savings: 15-20%.</p>
+                                    <div class="d-flex gap-2 mt-2">
+                                        <button class="btn btn-sm btn-outline-success">Implement</button>
+                                        <button class="btn btn-sm btn-outline-secondary">Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h6>Investigate Night Usage</h6>
+                                    <p>Unusual electricity consumption detected between 2-3 AM. Check for equipment left running overnight.</p>
+                                    <div class="d-flex gap-2 mt-2">
+                                        <button class="btn btn-sm btn-outline-success">Investigate</button>
+                                        <button class="btn btn-sm btn-outline-secondary">Details</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="recommendation-item">
-                        <div class="recommendation-icon">
-                            <i class="bi bi-clock-history"></i>
-                        </div>
-                        <div class="recommendation-content">
-                            <h6>Investigate Night Usage</h6>
-                            <p>Unusual electricity consumption detected between 2-3 AM. Check for equipment left running overnight.</p>
-                            <div class="d-flex gap-2 mt-2">
-                                <button class="btn btn-sm btn-outline-success">Investigate</button>
-                                <button class="btn btn-sm btn-outline-secondary">Details</button>
+                        
+                        <div class="col-md-6">
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="bi bi-lightbulb"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h6>Upgrade Lighting Systems</h6>
+                                    <p>Replace remaining fluorescent fixtures with LED lighting. Estimated ROI: 18 months.</p>
+                                    <div class="d-flex gap-2 mt-2">
+                                        <button class="btn btn-sm btn-outline-success">Implement</button>
+                                        <button class="btn btn-sm btn-outline-secondary">Details</button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="recommendation-item">
-                        <div class="recommendation-icon">
-                            <i class="bi bi-lightbulb"></i>
-                        </div>
-                        <div class="recommendation-content">
-                            <h6>Upgrade Lighting Systems</h6>
-                            <p>Replace remaining fluorescent fixtures with LED lighting. Estimated ROI: 18 months.</p>
-                            <div class="d-flex gap-2 mt-2">
-                                <button class="btn btn-sm btn-outline-success">Implement</button>
-                                <button class="btn btn-sm btn-outline-secondary">Details</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="recommendation-item">
-                        <div class="recommendation-icon">
-                            <i class="bi bi-eye"></i>
-                        </div>
-                        <div class="recommendation-content">
-                            <h6>Install Occupancy Sensors</h6>
-                            <p>Add motion sensors in low-traffic areas to automatically control lighting.</p>
-                            <div class="d-flex gap-2 mt-2">
-                                <button class="btn btn-sm btn-outline-success">Implement</button>
-                                <button class="btn btn-sm btn-outline-secondary">Details</button>
+                            
+                            <div class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="bi bi-eye"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <h6>Install Occupancy Sensors</h6>
+                                    <p>Add motion sensors in low-traffic areas to automatically control lighting.</p>
+                                    <div class="d-flex gap-2 mt-2">
+                                        <button class="btn btn-sm btn-outline-success">Implement</button>
+                                        <button class="btn btn-sm btn-outline-secondary">Details</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
