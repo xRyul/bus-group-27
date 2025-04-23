@@ -76,6 +76,11 @@
     display: none;
 }
 
+/* Time Period Toggle button is hidden on desktop */
+.time-period-toggle {
+    display: none;
+}
+
 /* Stat Cards */
 .stat-card {
     background-color: #ffffff;
@@ -742,7 +747,7 @@
 }
 
 /* Make sure the energy type filters are below the building info content in z-index */
-.energy-type-filters {
+.energy-type-filters, .time-period-filters {
     position: relative;
     z-index: 11;
     display: flex;
@@ -754,19 +759,27 @@
     display: none;
 }
 
-/* Energy Type Toggle button is hidden on desktop */
-.energy-type-toggle {
+/* Filter toggle buttons are hidden on desktop */
+.energy-type-toggle, .time-period-toggle {
     display: none;
 }
 
-/* Mobile-specific styles for energy type filters */
+/* Mobile-specific styles for filters */
 @media (max-width: 768px) {
-    .energy-type-filters {
+    .energy-type-filters, .time-period-filters {
         position: absolute;
+    }
+    
+    .energy-type-filters {
         right: 1rem;
     }
     
-    .energy-type-filters .filter-group {
+    .time-period-filters {
+        right: 4rem;
+    }
+    
+    .energy-type-filters .filter-group,
+    .time-period-filters .filter-group {
         display: none;
         position: absolute;
         top: 100%;
@@ -782,11 +795,12 @@
         gap: 5px;
     }
     
-    .energy-type-filters.active .filter-group {
+    .energy-type-filters.active .filter-group,
+    .time-period-filters.active .filter-group {
         display: flex;
     }
     
-    .energy-type-toggle {
+    .energy-type-toggle, .time-period-toggle {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -799,7 +813,8 @@
         cursor: pointer;
     }
     
-    .energy-type-filters .filter-group .btn-filter {
+    .energy-type-filters .filter-group .btn-filter,
+    .time-period-filters .filter-group .btn-filter {
         width: 100%;
         display: flex;
         justify-content: center;
@@ -809,7 +824,8 @@
         height: auto;
     }
     
-    .energy-type-filters .filter-group .btn-filter i {
+    .energy-type-filters .filter-group .btn-filter i,
+    .time-period-filters .filter-group .btn-filter i {
         margin: 0;
         width: 20px;
         text-align: center;
@@ -884,4 +900,95 @@
 
 .dropdown-item:active {
     background-color: #4CAF50;
+}
+
+.time-period-filters {
+    position: relative;
+    z-index: 15; /* Higher than energy-type-filters */
+}
+
+.time-period-button {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    background-color: #fff;
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    color: #343a40;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 38px;
+}
+
+.time-period-button:hover {
+    background-color: rgba(76, 175, 80, 0.05);
+    border-color: rgba(76, 175, 80, 0.5);
+}
+
+.time-period-button i:first-child {
+    margin-right: 6px;
+    color: #4CAF50;
+}
+
+.time-period-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 5px;
+    display: none;
+    z-index: 20;
+}
+
+.time-period-filters.active .time-period-dropdown {
+    display: block;
+}
+
+.dropdown-menu-custom {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    min-width: 160px;
+    padding: 0.5rem 0;
+}
+
+.time-period-option {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.time-period-option:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.time-period-option.active {
+    background-color: rgba(76, 175, 80, 0.15);
+    font-weight: 500;
+}
+
+.time-period-option i {
+    width: 24px;
+    margin-right: 8px;
+    color: #4CAF50;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .time-period-button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .time-label {
+        display: none;
+    }
+    
+    .time-period-button i.bi-chevron-down {
+        display: none;
+    }
 }

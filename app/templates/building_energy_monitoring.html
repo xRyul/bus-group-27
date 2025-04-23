@@ -29,36 +29,8 @@
     <!-- Dashboard Controls -->
     <div class="dashboard-controls animate-fade-in">
         <div class="row align-items-end">
-            <!-- Energy Type Filters moved to be next to building selector -->
-            
-            <!-- Time Period Controls -->
-            <div class="col-md-8">
-                <label class="control-label small">Time Period</label>
-                <div class="filter-group">
-                    <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
-                    <label class="btn btn-sm btn-filter" for="day">
-                        <i class="bi bi-calendar-day"></i> Day
-                    </label>
-                    
-                    <input type="radio" class="btn-check" name="timePeriod" id="week" autocomplete="off">
-                    <label class="btn btn-sm btn-filter" for="week">
-                        <i class="bi bi-calendar-week"></i> Week
-                    </label>
-                    
-                    <input type="radio" class="btn-check" name="timePeriod" id="month" autocomplete="off">
-                    <label class="btn btn-sm btn-filter" for="month">
-                        <i class="bi bi-calendar-month"></i> Month
-                    </label>
-                    
-                    <input type="radio" class="btn-check" name="timePeriod" id="year" autocomplete="off">
-                    <label class="btn btn-sm btn-filter" for="year">
-                        <i class="bi bi-calendar4"></i> Year
-                    </label>
-                </div>
-            </div>
-            
-            <!-- Date Range Picker -->
-            <div class="col-md-4">
+            <!-- Only Date Range Picker remains in controls -->
+            <div class="col-12">
                 <label for="dateRange" class="control-label small">Date Range</label>
                 <input type="date" class="form-control form-control-sm" id="dateRange">
             </div>
@@ -147,10 +119,40 @@
                         </div>
                     </div>
                     
-                    <!-- Right Section: Placeholder for balance (empty for now) -->
-                    <div class="d-flex align-items-center invisible">
-                        <!-- This is intentionally empty to balance the layout -->
-                        <div class="placeholder-right" style="width: 80px;"></div>
+                    <!-- Right Section: Time Period Controls -->
+                    <div class="time-period-filters">
+                        <button class="time-period-button" id="timePeriodButton">
+                            <i class="bi bi-calendar-day"></i>
+                            <span class="time-label">Day</span>
+                            <i class="bi bi-chevron-down ms-1"></i>
+                        </button>
+                        <div class="time-period-dropdown">
+                            <div class="dropdown-menu-custom">
+                                <div class="time-period-option" data-value="day" data-icon="bi-calendar-day" data-label="Day">
+                                    <i class="bi bi-calendar-day"></i>
+                                    <span>Day</span>
+                                </div>
+                                <div class="time-period-option" data-value="week" data-icon="bi-calendar-week" data-label="Week">
+                                    <i class="bi bi-calendar-week"></i>
+                                    <span>Week</span>
+                                </div>
+                                <div class="time-period-option" data-value="month" data-icon="bi-calendar-month" data-label="Month">
+                                    <i class="bi bi-calendar-month"></i>
+                                    <span>Month</span>
+                                </div>
+                                <div class="time-period-option" data-value="year" data-icon="bi-calendar4" data-label="Year">
+                                    <i class="bi bi-calendar4"></i>
+                                    <span>Year</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hidden radio inputs for compatibility with existing code -->
+                        <div style="display: none;">
+                            <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
+                            <input type="radio" class="btn-check" name="timePeriod" id="week" autocomplete="off">
+                            <input type="radio" class="btn-check" name="timePeriod" id="month" autocomplete="off">
+                            <input type="radio" class="btn-check" name="timePeriod" id="year" autocomplete="off">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -621,9 +623,10 @@
 <!-- Dashboard JavaScript -->
 <script src="{{ url_for('static', filename='js/energy_monitoring.js') }}"></script>
 
-<!-- Energy Type Toggle JS -->
+<!-- Filter Toggles JS -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Energy Type Toggle
         const energyTypeToggle = document.getElementById('energyTypeToggle');
         const energyTypeFilters = document.querySelector('.energy-type-filters');
         
@@ -631,15 +634,77 @@
             energyTypeToggle.addEventListener('click', function(e) {
                 e.preventDefault();
                 energyTypeFilters.classList.toggle('active');
-            });
-            
-            // Close the dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!energyTypeFilters.contains(e.target)) {
-                    energyTypeFilters.classList.remove('active');
-                }
+                // Close time period dropdown if open
+                timePeriodFilters.classList.remove('active');
             });
         }
+        
+        // Time Period Dropdown
+        const timePeriodButton = document.getElementById('timePeriodButton');
+        const timePeriodFilters = document.querySelector('.time-period-filters');
+        const timePeriodOptions = document.querySelectorAll('.time-period-option');
+        const radioInputs = {
+            day: document.getElementById('day'),
+            week: document.getElementById('week'),
+            month: document.getElementById('month'),
+            year: document.getElementById('year')
+        };
+        
+        // Set the initial active option
+        const initialValue = 'day'; // Default to day
+        const initialOption = document.querySelector(`.time-period-option[data-value="${initialValue}"]`);
+        if (initialOption) {
+            initialOption.classList.add('active');
+        }
+        
+        if (timePeriodButton) {
+            timePeriodButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                timePeriodFilters.classList.toggle('active');
+                // Close energy type dropdown if open
+                energyTypeFilters.classList.remove('active');
+            });
+        }
+        
+        // Handle option selection
+        timePeriodOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const value = this.dataset.value;
+                const icon = this.dataset.icon;
+                const label = this.dataset.label;
+                
+                // Update the button content
+                timePeriodButton.innerHTML = `
+                    <i class="bi ${icon}"></i>
+                    <span class="time-label">${label}</span>
+                    <i class="bi bi-chevron-down ms-1"></i>
+                `;
+                
+                // Update active class
+                timePeriodOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update the hidden radio input
+                if (radioInputs[value]) {
+                    radioInputs[value].checked = true;
+                    // Trigger a change event if needed by other code
+                    radioInputs[value].dispatchEvent(new Event('change'));
+                }
+                
+                // Close the dropdown
+                timePeriodFilters.classList.remove('active');
+            });
+        });
+        
+        // Close the dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!energyTypeFilters.contains(e.target)) {
+                energyTypeFilters.classList.remove('active');
+            }
+            if (!timePeriodFilters.contains(e.target)) {
+                timePeriodFilters.classList.remove('active');
+            }
+        });
     });
 </script>
 {% endblock %}
