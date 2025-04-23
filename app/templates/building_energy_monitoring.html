@@ -97,42 +97,47 @@
                     <div class="building-primary-info">
                         <i class="bi bi-building me-2"></i>
                         <div class="dropdown">
-                            <span class="building-name dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ selected_building.name|default('Computer Science Building') }}
-                            </span>
+                            <h3 class="building-name dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                {% if selected_building %}{{ selected_building.name }}{% else %}Computer Science Building{% endif %}
+                            </h3>
                             <ul class="dropdown-menu">
-                                <li><h6 class="dropdown-header">Select Building</h6></li>
                                 {% for building in buildings %}
-                                <li>
-                                    <a class="dropdown-item {% if building.id == selected_building_id %}active{% endif %}" 
-                                       href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
-                                        {{ building.name }}
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">{{ building.name }}</a></li>
                                 {% endfor %}
                                 <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="bi bi-search me-2"></i>Search Buildings...
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-search"></i> Search buildings...</a></li>
                             </ul>
                         </div>
-                        <span class="building-location"><i class="bi bi-geo-alt-fill mx-1"></i>{{ selected_building.location|default('Edgbaston') }}</span>
+                        <p class="location">
+                            <i class="bi bi-geo-alt-fill"></i> 
+                            {% if selected_building and selected_building.location %}{{ selected_building.location }}{% else %}Edgbaston{% endif %}
+                        </p>
                     </div>
                     <div class="building-meta">
-                        <span class="meta-item"><i class="bi bi-rulers me-1"></i>{{ selected_building.area|default('100,000') }} m²</span>
-                        <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built {{ selected_building.built_year|default('2010') }}</span>
-                        <span class="meta-item"><i class="bi bi-people me-1"></i>~{{ selected_building.occupancy|default('450') }} people</span>
+                        <div class="meta-item">
+                            <span class="meta-label">Area</span>
+                            <span class="meta-value">{% if selected_building and selected_building.total_area %}{{ selected_building.total_area }}{% else %}15,000{% endif %} m²</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Built</span>
+                            <span class="meta-value">{% if selected_building %}2010{% else %}1982{% endif %}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Occupancy</span>
+                            <span class="meta-value">{% if selected_building %}85{% else %}85{% endif %}%</span>
+                        </div>
                     </div>
                     <div class="building-rating ms-auto">
                         <span class="rating-label">Energy Class:</span>
                         <div class="rating-pills">
-                            <span class="rating-pill {% if selected_building.energy_class == 'A' %}active{% endif %}">A</span>
-                            <span class="rating-pill {% if selected_building.energy_class|default('B') == 'B' %}active{% endif %}">B</span>
-                            <span class="rating-pill {% if selected_building.energy_class == 'C' %}active{% endif %}">C</span>
-                            <span class="rating-pill {% if selected_building.energy_class == 'D' %}active{% endif %}">D</span>
-                            <span class="rating-pill {% if selected_building.energy_class == 'E' %}active{% endif %}">E</span>
+                            {% set energy_class = selected_building.energy_class if selected_building and selected_building.energy_class else 'C' %}
+                            <span class="rating-pill {% if energy_class == 'A' %}active{% endif %}">A</span>
+                            <span class="rating-pill {% if energy_class == 'B' %}active{% endif %}">B</span>
+                            <span class="rating-pill {% if energy_class == 'C' %}active{% endif %}">C</span>
+                            <span class="rating-pill {% if energy_class == 'D' %}active{% endif %}">D</span>
+                            <span class="rating-pill {% if energy_class == 'E' %}active{% endif %}">E</span>
+                            <span class="rating-pill {% if energy_class == 'F' %}active{% endif %}">F</span>
+                            <span class="rating-pill {% if energy_class == 'G' %}active{% endif %}">G</span>
                         </div>
                     </div>
                 </div>
@@ -204,10 +209,10 @@
                         </div>
                         <div class="stat-title">Anomalies</div>
                     </div>
-                    <div class="stat-value">3</div>
+                    <div class="stat-value">{{ anomaly_count }}</div>
                     <div class="stat-change negative">
                         <i class="bi bi-arrow-up"></i>
-                        <span>2 new today</span>
+                        <span>{{ anomaly_count }} detected</span>
                     </div>
                 </div>
             </div>
