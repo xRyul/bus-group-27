@@ -69,57 +69,58 @@
     <div class="row">
         <div class="col-12">
             <div class="building-info-bar">
-                <div class="d-flex align-items-center w-100">
-                    <!-- Building Selector (Always Visible) -->
-                    <div class="dropdown me-3">
-                        <button class="building-name dropdown-toggle" type="button" id="buildingDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                            {% if selected_building %}{{ selected_building.name }}{% else %}Computer Science Building{% endif %}
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="buildingDropdown">
-                            <li><h6 class="dropdown-header">Select Building</h6></li>
-                            {% for building in buildings %}
-                            <li>
-                                <a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" 
-                                   href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
-                                    {{ building.name }}
-                                </a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    
-
-                    
-                    <!-- Building Info Icon and Collapsible Details -->
-                    <div class="building-details-hover">
-                        <div class="building-info-icon">
-                            <i class="bi bi-info-circle"></i>
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <!-- Left Section: Building Selector and Info -->
+                    <div class="d-flex align-items-center">
+                        <!-- Building Selector (Always Visible) -->
+                        <div class="dropdown me-3">
+                            <button class="building-name dropdown-toggle" type="button" id="buildingDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                {% if selected_building %}{{ selected_building.name }}{% else %}Computer Science Building{% endif %}
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="buildingDropdown">
+                                <li><h6 class="dropdown-header">Select Building</h6></li>
+                                {% for building in buildings %}
+                                <li>
+                                    <a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" 
+                                       href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
+                                        {{ building.name }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
                         </div>
-                        <div class="building-info-content">
-                            <div class="building-primary-info">
-                                <p class="location"><i class="bi bi-geo-alt-fill"></i> {% if selected_building and selected_building.location %}{{ selected_building.location }}{% else %}Edgbaston{% endif %}</p>
+                        
+                        <!-- Building Info Icon and Collapsible Details -->
+                        <div class="building-details-hover">
+                            <div class="building-info-icon">
+                                <i class="bi bi-info-circle"></i>
                             </div>
-                            <div class="building-meta">
-                                <span class="meta-item"><i class="bi bi-rulers me-1"></i>{% if selected_building and selected_building.total_area %}{{ selected_building.total_area }}{% else %}15,000{% endif %} m²</span>
-                                <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built 2010</span>
-                                <span class="meta-item"><i class="bi bi-people me-1"></i>~450 people</span>
-                            </div>
-                            <div class="building-rating">
-                                <span class="rating-label">Class:</span>
-                                <div class="rating-pills">
-                                    {% set energy_class = selected_building.energy_class if selected_building and selected_building.energy_class else 'C' %}
-                                    <span class="rating-pill {% if energy_class == 'A+' or energy_class == 'A' %}active{% endif %}">A</span>
-                                    <span class="rating-pill {% if energy_class == 'B' %}active{% endif %}">B</span>
-                                    <span class="rating-pill {% if energy_class == 'C' %}active{% endif %}">C</span>
-                                    <span class="rating-pill {% if energy_class == 'D' %}active{% endif %}">D</span>
-                                    <span class="rating-pill {% if energy_class == 'E' %}active{% endif %}">E</span>
+                            <div class="building-info-content">
+                                <div class="building-primary-info">
+                                    <p class="location"><i class="bi bi-geo-alt-fill"></i> {% if selected_building and selected_building.location %}{{ selected_building.location }}{% else %}Edgbaston{% endif %}</p>
+                                </div>
+                                <div class="building-meta">
+                                    <span class="meta-item"><i class="bi bi-rulers me-1"></i>{% if selected_building and selected_building.total_area %}{{ selected_building.total_area }}{% else %}15,000{% endif %} m²</span>
+                                    <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built 2010</span>
+                                    <span class="meta-item"><i class="bi bi-people me-1"></i>~450 people</span>
+                                </div>
+                                <div class="building-rating">
+                                    <span class="rating-label">Class:</span>
+                                    <div class="rating-pills">
+                                        {% set energy_class = selected_building.energy_class if selected_building and selected_building.energy_class else 'C' %}
+                                        <span class="rating-pill {% if energy_class == 'A+' or energy_class == 'A' %}active{% endif %}">A</span>
+                                        <span class="rating-pill {% if energy_class == 'B' %}active{% endif %}">B</span>
+                                        <span class="rating-pill {% if energy_class == 'C' %}active{% endif %}">C</span>
+                                        <span class="rating-pill {% if energy_class == 'D' %}active{% endif %}">D</span>
+                                        <span class="rating-pill {% if energy_class == 'E' %}active{% endif %}">E</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Energy Type Filters (Moved here from dashboard controls) -->
-                    <div class="ms-3 energy-type-filters">
+                    
+                    <!-- Center Section: Energy Type Filters -->
+                    <div class="energy-type-filters">
                         <div class="energy-type-toggle" id="energyTypeToggle">
                             <i class="bi bi-sliders"></i>
                         </div>
@@ -144,6 +145,12 @@
                                 <i class="bi bi-sun"></i>
                             </label>
                         </div>
+                    </div>
+                    
+                    <!-- Right Section: Placeholder for balance (empty for now) -->
+                    <div class="d-flex align-items-center invisible">
+                        <!-- This is intentionally empty to balance the layout -->
+                        <div class="placeholder-right" style="width: 80px;"></div>
                     </div>
                 </div>
             </div>

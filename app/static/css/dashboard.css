@@ -745,6 +745,78 @@
 .energy-type-filters {
     position: relative;
     z-index: 11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-label {
+    display: none;
+}
+
+/* Energy Type Toggle button is hidden on desktop */
+.energy-type-toggle {
+    display: none;
+}
+
+/* Mobile-specific styles for energy type filters */
+@media (max-width: 768px) {
+    .energy-type-filters {
+        position: absolute;
+        right: 1rem;
+    }
+    
+    .energy-type-filters .filter-group {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 10px;
+        flex-direction: column;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 20;
+        margin-top: 5px;
+        gap: 5px;
+    }
+    
+    .energy-type-filters.active .filter-group {
+        display: flex;
+    }
+    
+    .energy-type-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 4px;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+        color: #495057;
+        cursor: pointer;
+    }
+    
+    .energy-type-filters .filter-group .btn-filter {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 4px;
+        padding: 6px 8px;
+        height: auto;
+    }
+    
+    .energy-type-filters .filter-group .btn-filter i {
+        margin: 0;
+        width: 20px;
+        text-align: center;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .building-primary-info, .building-meta, .building-rating {
