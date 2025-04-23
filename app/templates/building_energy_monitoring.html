@@ -29,23 +29,8 @@
     <!-- Dashboard Controls -->
     <div class="dashboard-controls animate-fade-in">
         <div class="row align-items-end">
-            <!-- Building Selector -->
-            <div class="col-md-2">
-                <label for="buildingSelector" class="control-label small">Building</label>
-                <select class="form-select form-select-sm" id="buildingSelector">
-                    {# Dynamically populate buildings from the backend #}
-                    {% for building in buildings %}
-                        <option value="{{ building.id }}" {% if building.id == selected_building_id %}selected{% endif %}>
-                            {{ building.name }}
-                        </option>
-                    {% else %}
-                        <option value="" disabled>No buildings available</option>
-                    {% endfor %}
-                </select>
-            </div>
-            
             <!-- Energy Type Filters -->
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label class="control-label small">Energy Type</label>
                 <div class="filter-group">
                     <input type="checkbox" class="btn-check" id="electricity" autocomplete="off" checked>
@@ -71,7 +56,7 @@
             </div>
             
             <!-- Time Period Controls -->
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <label class="control-label small">Time Period</label>
                 <div class="filter-group">
                     <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
@@ -111,22 +96,43 @@
                 <div class="d-flex align-items-center building-info-content">
                     <div class="building-primary-info">
                         <i class="bi bi-building me-2"></i>
-                        <span class="building-name">Computer Science Building</span>
-                        <span class="building-location"><i class="bi bi-geo-alt-fill mx-1"></i>Edgbaston</span>
+                        <div class="dropdown">
+                            <span class="building-name dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ selected_building.name|default('Computer Science Building') }}
+                            </span>
+                            <ul class="dropdown-menu">
+                                <li><h6 class="dropdown-header">Select Building</h6></li>
+                                {% for building in buildings %}
+                                <li>
+                                    <a class="dropdown-item {% if building.id == selected_building_id %}active{% endif %}" 
+                                       href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
+                                        {{ building.name }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-search me-2"></i>Search Buildings...
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <span class="building-location"><i class="bi bi-geo-alt-fill mx-1"></i>{{ selected_building.location|default('Edgbaston') }}</span>
                     </div>
                     <div class="building-meta">
-                        <span class="meta-item"><i class="bi bi-rulers me-1"></i>100,000 m²</span>
-                        <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built 2010</span>
-                        <span class="meta-item"><i class="bi bi-people me-1"></i>~450 people</span>
+                        <span class="meta-item"><i class="bi bi-rulers me-1"></i>{{ selected_building.area|default('100,000') }} m²</span>
+                        <span class="meta-item"><i class="bi bi-calendar3 me-1"></i>Built {{ selected_building.built_year|default('2010') }}</span>
+                        <span class="meta-item"><i class="bi bi-people me-1"></i>~{{ selected_building.occupancy|default('450') }} people</span>
                     </div>
                     <div class="building-rating ms-auto">
                         <span class="rating-label">Energy Class:</span>
                         <div class="rating-pills">
-                            <span class="rating-pill">A</span>
-                            <span class="rating-pill active">B</span>
-                            <span class="rating-pill">C</span>
-                            <span class="rating-pill">D</span>
-                            <span class="rating-pill">E</span>
+                            <span class="rating-pill {% if selected_building.energy_class == 'A' %}active{% endif %}">A</span>
+                            <span class="rating-pill {% if selected_building.energy_class|default('B') == 'B' %}active{% endif %}">B</span>
+                            <span class="rating-pill {% if selected_building.energy_class == 'C' %}active{% endif %}">C</span>
+                            <span class="rating-pill {% if selected_building.energy_class == 'D' %}active{% endif %}">D</span>
+                            <span class="rating-pill {% if selected_building.energy_class == 'E' %}active{% endif %}">E</span>
                         </div>
                     </div>
                 </div>

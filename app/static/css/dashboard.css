@@ -540,6 +540,32 @@
     font-weight: 600;
     color: #333;
     margin-right: 0.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.building-name:hover {
+    color: #4CAF50;
+}
+
+.building-name.dropdown-toggle::after {
+    vertical-align: middle;
+    margin-left: 0.4rem;
+}
+
+.dropdown-menu {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+    padding: 0.5rem 0;
+}
+
+.dropdown-item.active {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.dropdown-item:active {
+    background-color: #4CAF50;
 }
 
 .building-location {
