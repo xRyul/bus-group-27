@@ -77,6 +77,8 @@
     flex-direction: column;
     height: 100%;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .stat-card:hover {
@@ -511,18 +513,15 @@
     }
 }
 
-/* Building Info Bar - Seamless integrated design */
+/* Building Info Bar & Dropdown Styles */
 .building-info-bar {
     border-radius: 0;
     padding: 0.5rem 0;
     box-shadow: none;
     border-bottom: 1px solid #e9ecef;
     margin-bottom: 1.5rem;
-}
-
-.building-info-content {
-    width: 100%;
-    flex-wrap: wrap;
+    position: relative;
+    z-index: 10;
 }
 
 .building-primary-info {
@@ -537,30 +536,59 @@
     font-size: 1.2rem;
 }
 
+.building-primary-info .dropdown {
+    position: relative;
+    z-index: 20;
+}
+
+/* Building name button styles */
 .building-name {
     font-weight: 600;
     color: #333;
     margin-right: 0.5rem;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
-    background-color: rgba(76, 175, 80, 0.05);
-    border: 1px solid rgba(76, 175, 80, 0.2);
+    background-color: #fff;
+    border: 1px solid rgba(76, 175, 80, 0.3);
     display: inline-flex;
     align-items: center;
+    font-size: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.building-name:hover {
+.building-name:hover, .building-name:focus {
     color: #4CAF50;
-    background-color: rgba(76, 175, 80, 0.1);
-    border-color: rgba(76, 175, 80, 0.3);
+    background-color: rgba(76, 175, 80, 0.05);
+    border-color: rgba(76, 175, 80, 0.5);
+    outline: none;
 }
 
 .building-name.dropdown-toggle::after {
     vertical-align: middle;
     margin-left: 0.5rem;
     color: #4CAF50;
+}
+
+.dropdown-menu {
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+    padding: 0.5rem 0;
+    z-index: 2000;
+    width: 280px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.dropdown-item.active {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.dropdown-item:active {
+    background-color: #4CAF50;
 }
 
 .location {
@@ -590,16 +618,6 @@
 }
 
 /* Dropdown Styles */
-.dropdown-menu {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid #eee;
-    padding: 0.5rem 0;
-    z-index: 1050; /* Higher z-index to ensure it's above other elements */
-    width: 280px; /* Fixed width for better usability */
-    max-height: 350px; /* Add max height */
-    overflow-y: auto; /* Allow scrolling if many items */
-}
-
 .dropdown-item.active {
     background-color: rgba(76, 175, 80, 0.1);
     color: #4CAF50;
