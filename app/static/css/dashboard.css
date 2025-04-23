@@ -511,12 +511,13 @@
     }
 }
 
-/* Building Info Bar - Single line design */
+/* Building Info Bar - Seamless integrated design */
 .building-info-bar {
-    background-color: #f8f9fa;
-    border-radius: 6px;
-    padding: 0.75rem 1.25rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 0;
+    padding: 0.5rem 0;
+    box-shadow: none;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 1.5rem;
 }
 
 .building-info-content {
