@@ -27,14 +27,8 @@
     </div>
     
     <!-- Dashboard Controls -->
-    <div class="dashboard-controls animate-fade-in">
-        <div class="row align-items-end">
-            <!-- Only Date Range Picker remains in controls -->
-            <div class="col-12">
-                <label for="dateRange" class="control-label small">Date Range</label>
-                <input type="date" class="form-control form-control-sm" id="dateRange">
-            </div>
-        </div>
+    <div class="dashboard-controls animate-fade-in" style="display: none;">
+        <!-- Date Range Picker moved to dropdown -->
     </div>
     
     <!-- Building Quick Info - Dropdown + Collapsible Details -->
@@ -144,6 +138,11 @@
                                     <i class="bi bi-calendar4"></i>
                                     <span>Year</span>
                                 </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="time-period-option" data-value="custom" data-icon="bi-calendar-range" data-label="Custom" id="customDateOption">
+                                    <i class="bi bi-calendar-range"></i>
+                                    <span>Custom Range</span>
+                                </div>
                             </div>
                         </div>
                         <!-- Hidden radio inputs for compatibility with existing code -->
@@ -152,6 +151,8 @@
                             <input type="radio" class="btn-check" name="timePeriod" id="week" autocomplete="off">
                             <input type="radio" class="btn-check" name="timePeriod" id="month" autocomplete="off">
                             <input type="radio" class="btn-check" name="timePeriod" id="year" autocomplete="off">
+                            <input type="radio" class="btn-check" name="timePeriod" id="custom" autocomplete="off">
+                            <input type="date" class="form-control form-control-sm" id="dateRange" style="display: none;">
                         </div>
                     </div>
                 </div>
@@ -605,6 +606,37 @@
             </div>
         </div>
     </div>
+    
+    <!-- Custom Date Range Modal -->
+    <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customDateModalLabel">Select Custom Date Range</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDate" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="endDate" required>
+                        </div>
+                        <div class="mt-3 small text-muted">
+                            Select a date range to view data for a specific time period.
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="applyCustomDate">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -643,18 +675,41 @@
         const timePeriodButton = document.getElementById('timePeriodButton');
         const timePeriodFilters = document.querySelector('.time-period-filters');
         const timePeriodOptions = document.querySelectorAll('.time-period-option');
+        const customDateOption = document.getElementById('customDateOption');
+        const customDateModal = new bootstrap.Modal(document.getElementById('customDateModal'));
         const radioInputs = {
             day: document.getElementById('day'),
             week: document.getElementById('week'),
             month: document.getElementById('month'),
-            year: document.getElementById('year')
+            year: document.getElementById('year'),
+            custom: document.getElementById('custom')
         };
+        
+        // Date fields
+        const startDateField = document.getElementById('startDate');
+        const endDateField = document.getElementById('endDate');
+        const applyCustomDateBtn = document.getElementById('applyCustomDate');
+        
+        // Set default dates (today and a week from today)
+        const today = new Date();
+        const nextWeek = new Date();
+        nextWeek.setDate(today.getDate() + 7);
+        
+        if (startDateField && endDateField) {
+            startDateField.valueAsDate = today;
+            endDateField.valueAsDate = nextWeek;
+        }
         
         // Set the initial active option
         const initialValue = 'day'; // Default to day
         const initialOption = document.querySelector(`.time-period-option[data-value="${initialValue}"]`);
         if (initialOption) {
             initialOption.classList.add('active');
+        }
+        
+        // Setup date formatting helper
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
         }
         
         if (timePeriodButton) {
@@ -672,6 +727,16 @@
                 const value = this.dataset.value;
                 const icon = this.dataset.icon;
                 const label = this.dataset.label;
+                
+                // If it's the custom option, show the modal
+                if (value === 'custom') {
+                    // Close the dropdown
+                    timePeriodFilters.classList.remove('active');
+                    
+                    // Show custom date modal
+                    customDateModal.show();
+                    return;
+                }
                 
                 // Update the button content
                 timePeriodButton.innerHTML = `
@@ -695,6 +760,41 @@
                 timePeriodFilters.classList.remove('active');
             });
         });
+        
+        // Handle custom date application
+        if (applyCustomDateBtn) {
+            applyCustomDateBtn.addEventListener('click', function() {
+                // Get the start and end dates
+                const startDate = startDateField.value;
+                const endDate = endDateField.value;
+                
+                if (!startDate || !endDate) {
+                    alert('Please select both start and end dates.');
+                    return;
+                }
+                
+                // Update the button content to show the date range
+                const startFormatted = new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const endFormatted = new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                
+                timePeriodButton.innerHTML = `
+                    <i class="bi bi-calendar-range"></i>
+                    <span class="time-label">${startFormatted} - ${endFormatted}</span>
+                    <i class="bi bi-chevron-down ms-1"></i>
+                `;
+                
+                // Update active class
+                timePeriodOptions.forEach(opt => opt.classList.remove('active'));
+                customDateOption.classList.add('active');
+                
+                // Update the hidden radio input
+                radioInputs.custom.checked = true;
+                radioInputs.custom.dispatchEvent(new Event('change'));
+                
+                // Hide the modal
+                customDateModal.hide();
+            });
+        }
         
         // Close the dropdowns when clicking outside
         document.addEventListener('click', function(e) {
