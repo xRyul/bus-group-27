@@ -66,6 +66,16 @@
     color: #ffffff;
 }
 
+/* Hide filter labels on desktop */
+.filter-label {
+    display: none;
+}
+
+/* Energy Type Toggle button is hidden on desktop */
+.energy-type-toggle {
+    display: none;
+}
+
 /* Stat Cards */
 .stat-card {
     background-color: #ffffff;
@@ -404,18 +414,20 @@
     
     .building-details-hover:hover .building-info-content {
         width: 100%;
-        max-width: none;
+        min-width: 100%;
+        max-width: 100%;
         left: 0;
         right: 0;
-        position: absolute;
+        position: fixed;
         top: 38px;
         height: auto;
         min-height: 80px;
         flex-wrap: wrap;
-        padding: 10px;
-        border-radius: 4px;
+        padding: 10px 15px;
+        border-radius: 0;
         box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         z-index: 1050;
+        background-color: #fff;
     }
     
     .building-primary-info, .building-meta, .building-rating {
@@ -438,6 +450,73 @@
     
     .building-info-bar {
         position: relative;
+    }
+    
+    /* Consolidated energy types for mobile */
+    .energy-type-filters .filter-group {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 8px;
+        flex-direction: column;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        z-index: 20;
+        margin-top: 5px;
+    }
+    
+    .energy-type-filters.active .filter-group {
+        display: flex;
+    }
+    
+    .energy-type-toggle {
+        display: none;
+    }
+    
+    .energy-type-filters .energy-type-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 4px;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+        color: #495057;
+        cursor: pointer;
+    }
+    
+    .energy-type-filters .filter-group .btn-filter {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 4px;
+        padding: 6px 8px;
+        height: auto;
+    }
+    
+    .energy-type-filters .filter-group .btn-filter i {
+        margin: 0;
+        width: 20px;
+        text-align: center;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .filter-label {
+        display: inline-block;
+        font-size: 0.85rem;
+    }
+    
+    /* Adjust padding in dropdowns */
+    .energy-type-filters .filter-group {
+        padding: 10px;
+        gap: 5px;
     }
 }
 
@@ -611,7 +690,6 @@
     position: relative;
     display: flex;
     align-items: center;
-    flex-grow: 1;
 }
 
 .building-info-icon {
@@ -624,6 +702,8 @@
     color: var(--bs-primary);
     border-radius: 4px;
     transition: all 0.2s ease;
+    position: relative;
+    z-index: 15;
 }
 
 .building-info-icon:hover {
@@ -633,26 +713,38 @@
 .building-info-content {
     position: absolute;
     top: 0;
-    left: 38px;
+    left: 0;
     width: 0;
-    height: 38px;
+    max-width: 0;
+    height: 100%;
     overflow: hidden;
     background-color: white;
-    border-radius: 0 4px 4px 0;
-    transition: all 0.3s ease;
+    border-radius: 4px;
+    transition: opacity 0.3s ease, width 0.3s ease, max-width 0.3s ease;
     white-space: nowrap;
     opacity: 0;
     display: flex;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    z-index: 12;
+    pointer-events: none;
 }
 
 .building-details-hover:hover .building-info-content {
-    width: calc(100% - 50px);
-    max-width: 1100px;
-    padding: 0 15px;
+    width: calc(100% - 38px);
+    min-width: 600px;
+    max-width: 100%;
+    padding: 0 15px 0 45px; /* Add left padding to not overlap the icon */
     opacity: 1;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    border: 1px solid #e9ecef;
+    pointer-events: auto;
+}
+
+/* Make sure the energy type filters are below the building info content in z-index */
+.energy-type-filters {
+    position: relative;
+    z-index: 11;
 }
 
 .building-primary-info, .building-meta, .building-rating {

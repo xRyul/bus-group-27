@@ -88,30 +88,7 @@
                         </ul>
                     </div>
                     
-                    <!-- Energy Type Filters (Moved here from dashboard controls) -->
-                    <div class="me-3">
-                        <div class="filter-group">
-                            <input type="checkbox" class="btn-check" id="electricity" autocomplete="off" checked>
-                            <label class="btn btn-sm btn-filter" for="electricity" data-bs-toggle="tooltip" title="Electricity">
-                                <i class="bi bi-lightning-charge"></i>
-                            </label>
-                            
-                            <input type="checkbox" class="btn-check" id="gas" autocomplete="off">
-                            <label class="btn btn-sm btn-filter" for="gas" data-bs-toggle="tooltip" title="Gas">
-                                <i class="bi bi-fire"></i>
-                            </label>
-                            
-                            <input type="checkbox" class="btn-check" id="water" autocomplete="off">
-                            <label class="btn btn-sm btn-filter" for="water" data-bs-toggle="tooltip" title="Water">
-                                <i class="bi bi-droplet"></i>
-                            </label>
-                            
-                            <input type="checkbox" class="btn-check" id="renewable" autocomplete="off">
-                            <label class="btn btn-sm btn-filter" for="renewable" data-bs-toggle="tooltip" title="Renewable">
-                                <i class="bi bi-sun"></i>
-                            </label>
-                        </div>
-                    </div>
+
                     
                     <!-- Building Info Icon and Collapsible Details -->
                     <div class="building-details-hover">
@@ -138,6 +115,34 @@
                                     <span class="rating-pill {% if energy_class == 'E' %}active{% endif %}">E</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Energy Type Filters (Moved here from dashboard controls) -->
+                    <div class="ms-3 energy-type-filters">
+                        <div class="energy-type-toggle" id="energyTypeToggle">
+                            <i class="bi bi-sliders"></i>
+                        </div>
+                        <div class="filter-group">
+                            <input type="checkbox" class="btn-check" id="electricity" autocomplete="off" checked>
+                            <label class="btn btn-sm btn-filter" for="electricity" data-bs-toggle="tooltip" title="Electricity">
+                                <i class="bi bi-lightning-charge"></i>
+                            </label>
+                            
+                            <input type="checkbox" class="btn-check" id="gas" autocomplete="off">
+                            <label class="btn btn-sm btn-filter" for="gas" data-bs-toggle="tooltip" title="Gas">
+                                <i class="bi bi-fire"></i>
+                            </label>
+                            
+                            <input type="checkbox" class="btn-check" id="water" autocomplete="off">
+                            <label class="btn btn-sm btn-filter" for="water" data-bs-toggle="tooltip" title="Water">
+                                <i class="bi bi-droplet"></i>
+                            </label>
+                            
+                            <input type="checkbox" class="btn-check" id="renewable" autocomplete="off">
+                            <label class="btn btn-sm btn-filter" for="renewable" data-bs-toggle="tooltip" title="Renewable">
+                                <i class="bi bi-sun"></i>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -608,4 +613,26 @@
 
 <!-- Dashboard JavaScript -->
 <script src="{{ url_for('static', filename='js/energy_monitoring.js') }}"></script>
+
+<!-- Energy Type Toggle JS -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const energyTypeToggle = document.getElementById('energyTypeToggle');
+        const energyTypeFilters = document.querySelector('.energy-type-filters');
+        
+        if (energyTypeToggle) {
+            energyTypeToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                energyTypeFilters.classList.toggle('active');
+            });
+            
+            // Close the dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!energyTypeFilters.contains(e.target)) {
+                    energyTypeFilters.classList.remove('active');
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}
