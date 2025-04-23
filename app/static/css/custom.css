@@ -298,3 +298,24 @@ body {
         margin-bottom: 1rem;
     }
 }
+
+
+@media (min-width: 769px) and (max-width: 991px) {
+    .navbar-collapse {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 0.5rem;
+    }
+    
+    .nav-link-modern {
+        margin: 0 0.25rem;
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .container {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
