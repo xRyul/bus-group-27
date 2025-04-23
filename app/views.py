@@ -1,22 +1,16 @@
-import csv
-import io
-from datetime import datetime, time
+from datetime import datetime
 from urllib.parse import urlsplit
 
 import sqlalchemy as sa
 from flask import (
     flash,
-    jsonify,
     redirect,
     render_template,
     request,
-    send_file,
-    send_from_directory,
     url_for,
 )
 from flask_login import (
     current_user,
-    fresh_login_required,
     login_required,
     login_user,
     logout_user,
@@ -24,13 +18,10 @@ from flask_login import (
 
 from app import app, db
 from app.debug_utils import activity_types
-from app.forms import ChooseForm, LoginForm, UserSubmission
+from app.forms import LoginForm, UserSubmission
 from app.logic import BuildingEnergyMonitoring, CommunityEngagement
-from app.models.building import Building
-from app.models.building_energy import BuildingEnergy
 from app.models.sustainable_activity import SustainableActivity
 from app.models.user import User
-from app.models.user_points import UserPoints
 
 
 @app.route("/")

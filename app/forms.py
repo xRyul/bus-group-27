@@ -1,6 +1,3 @@
-import datetime
-
-from flask_login import current_user
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,
@@ -11,21 +8,10 @@ from wtforms import (
     StringField,
     SubmitField,
 )
-from wtforms.fields.numeric import IntegerField
 from wtforms.fields.simple import TextAreaField
-from wtforms.validators import (
-    DataRequired,
-    Email,
-    EqualTo,
-    Length,
-    NumberRange,
-    Optional,
-    ValidationError,
-)
+from wtforms.validators import DataRequired
 
-from app import db
 from app.debug_utils import activity_types
-from app.models.user import User
 
 
 class ChooseForm(FlaskForm):
