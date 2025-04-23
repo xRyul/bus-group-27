@@ -4,8 +4,6 @@ from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from flask_login import UserMixin
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import db, login
@@ -25,14 +23,16 @@ class User(UserMixin, db.Model):
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     role: so.Mapped[str] = so.mapped_column(sa.String(10), default="Normal")
 
-    # One-to-many: A single user can have multiple sustainable activities.
-    # activities: Allows querying all activities associated with a user, e.g., user.activities.all().
+    # One-to-many relationship: A single user can have multiple sustainable activities.
+    # The foreign key is defined in the SustainableActivity model (user_id field)
+    # This relationship allows querying all activities associated with a user, e.g., user.activities.all()
     activities: so.WriteOnlyMapped["SustainableActivity"] = so.relationship(
         back_populates="user", lazy="dynamic"
     )
 
-    # One-to-one: A single user can have only one set of points.
-    # points: Allows accessing a user's point e.g., user.points.
+    # One-to-one relationship: A single user can have only one set of points.
+    # The foreign key is defined in the UserPoints model (user_id field)
+    # This relationship allows accessing a user's points directly, e.g., user.points
     points: so.Mapped[Optional["UserPoints"]] = (
         so.relationship(  # User might not have points yet
             back_populates="user", uselist=False
