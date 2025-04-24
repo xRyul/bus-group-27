@@ -8,21 +8,9 @@
     <div class="dashboard-header">
         <div>
             <h1 class="dashboard-title">Building Energy Monitoring</h1>
-            <p class="dashboard-subtitle">Track, analyze, and optimize energy usage across campus buildings</p>
         </div>
         <div class="dashboard-actions">
-            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#reportIssueModal">
-                <i class="bi bi-flag"></i> Report Issue
-            </button>
-            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#alertConfigModal">
-                <i class="bi bi-bell"></i> Alerts
-            </button>
-            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addNoteModal">
-                <i class="bi bi-journal-plus"></i> Add Note
-            </button>
-            <button class="btn btn-primary" id="downloadReportBtn">
-                <i class="bi bi-download"></i> Export Report
-            </button>
+            <!-- Export Report button removed from here -->
         </div>
     </div>
     
@@ -113,46 +101,73 @@
                         </div>
                     </div>
                     
-                    <!-- Right Section: Time Period Controls -->
-                    <div class="time-period-filters">
-                        <button class="time-period-button" id="timePeriodButton">
-                            <i class="bi bi-calendar-day"></i>
-                            <span class="time-label">Day</span>
-                            <i class="bi bi-chevron-down ms-1"></i>
+                    <!-- Right Controls: Settings and Time Period -->
+                    <div class="d-flex align-items-center position-relative">
+                        <!-- Export Report Button -->
+                        <button class="btn btn-outline-primary me-2" id="downloadReportBtn">
+                            <i class="bi bi-download me-1"></i> <span class="export-label">Export report</span>
                         </button>
-                        <div class="time-period-dropdown">
-                            <div class="dropdown-menu-custom">
-                                <div class="time-period-option" data-value="day" data-icon="bi-calendar-day" data-label="Day">
-                                    <i class="bi bi-calendar-day"></i>
-                                    <span>Day</span>
-                                </div>
-                                <div class="time-period-option" data-value="week" data-icon="bi-calendar-week" data-label="Week">
-                                    <i class="bi bi-calendar-week"></i>
-                                    <span>Week</span>
-                                </div>
-                                <div class="time-period-option" data-value="month" data-icon="bi-calendar-month" data-label="Month">
-                                    <i class="bi bi-calendar-month"></i>
-                                    <span>Month</span>
-                                </div>
-                                <div class="time-period-option" data-value="year" data-icon="bi-calendar4" data-label="Year">
-                                    <i class="bi bi-calendar4"></i>
-                                    <span>Year</span>
-                                </div>
-                                <div class="dropdown-divider"></div>
-                                <div class="time-period-option" data-value="custom" data-icon="bi-calendar-range" data-label="Custom" id="customDateOption">
-                                    <i class="bi bi-calendar-range"></i>
-                                    <span>Custom Range</span>
+                        
+                        <!-- Settings Dropdown -->
+                        <div class="settings-dropdown">
+                            <button class="settings-button" id="settingsButton">
+                                <i class="bi bi-gear"></i>
+                            </button>
+                            <div class="settings-dropdown-menu">
+                                <div class="dropdown-menu-custom">
+                                    <div class="settings-option" data-bs-toggle="modal" data-bs-target="#reportIssueModal">
+                                        <i class="bi bi-flag"></i>
+                                        <span>Report Issue</span>
+                                    </div>
+                                    <div class="settings-option" data-bs-toggle="modal" data-bs-target="#alertConfigModal">
+                                        <i class="bi bi-bell"></i>
+                                        <span>Alerts</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Hidden radio inputs for compatibility with existing code -->
-                        <div style="display: none;">
-                            <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
-                            <input type="radio" class="btn-check" name="timePeriod" id="week" autocomplete="off">
-                            <input type="radio" class="btn-check" name="timePeriod" id="month" autocomplete="off">
-                            <input type="radio" class="btn-check" name="timePeriod" id="year" autocomplete="off">
-                            <input type="radio" class="btn-check" name="timePeriod" id="custom" autocomplete="off">
-                            <input type="date" class="form-control form-control-sm" id="dateRange" style="display: none;">
+                        
+                        <!-- Time Period Controls -->
+                        <div class="time-period-filters">
+                            <button class="time-period-button" id="timePeriodButton">
+                                <i class="bi bi-calendar-day"></i>
+                                <span class="time-label">Day</span>
+                                <i class="bi bi-chevron-down ms-1"></i>
+                            </button>
+                            <div class="time-period-dropdown">
+                                <div class="dropdown-menu-custom">
+                                    <div class="time-period-option" data-value="day" data-icon="bi-calendar-day" data-label="Day">
+                                        <i class="bi bi-calendar-day"></i>
+                                        <span>Day</span>
+                                    </div>
+                                    <div class="time-period-option" data-value="week" data-icon="bi-calendar-week" data-label="Week">
+                                        <i class="bi bi-calendar-week"></i>
+                                        <span>Week</span>
+                                    </div>
+                                    <div class="time-period-option" data-value="month" data-icon="bi-calendar-month" data-label="Month">
+                                        <i class="bi bi-calendar-month"></i>
+                                        <span>Month</span>
+                                    </div>
+                                    <div class="time-period-option" data-value="year" data-icon="bi-calendar4" data-label="Year">
+                                        <i class="bi bi-calendar4"></i>
+                                        <span>Year</span>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="time-period-option" data-value="custom" data-icon="bi-calendar-range" data-label="Custom" id="customDateOption">
+                                        <i class="bi bi-calendar-range"></i>
+                                        <span>Custom Range</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Hidden radio inputs for compatibility with existing code -->
+                            <div style="display: none;">
+                                <input type="radio" class="btn-check" name="timePeriod" id="day" autocomplete="off" checked>
+                                <input type="radio" class="btn-check" name="timePeriod" id="week" autocomplete="off">
+                                <input type="radio" class="btn-check" name="timePeriod" id="month" autocomplete="off">
+                                <input type="radio" class="btn-check" name="timePeriod" id="year" autocomplete="off">
+                                <input type="radio" class="btn-check" name="timePeriod" id="custom" autocomplete="off">
+                                <input type="date" class="form-control form-control-sm" id="dateRange" style="display: none;">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -567,46 +582,6 @@
         </div>
     </div>
 
-    <!-- Add Note Modal -->
-    <div class="modal fade" id="addNoteModal" tabindex="-1" aria-labelledby="addNoteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addNoteModalLabel">Add Note to Timeline</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="noteDate" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="noteDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="noteTitle" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="noteTitle" placeholder="Brief title for your note" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="noteContent" class="form-label">Note</label>
-                            <textarea class="form-control" id="noteContent" rows="3" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="noteVisibility" checked>
-                                <label class="form-check-label" for="noteVisibility">
-                                    Make visible to all users
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-info">Add Note</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <!-- Custom Date Range Modal -->
     <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
         <div class="modal-dialog">

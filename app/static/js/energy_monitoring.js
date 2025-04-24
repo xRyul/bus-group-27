@@ -613,6 +613,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update the hidden radio input
                 if (radioInputs.custom) {
                     radioInputs.custom.checked = true;
+                    // Trigger a change event if needed by other code
                     radioInputs.custom.dispatchEvent(new Event('change'));
                 }
                 
@@ -642,6 +643,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 energyTypeToggle && !energyTypeToggle.contains(e.target)) {
                 energyTypeFilters.classList.remove('active');
             }
+            
+            // Settings dropdown closing
+            const settingsDropdown = document.querySelector('.settings-dropdown');
+            const settingsButton = document.getElementById('settingsButton');
+            if (settingsDropdown && !settingsDropdown.contains(e.target) && 
+                settingsButton && !settingsButton.contains(e.target)) {
+                settingsDropdown.classList.remove('active');
+            }
         });
         
         // Energy Type Toggle
@@ -654,6 +663,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 energyTypeFilters.classList.toggle('active');
                 // Close time period dropdown if open
                 if (timePeriodFilters) timePeriodFilters.classList.remove('active');
+                // Close settings dropdown if open
+                const settingsDropdown = document.querySelector('.settings-dropdown');
+                if (settingsDropdown) settingsDropdown.classList.remove('active');
+            });
+        }
+        
+        // Settings dropdown functionality
+        const settingsDropdown = document.querySelector('.settings-dropdown');
+        const settingsButton = document.getElementById('settingsButton');
+        
+        if (settingsButton && settingsDropdown) {
+            settingsButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                settingsDropdown.classList.toggle('active');
+                
+                // Close other dropdowns
+                if (timePeriodFilters) timePeriodFilters.classList.remove('active');
+                if (energyTypeFilters) energyTypeFilters.classList.remove('active');
+            });
+            
+            // Prevent closing when clicking inside the dropdown menu
+            const settingsDropdownMenu = settingsDropdown.querySelector('.settings-dropdown-menu');
+            if (settingsDropdownMenu) {
+                settingsDropdownMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Add click handlers for settings options
+            const settingsOptions = document.querySelectorAll('.settings-option');
+            settingsOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // The data-bs-toggle and data-bs-target attributes will handle modal opening
+                    settingsDropdown.classList.remove('active');
+                });
             });
         }
         
