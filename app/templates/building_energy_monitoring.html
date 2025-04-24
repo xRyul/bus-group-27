@@ -104,7 +104,7 @@
                     <!-- Right Controls: Settings and Time Period -->
                     <div class="d-flex align-items-center position-relative">
                         <!-- Export Report Button -->
-                        <button class="btn btn-outline-primary me-2" id="downloadReportBtn">
+                        <button class="btn btn-outline-primary me-2" id="downloadReportBtn" data-bs-toggle="modal" data-bs-target="#exportOptionsModal">
                             <i class="bi bi-download me-1"></i> <span class="export-label">Export report</span>
                         </button>
                         
@@ -608,6 +608,89 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" id="applyCustomDate">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Options Modal -->
+    <div class="modal fade" id="exportOptionsModal" tabindex="-1" aria-labelledby="exportOptionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exportOptionsModalLabel">Export Options</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="exportOptionsForm">
+                        <input type="hidden" id="exportBuildingId" value="{{ selected_building_id }}">
+                        <input type="hidden" id="exportTimePeriod" value="{{ time_period }}">
+                        
+                        <!-- Custom date range (only shown if time_period is 'custom') -->
+                        {% if time_period == 'custom' and custom_start_date and custom_end_date %}
+                        <input type="hidden" id="exportStartDate" value="{{ custom_start_date }}">
+                        <input type="hidden" id="exportEndDate" value="{{ custom_end_date }}">
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Select Data to Include</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="includeElectric" checked>
+                                <label class="form-check-label" for="includeElectric">
+                                    <i class="bi bi-lightning-charge text-warning"></i> Electricity Data
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="includeGas" checked>
+                                <label class="form-check-label" for="includeGas">
+                                    <i class="bi bi-fire text-danger"></i> Gas Data
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="includeWater" checked>
+                                <label class="form-check-label" for="includeWater">
+                                    <i class="bi bi-droplet text-primary"></i> Water Data
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="includeAnomalies" checked>
+                                <label class="form-check-label" for="includeAnomalies">
+                                    <i class="bi bi-exclamation-triangle text-warning"></i> Anomaly Data
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="includeSummary" checked>
+                                <label class="form-check-label" for="includeSummary">
+                                    <i class="bi bi-bar-chart-line text-success"></i> Summary Statistics
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="includeChartImage" checked>
+                                <label class="form-check-label" for="includeChartImage">
+                                    <i class="bi bi-image text-primary"></i> Chart Image
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="exportFormat" class="form-label fw-bold">Export Format</label>
+                            <select class="form-select" id="exportFormat">
+                                <option value="json">JSON</option>
+                                <option value="csv">CSV</option>
+                            </select>
+                            <div class="form-text">
+                                <small>
+                                    <i class="bi bi-info-circle"></i> JSON format includes all selected data. CSV format is best for time series data only.
+                                </small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="exportSubmitBtn">
+                        <i class="bi bi-download"></i> Export
+                    </button>
                 </div>
             </div>
         </div>

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from typing import Optional
 
 import sqlalchemy as sa
@@ -263,6 +264,167 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
         # Return water intensity in L/m²/yr
         return round(annual_water / building_area)
+
+    def export_building_data(
+        self,
+        building_id,
+        export_options,
+        time_period="day",
+        start_date=None,
+        end_date=None,
+    ):
+        """
+        Export building energy data based on specified options
+
+        Args:
+            building_id: The ID of the building to export data for
+            export_options: Dict of boolean flags for what data to include:
+                - include_electric: Include electricity data
+                - include_gas: Include gas data
+                - include_water: Include water data
+                - include_anomalies: Include anomaly data
+                - include_summary: Include summary statistics
+            time_period: The time period to export data for ('day', 'week', 'month', 'year', 'custom')
+            start_date: Start date for custom time period (str format YYYY-MM-DD)
+            end_date: End date for custom time period (str format YYYY-MM-DD)
+
+        Returns:
+            Dict containing the requested data formatted for export
+        """
+        # Get the building
+        building = db.session.get(Building, building_id)
+        if not building:
+            return {"error": f"Building with ID {building_id} not found"}
+
+        result = {
+            "building": {
+                "id": building.id,
+                "name": building.name,
+                "location": building.location,
+                "area": building.total_area,
+                "energy_class": building.energy_class,
+            },
+            "export_date": datetime.now().isoformat(),
+            "time_period": time_period,
+        }
+
+        # Handle custom time period
+        if time_period == "custom" and start_date and end_date:
+            result["start_date"] = start_date
+            result["end_date"] = end_date
+
+        # Add energy data based on options
+        if export_options.get("include_electric", False):
+            result["electric_data"] = self._get_energy_data_for_export(
+                building_id, "electric", time_period, start_date, end_date
+            )
+
+        if export_options.get("include_gas", False):
+            result["gas_data"] = self._get_energy_data_for_export(
+                building_id, "gas", time_period, start_date, end_date
+            )
+
+        if export_options.get("include_water", False):
+            result["water_data"] = self._get_energy_data_for_export(
+                building_id, "water", time_period, start_date, end_date
+            )
+
+        # Include anomaly data if requested
+        if export_options.get("include_anomalies", False):
+            anomalies = self.get_anomalies_for_building(building_id)
+            result["anomalies"] = anomalies
+
+        # Include summary statistics if requested
+        if export_options.get("include_summary", False):
+            # Calculate days for custom period if needed
+            custom_days = None
+            if time_period == "custom" and start_date and end_date:
+
+                start = datetime.strptime(start_date, "%Y-%m-%d")
+                end = datetime.strptime(end_date, "%Y-%m-%d")
+                custom_days = (end - start).days + 1
+
+            # Get hourly data for calculations
+            hourly_data_electric = self.get_hourly_average("electric", building_id)
+            hourly_data_gas = self.get_hourly_average("gas", building_id)
+            hourly_data_water = self.get_hourly_average("water", building_id)
+
+            # Calculate summary statistics
+            result["summary"] = {
+                "total_consumption": self.calculate_total_consumption(
+                    hourly_data_electric, hourly_data_gas, time_period, custom_days
+                ),
+                "estimated_cost": self.calculate_estimated_cost(
+                    hourly_data_electric, hourly_data_gas, time_period, custom_days
+                ),
+                "carbon_footprint": self.calculate_carbon_footprint(
+                    hourly_data_electric, hourly_data_gas, time_period, custom_days
+                ),
+                "energy_intensity": self.calculate_energy_intensity(
+                    self.calculate_total_consumption(
+                        hourly_data_electric, hourly_data_gas, "year"
+                    ),
+                    building.total_area,
+                    "year",
+                ),
+                "renewable_percent": self.estimate_renewable_percentage(
+                    building.energy_class
+                ),
+                "water_intensity": self.calculate_water_intensity(
+                    hourly_data_water, building.total_area, "year"
+                ),
+            }
+
+        return result
+
+    def _get_energy_data_for_export(
+        self, building_id, energy_type, time_period, start_date=None, end_date=None
+    ):
+
+        query = sa.select(BuildingEnergy).where(
+            BuildingEnergy.building_id == building_id,
+            BuildingEnergy.energy_type == energy_type,
+        )
+
+        # Add time period filtering
+        if time_period == "custom" and start_date and end_date:
+            query = query.where(
+                BuildingEnergy.timestamp >= start_date,
+                BuildingEnergy.timestamp <= end_date,
+            )
+        elif time_period == "day":
+            # Last 24 hours of data
+            query = query.where(
+                BuildingEnergy.timestamp >= datetime.now() - timedelta(days=1)
+            )
+        elif time_period == "week":
+            query = query.where(
+                BuildingEnergy.timestamp >= datetime.now() - timedelta(days=7)
+            )
+        elif time_period == "month":
+            query = query.where(
+                BuildingEnergy.timestamp >= datetime.now() - timedelta(days=30)
+            )
+        elif time_period == "year":
+            query = query.where(
+                BuildingEnergy.timestamp >= datetime.now() - timedelta(days=365)
+            )
+
+        # Order by timestamp
+        query = query.order_by(BuildingEnergy.timestamp)
+
+        # Execute query and format results
+        data = []
+        for record in db.session.execute(query).scalars():
+            data.append(
+                {
+                    "timestamp": record.timestamp.isoformat(),
+                    "consumption_value": record.consumption_value,
+                    "is_anomaly": record.is_anomaly,
+                }
+            )
+
+        return data
 
 
 class CommunityEngagement:

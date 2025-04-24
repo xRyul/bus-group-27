@@ -1,9 +1,12 @@
+import json
 from datetime import datetime
 from urllib.parse import urlsplit
 
 import sqlalchemy as sa
 from flask import (
+    Response,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
@@ -237,7 +240,6 @@ def building_energy_monitoring():
     # Handle custom date range
     if time_period == "custom" and custom_start_date and custom_end_date:
         try:
-            from datetime import datetime
 
             start_date = datetime.strptime(custom_start_date, "%Y-%m-%d")
             end_date = datetime.strptime(custom_end_date, "%Y-%m-%d")
@@ -247,7 +249,6 @@ def building_energy_monitoring():
             ).days + 1  # +1 to include both start and end dates
 
             if custom_days <= 0:
-                # Invalid date range, default to 1 day
                 custom_days = 1
                 flash("Invalid date range. Using default values.", "warning")
         except ValueError:
@@ -338,6 +339,80 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("home"))
+
+
+@app.route("/export-building-data", methods=["POST"])
+@login_required
+def export_building_data():
+    # Get export parameters from request
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    building_id = data.get("building_id")
+    if not building_id:
+        return jsonify({"error": "No building ID provided"}), 400
+
+    # Extract export options
+    export_options = {
+        "include_electric": data.get("include_electric", False),
+        "include_gas": data.get("include_gas", False),
+        "include_water": data.get("include_water", False),
+        "include_anomalies": data.get("include_anomalies", False),
+        "include_summary": data.get("include_summary", False),
+    }
+
+    # Extract time period and custom dates if applicable
+    time_period = data.get("time_period", "day")
+    start_date = data.get("start_date")
+    end_date = data.get("end_date")
+
+    # Use BuildingEnergyMonitoring service to get the data
+    bem = BuildingEnergyMonitoring()
+    export_data = bem.export_building_data(
+        building_id, export_options, time_period, start_date, end_date
+    )
+
+    if "error" in export_data:
+        return jsonify({"error": export_data["error"]}), 400
+
+    # Format the output based on requested format
+    export_format = data.get("export_format", "json")
+
+    if export_format == "json":
+        # For JSON, we can just return the data
+        return jsonify(export_data)
+    elif export_format == "csv":
+        # For CSV, we need to flatten the data
+        csv_data = "timestamp,type,consumption_value,is_anomaly\n"
+
+        # Add electric data if included
+        if "electric_data" in export_data:
+            for entry in export_data["electric_data"]:
+                csv_data += f"{entry['timestamp']},electric,{entry['consumption_value']},{entry['is_anomaly']}\n"
+
+        # Add gas data if included
+        if "gas_data" in export_data:
+            for entry in export_data["gas_data"]:
+                csv_data += f"{entry['timestamp']},gas,{entry['consumption_value']},{entry['is_anomaly']}\n"
+
+        # Add water data if included
+        if "water_data" in export_data:
+            for entry in export_data["water_data"]:
+                csv_data += f"{entry['timestamp']},water,{entry['consumption_value']},{entry['is_anomaly']}\n"
+
+        # Return CSV as a file download
+        building_name = export_data["building"]["name"].replace(" ", "_").lower()
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        filename = f"{building_name}_energy_data_{timestamp}.csv"
+
+        return Response(
+            csv_data,
+            mimetype="text/csv",
+            headers={"Content-Disposition": f"attachment;filename={filename}"},
+        )
+    else:
+        return jsonify({"error": f"Unsupported export format: {export_format}"}), 400
 
 
 # Error handlers

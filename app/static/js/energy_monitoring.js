@@ -213,17 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // Export chart as image
-            const downloadReportBtn = document.getElementById('downloadReportBtn');
-            if (downloadReportBtn) {
-                downloadReportBtn.addEventListener('click', function() {
-                    const link = document.createElement('a');
-                    link.download = 'energy-consumption-report.png';
-                    link.href = mainChart.toBase64Image();
-                    link.click();
-                });
-            }
-            
             // Connect energy type filters to chart visibility
             document.getElementById('electricity').addEventListener('change', function() {
                 mainChart.data.datasets[0].hidden = !this.checked; // Electric line
@@ -474,8 +463,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (endDateField) endDateField.value = endDate;
                     
                     // Format dates for display
-                    const startFormatted = new Date(startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                    const endFormatted = new Date(endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    const startFormatted = new Date(startDate).toLocaleDateString('en-UK', { month: 'short', day: 'numeric' });
+                    const endFormatted = new Date(endDate).toLocaleDateString('en-UK', { month: 'short', day: 'numeric' });
                     
                     // Update button content
                     timePeriodButton.innerHTML = `
@@ -705,8 +694,143 @@ document.addEventListener('DOMContentLoaded', function() {
         const downloadReportBtn = document.getElementById('downloadReportBtn');
         if (downloadReportBtn) {
             downloadReportBtn.addEventListener('click', function() {
-                console.log('Exporting full report...');
-                alert('Generating comprehensive energy report PDF...');
+                // The button now opens a modal with data-bs-toggle="modal"
+                // So we don't need to do anything here
+            });
+        }
+        
+        // Handle export form submission
+        const exportSubmitBtn = document.getElementById('exportSubmitBtn');
+        if (exportSubmitBtn) {
+            exportSubmitBtn.addEventListener('click', function() {
+                const modal = document.getElementById('exportOptionsModal');
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                
+                // Show loading state
+                exportSubmitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Exporting...';
+                exportSubmitBtn.disabled = true;
+                
+                // Get export options
+                const exportOptions = {
+                    building_id: document.getElementById('exportBuildingId').value,
+                    time_period: document.getElementById('exportTimePeriod').value,
+                    include_electric: document.getElementById('includeElectric').checked,
+                    include_gas: document.getElementById('includeGas').checked,
+                    include_water: document.getElementById('includeWater').checked,
+                    include_anomalies: document.getElementById('includeAnomalies').checked,
+                    include_summary: document.getElementById('includeSummary').checked,
+                    export_format: document.getElementById('exportFormat').value
+                };
+                
+                // Handle chart image export if that option is selected
+                const includeChartImage = document.getElementById('includeChartImage').checked;
+                if (includeChartImage) {
+                    // Get the chart canvas
+                    const mainChart = Chart.getChart('mainChart');
+                    if (mainChart) {
+                        // Export chart as PNG image
+                        const chartImageUrl = mainChart.toBase64Image();
+                        const link = document.createElement('a');
+                        const building_name = document.getElementById('buildingDropdown').textContent.trim().replace(/\s+/g, '_').toLowerCase();
+                        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                        link.download = `${building_name}_energy_chart_${timestamp}.png`;
+                        link.href = chartImageUrl;
+                        link.click();
+                    }
+                }
+                
+                // Add custom date range if applicable
+                const startDateEl = document.getElementById('exportStartDate');
+                const endDateEl = document.getElementById('exportEndDate');
+                if (exportOptions.time_period === 'custom' && startDateEl && endDateEl) {
+                    exportOptions.start_date = startDateEl.value;
+                    exportOptions.end_date = endDateEl.value;
+                }
+                
+                // Make API call to get export data
+                fetch('/export-building-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(exportOptions)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Export failed');
+                    }
+                    
+                    const contentType = response.headers.get('content-type');
+                    
+                    // Handle CSV response
+                    if (contentType && contentType.includes('text/csv')) {
+                        // For CSV, we trigger a download
+                        return response.blob().then(blob => {
+                            const contentDisposition = response.headers.get('content-disposition');
+                            let filename = 'energy_data_export.csv';
+                            
+                            // Try to extract filename from Content-Disposition header
+                            if (contentDisposition) {
+                                const filenameMatch = contentDisposition.match(/filename=(.*)/);
+                                if (filenameMatch && filenameMatch[1]) {
+                                    filename = filenameMatch[1].replace(/['"]/g, '');
+                                }
+                            }
+                            
+                            // Create a download link and trigger it
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = filename;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            a.remove();
+                        });
+                    }
+                    
+                    // Handle JSON response
+                    return response.json().then(data => {
+                        // For JSON, we save it as a file
+                        const jsonStr = JSON.stringify(data, null, 2);
+                        const blob = new Blob([jsonStr], { type: 'application/json' });
+                        
+                        // Create filename with building name
+                        let building_name = "building";
+                        if (data.building && data.building.name) {
+                            building_name = data.building.name.replace(/\s+/g, '_').toLowerCase();
+                        }
+                        
+                        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                        const filename = `${building_name}_energy_data_${timestamp}.json`;
+                        
+                        // Create a download link and trigger it
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        a.remove();
+                    });
+                })
+                .catch(error => {
+                    console.error('Error during export:', error);
+                    alert('An error occurred during export. Please try again.');
+                })
+                .finally(() => {
+                    // Reset button state
+                    exportSubmitBtn.innerHTML = '<i class="bi bi-download"></i> Export';
+                    exportSubmitBtn.disabled = false;
+                    
+                    // Close the modal
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+                });
             });
         }
         
