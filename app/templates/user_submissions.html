@@ -49,11 +49,11 @@
                         </td>
                         <td>
                             <form action="{{ url_for('update_status', submission_id=submission.id, status='verified') }}"
-                                  method="POST" style="display: inline-block;">
+                                method="POST" style="display: inline-block;">
                                 <button type="submit" class="approve-button">Approve</button>
                             </form>
                             <form action="{{ url_for('update_status', submission_id=submission.id, status='rejected') }}"
-                                  method="POST" style="display: inline-block;">
+                                method="POST" style="display: inline-block;">
                                 <button type="submit" class="decline-button">Decline</button>
                             </form>
                         </td>
