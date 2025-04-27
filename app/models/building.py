@@ -17,9 +17,7 @@ class Building(db.Model):
     energy_class: so.Mapped[str] = so.mapped_column(sa.String(20))
 
     # Relationship: one-to-many with BuildingEnergy
-    energy_readings = db.relationship(
-        "BuildingEnergy", back_populates="building", lazy="dynamic"
-    )
+    energy_readings = db.relationship("BuildingEnergy", back_populates="building", lazy="dynamic")
 
     def __repr__(self):
         return f"Building(id={self.id}, name={self.name}, location={self.location}, energy_class={self.energy_class})"

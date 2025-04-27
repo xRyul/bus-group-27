@@ -14,12 +14,8 @@ class BuildingEnergy(db.Model):
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     building_id: so.Mapped[int] = so.mapped_column(ForeignKey("buildings.id"))
-    timestamp: so.Mapped[datetime.datetime] = so.mapped_column(
-        sa.DateTime, default=datetime.datetime.utcnow
-    )
-    energy_type: so.Mapped[str] = so.mapped_column(
-        sa.String(20)
-    )  # electricity, gas, water
+    timestamp: so.Mapped[datetime.datetime] = so.mapped_column(sa.DateTime, default=datetime.datetime.utcnow)
+    energy_type: so.Mapped[str] = so.mapped_column(sa.String(20))  # electricity, gas, water
     consumption_value: so.Mapped[float] = so.mapped_column(sa.Float)
     unit: so.Mapped[str] = so.mapped_column(sa.String(10))  # kWh, m3, etc.
     is_anomaly: so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)

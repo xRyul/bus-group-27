@@ -9,15 +9,9 @@
         <div>
             <h1 class="dashboard-title">Building Energy Monitoring</h1>
         </div>
-        <div class="dashboard-actions">
-            <!-- Export Report button removed from here -->
-        </div>
     </div>
     
-    <!-- Dashboard Controls -->
-    <div class="dashboard-controls animate-fade-in" style="display: none;">
-        <!-- Date Range Picker moved to dropdown -->
-    </div>
+
     
     <!-- Building Quick Info - Dropdown + Collapsible Details -->
     <div class="row">
@@ -36,8 +30,8 @@
                                 {% for building in buildings %}
                                 <li>
                                     <a class="dropdown-item {% if selected_building and selected_building.id == building.id %}active{% endif %}" 
-                                       href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
-                                        {{ building.name }}
+                                    href="{{ url_for('building_energy_monitoring', building_id=building.id) }}">
+                                    {{ building.name }}
                                     </a>
                                 </li>
                                 {% endfor %}
@@ -428,9 +422,6 @@
             <div class="dashboard-card h-100 animate-fade-in">
                 <div class="card-header">
                     <h5><i class="bi bi-lightbulb"></i> AI Efficiency Recommendations</h5>
-                    <button class="btn btn-sm btn-outline-primary" id="implementAllBtn">
-                        <i class="bi bi-check2-all"></i> Implement All
-                    </button>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -442,10 +433,6 @@
                                 <div class="recommendation-content">
                                     <h6>Optimize HVAC Schedule</h6>
                                     <p>Adjust HVAC operating hours to match building occupancy patterns. Potential savings: 15-20%.</p>
-                                    <div class="d-flex gap-2 mt-2">
-                                        <button class="btn btn-sm btn-outline-success">Implement</button>
-                                        <button class="btn btn-sm btn-outline-secondary">Details</button>
-                                    </div>
                                 </div>
                             </div>
                             
@@ -456,10 +443,6 @@
                                 <div class="recommendation-content">
                                     <h6>Investigate Night Usage</h6>
                                     <p>Unusual electricity consumption detected between 2-3 AM. Check for equipment left running overnight.</p>
-                                    <div class="d-flex gap-2 mt-2">
-                                        <button class="btn btn-sm btn-outline-success">Investigate</button>
-                                        <button class="btn btn-sm btn-outline-secondary">Details</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -472,10 +455,6 @@
                                 <div class="recommendation-content">
                                     <h6>Upgrade Lighting Systems</h6>
                                     <p>Replace remaining fluorescent fixtures with LED lighting. Estimated ROI: 18 months.</p>
-                                    <div class="d-flex gap-2 mt-2">
-                                        <button class="btn btn-sm btn-outline-success">Implement</button>
-                                        <button class="btn btn-sm btn-outline-secondary">Details</button>
-                                    </div>
                                 </div>
                             </div>
                             
@@ -486,10 +465,6 @@
                                 <div class="recommendation-content">
                                     <h6>Install Occupancy Sensors</h6>
                                     <p>Add motion sensors in low-traffic areas to automatically control lighting.</p>
-                                    <div class="d-flex gap-2 mt-2">
-                                        <button class="btn btn-sm btn-outline-success">Implement</button>
-                                        <button class="btn btn-sm btn-outline-secondary">Details</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -713,12 +688,4 @@
 <!-- Dashboard JavaScript -->
 <script src="{{ url_for('static', filename='js/energy_monitoring.js') }}"></script>
 
-<!-- Energy type toggle JS - keep this part as it's specific to this page -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // This section is now handled by energy_monitoring.js
-        // The time period selection, dropdown functionality, and custom date handling
-        // are all consolidated in the setupDashboardControls function in the main JS file
-    });
-</script>
 {% endblock %}

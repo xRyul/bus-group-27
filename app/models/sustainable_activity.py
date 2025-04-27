@@ -16,13 +16,9 @@ class SustainableActivity(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(ForeignKey("users.id"))
     activity_type: so.Mapped[str] = so.mapped_column(sa.String(50))
     description: so.Mapped[str] = so.mapped_column(sa.String(255))
-    timestamp: so.Mapped[datetime.datetime] = so.mapped_column(
-        sa.DateTime, default=datetime.datetime.utcnow
-    )
+    timestamp: so.Mapped[datetime.datetime] = so.mapped_column(sa.DateTime, default=datetime.datetime.utcnow)
     evidence: so.Mapped[str] = so.mapped_column(sa.String(255), nullable=True)
-    status: so.Mapped[str] = so.mapped_column(
-        sa.String(20), default="pending"
-    )  # pending, verified, rejected
+    status: so.Mapped[str] = so.mapped_column(sa.String(20), default="pending")  # pending, verified, rejected
     points_awarded: so.Mapped[int] = so.mapped_column(sa.Integer, default=0)
     carbon_saved: so.Mapped[float] = so.mapped_column(sa.Float, default=0.0)
 

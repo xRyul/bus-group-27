@@ -20,7 +20,8 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-modern">
     <div class="container">
-        <a class="navbar-brand navbar-brand-modern" href="{% if current_user.is_authenticated %}
+        <a class="navbar-brand navbar-brand-modern" href="
+                {% if current_user.is_authenticated %}
                     {% if current_user.role == 'Admin' %}
                         {{ url_for('admin') }}
                     {% elif current_user.role in ['Student', 'Staff'] %}

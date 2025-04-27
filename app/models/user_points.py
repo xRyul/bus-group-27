@@ -16,9 +16,7 @@ class UserPoints(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(ForeignKey("users.id"), unique=True)
     total_points: so.Mapped[int] = so.mapped_column(sa.Integer, default=0)
     green_score: so.Mapped[float] = so.mapped_column(sa.Float, default=0.0)
-    last_updated: so.Mapped[datetime.datetime] = so.mapped_column(
-        sa.DateTime, default=datetime.datetime.utcnow
-    )
+    last_updated: so.Mapped[datetime.datetime] = so.mapped_column(sa.DateTime, default=datetime.datetime.utcnow)
 
     # Relationship: one-to-one with User
     user = db.relationship("User", back_populates="points")

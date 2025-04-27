@@ -32,16 +32,16 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         return db.session.scalars(sa.select(Building).order_by(Building.name)).all()
 
     # Find the most appropriate default building ID from a list of buildings
+    # Try to find Computer Science building first
+    # Fall back to first building in the list
     def get_default_building_id(self, buildings):
         if not buildings:
             return None
 
-        # Try to find Computer Science building first
         cs_building = next((b for b in buildings if b.name == "Computer Science"), None)
         if cs_building:
             return cs_building.id
 
-        # Fall back to first building in the list
         return buildings[0].id
 
     # Validate a selected building ID and return a valid ID
@@ -57,6 +57,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         return self.get_default_building_id(buildings)
 
     # Get hourly average energy consumption for a building and energy type
+    # Ensure all 24 hours are present, default to 0
     def get_hourly_average(self, energy_type, building_id):
         avg_data = (
             db.session.query(
@@ -71,7 +72,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
             .order_by(extract("hour", BuildingEnergy.timestamp))
             .all()
         )
-        # Ensure all 24 hours are present, default to 0
+
         data_dict = {hour: avg for hour, avg in avg_data}
         return [data_dict.get(h, 0) for h in range(24)]
 
@@ -111,21 +112,9 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
     def calculate_total_consumption(
         self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None
     ):
-        # The hourly_data already contains the average hourly consumption for each hour
-        # We don't need to multiply by 24 again as the values are already per hour
-
-        # Debug: Print hourly data
-        print(f"Hourly electric data: {hourly_data_electric}")
-        print(f"Hourly gas data: {hourly_data_gas}")
-
         # Daily consumption - sum of hourly values
-        # Each value in hourly_data represents the average consumption for that hour
-        # So the daily total is just the sum of all hourly values
         total_electric_daily = sum(hourly_data_electric)
         total_gas_daily = sum(hourly_data_gas)
-
-        print(f"Daily electric total: {total_electric_daily}")
-        print(f"Daily gas total: {total_gas_daily}")
 
         # Scale based on selected time period
         scaling_factors = {
@@ -137,29 +126,20 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         }
 
         scaling = scaling_factors.get(time_period, 1)
-        print(f"Time period: {time_period}, Scaling factor: {scaling}")
 
         total_electric = total_electric_daily * scaling
         total_gas = total_gas_daily * scaling
 
-        print(f"Scaled electric total: {total_electric}")
-        print(f"Scaled gas total: {total_gas}")
-
-        # Convert gas (m3) to kWh using approximate conversion factor
-        gas_to_kwh = total_gas * 10.55
-        print(f"Gas converted to kWh: {gas_to_kwh}")
-
-        # Final total
+        # Convert gas (m3) to kWh using the EON formula: https://www.eonnext.com/business/help/convert-gas-units-to-kwh#:~:text=You%20can%20find%20this%20on,your%20gas%20usage%20in%20kWh.
+        # m3 × calorific value × correction factor (1.02264) ÷ kWh conversion factor (3.6)
+        # Using hardcoded average calorific value of 38
+        gas_to_kwh = total_gas * 38 * 1.02264 / 3.6
         final_total = round(total_electric + gas_to_kwh)
-        print(f"Final total consumption: {final_total} kWh")
 
-        # Return total in kWh
         return final_total
 
     # Calculate estimated cost based on consumption
-    def calculate_estimated_cost(
-        self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None
-    ):
+    def calculate_estimated_cost(self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None):
         # Get total consumption for the time period
         total_electric_daily = sum(hourly_data_electric)
         total_gas_daily = sum(hourly_data_gas)
@@ -177,15 +157,17 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
         total_electric = total_electric_daily * scaling
         total_gas = total_gas_daily * scaling
-        gas_to_kwh = total_gas * 10.55
+        
+        # Convert gas (m3) to kWh using the EON formula:
+        # https://www.eonnext.com/business/help/convert-gas-units-to-kwh#:~:text=You%20can%20find%20this%20on,your%20gas%20usage%20in%20kWh.
+        # m3 × calorific value × correction factor (1.02264) ÷ kWh conversion factor (3.6)
+        gas_to_kwh = total_gas * 38 * 1.02264 / 3.6
 
-        # Approximate rates: £0.15 per kWh for electricity, £0.05 per kWh for gas
-        return round(total_electric * 0.15 + gas_to_kwh * 0.05, 2)
+        #  £0.40 per kWh for electricity, £0.25 per kWh for gas
+        return round(total_electric * 0.40 + gas_to_kwh * 0.25, 2)
 
     # Calculate carbon footprint based on consumption
-    def calculate_carbon_footprint(
-        self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None
-    ):
+    def calculate_carbon_footprint(self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None):
         # Get total consumption for the time period
         total_electric_daily = sum(hourly_data_electric)
         total_gas_daily = sum(hourly_data_gas)
@@ -203,17 +185,20 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
         total_electric = total_electric_daily * scaling
         total_gas = total_gas_daily * scaling
-        gas_to_kwh = total_gas * 10.55
+        
+        # Convert gas (m3) to kWh using the EON formula:
+        # https://www.eonnext.com/business/help/convert-gas-units-to-kwh#:~:text=You%20can%20find%20this%20on,your%20gas%20usage%20in%20kWh.
+        # m3 × calorific value × correction factor (1.02264) ÷ kWh conversion factor (3.6)
+        gas_to_kwh = total_gas * 38 * 1.02264 / 3.6
 
         # UK grid average emissions factors:
+        # https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2024
         # ~0.23 kg CO2 per kWh of electricity
         # ~0.18 kg CO2 per kWh of gas
         return round(total_electric * 0.23 + gas_to_kwh * 0.18)
 
     # Calculate energy intensity (kWh/m²/yr)
-    def calculate_energy_intensity(
-        self, total_consumption, building_area, time_period="day", custom_days=None
-    ):
+    def calculate_energy_intensity(self, total_consumption, building_area, time_period="day", custom_days=None):
         if not building_area:
             return 0
 
@@ -315,19 +300,13 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
         # Add energy data based on options
         if export_options.get("include_electric", False):
-            result["electric_data"] = self._get_energy_data_for_export(
-                building_id, "electric", time_period, start_date, end_date
-            )
+            result["electric_data"] = self._get_energy_data_for_export(building_id, "electric", time_period, start_date, end_date)
 
         if export_options.get("include_gas", False):
-            result["gas_data"] = self._get_energy_data_for_export(
-                building_id, "gas", time_period, start_date, end_date
-            )
+            result["gas_data"] = self._get_energy_data_for_export(building_id, "gas", time_period, start_date, end_date)
 
         if export_options.get("include_water", False):
-            result["water_data"] = self._get_energy_data_for_export(
-                building_id, "water", time_period, start_date, end_date
-            )
+            result["water_data"] = self._get_energy_data_for_export(building_id, "water", time_period, start_date, end_date)
 
         # Include anomaly data if requested
         if export_options.get("include_anomalies", False):
@@ -351,69 +330,36 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
             # Calculate summary statistics
             result["summary"] = {
-                "total_consumption": self.calculate_total_consumption(
-                    hourly_data_electric, hourly_data_gas, time_period, custom_days
-                ),
-                "estimated_cost": self.calculate_estimated_cost(
-                    hourly_data_electric, hourly_data_gas, time_period, custom_days
-                ),
-                "carbon_footprint": self.calculate_carbon_footprint(
-                    hourly_data_electric, hourly_data_gas, time_period, custom_days
-                ),
-                "energy_intensity": self.calculate_energy_intensity(
-                    self.calculate_total_consumption(
-                        hourly_data_electric, hourly_data_gas, "year"
-                    ),
-                    building.total_area,
-                    "year",
-                ),
-                "renewable_percent": self.estimate_renewable_percentage(
-                    building.energy_class
-                ),
-                "water_intensity": self.calculate_water_intensity(
-                    hourly_data_water, building.total_area, "year"
-                ),
+                "total_consumption": self.calculate_total_consumption(hourly_data_electric, hourly_data_gas, time_period, custom_days),
+                "estimated_cost": self.calculate_estimated_cost(hourly_data_electric, hourly_data_gas, time_period, custom_days),
+                "carbon_footprint": self.calculate_carbon_footprint(hourly_data_electric, hourly_data_gas, time_period, custom_days),
+                "energy_intensity": self.calculate_energy_intensity(self.calculate_total_consumption(hourly_data_electric, hourly_data_gas, "year"), 
+                building.total_area, "year",),
+                "renewable_percent": self.estimate_renewable_percentage(building.energy_class),
+                "water_intensity": self.calculate_water_intensity(hourly_data_water, building.total_area, "year"),
             }
 
         return result
 
-    def _get_energy_data_for_export(
-        self, building_id, energy_type, time_period, start_date=None, end_date=None
-    ):
+    def _get_energy_data_for_export(self, building_id, energy_type, time_period, start_date=None, end_date=None):
 
-        query = sa.select(BuildingEnergy).where(
-            BuildingEnergy.building_id == building_id,
-            BuildingEnergy.energy_type == energy_type,
-        )
+        query = sa.select(BuildingEnergy).where(BuildingEnergy.building_id == building_id, BuildingEnergy.energy_type == energy_type)
 
         # Add time period filtering
         if time_period == "custom" and start_date and end_date:
-            query = query.where(
-                BuildingEnergy.timestamp >= start_date,
-                BuildingEnergy.timestamp <= end_date,
-            )
+            query = query.where(BuildingEnergy.timestamp >= start_date, BuildingEnergy.timestamp <= end_date)
         elif time_period == "day":
             # Last 24 hours of data
-            query = query.where(
-                BuildingEnergy.timestamp >= datetime.now() - timedelta(days=1)
-            )
+            query = query.where(BuildingEnergy.timestamp >= datetime.now() - timedelta(days=1))
         elif time_period == "week":
-            query = query.where(
-                BuildingEnergy.timestamp >= datetime.now() - timedelta(days=7)
-            )
+            query = query.where(BuildingEnergy.timestamp >= datetime.now() - timedelta(days=7))
         elif time_period == "month":
-            query = query.where(
-                BuildingEnergy.timestamp >= datetime.now() - timedelta(days=30)
-            )
+            query = query.where(BuildingEnergy.timestamp >= datetime.now() - timedelta(days=30))
         elif time_period == "year":
-            query = query.where(
-                BuildingEnergy.timestamp >= datetime.now() - timedelta(days=365)
-            )
+            query = query.where(BuildingEnergy.timestamp >= datetime.now() - timedelta(days=365))
 
-        # Order by timestamp
+        # Order by timestamp and format results
         query = query.order_by(BuildingEnergy.timestamp)
-
-        # Execute query and format results
         data = []
         for record in db.session.execute(query).scalars():
             data.append(
@@ -543,10 +489,9 @@ class CommunityEngagement:
             "total_points": total_points,
         }, 200
 
-    # New methods for admin/user operations
+    # Methods for admin/user operations
 
     def get_user_points(self, user_id=None):
-        """Get point information for a user"""
         if not self.user and not user_id:
             return 0
 
@@ -557,8 +502,8 @@ class CommunityEngagement:
         user_points = UserPoints.query.filter_by(user_id=user_id).first()
         return user_points.green_score if user_points else 0
 
+    # Get top users by green score
     def get_top_users(self, limit=10):
-        """Get top users by green score"""
         return (
             db.session.query(UserPoints, User)
             .join(User, UserPoints.user_id == User.id)
@@ -568,7 +513,6 @@ class CommunityEngagement:
         )
 
     def get_recent_activities(self, user_id=None, limit=3):
-        """Get recent activities for a user"""
         if not self.user and user_id is None:
             return []
 
@@ -583,14 +527,14 @@ class CommunityEngagement:
             .all()
         )
 
+    # Get all pending activity submissions
     @staticmethod
     def get_pending_submissions():
-        """Get all pending activity submissions"""
         return SustainableActivity.query.filter_by(status="pending").all()
 
+    # Update status of a sustainable activity
     @staticmethod
     def update_activity_status(activity_id, status):
-        """Update status of a sustainable activity"""
         if status not in ["verified", "rejected"]:
             return {"error": "Invalid status value"}, 400
 
@@ -602,9 +546,9 @@ class CommunityEngagement:
         db.session.commit()
         return {"message": f"Activity status updated to {status}"}, 200
 
+    #Update a user's role with validation
     @staticmethod
     def update_user_role(user_id, new_role, current_user_id=None):
-        """Update a user's role with validation"""
         user = User.query.get(user_id)
         if not user:
             return {"error": "User not found"}, 404

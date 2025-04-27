@@ -164,7 +164,7 @@ def verify_activity(activity_id):
     if user:
         community_engagement = CommunityEngagement(user)
 
-        # Add display name to activity (for logging/flash messages if needed)
+        # Add display name to activity (for logging/flash messages)
         community_engagement.add_display_names_to_activities(activity, activity_types)
 
         result, status_code = community_engagement.award_points(activity)

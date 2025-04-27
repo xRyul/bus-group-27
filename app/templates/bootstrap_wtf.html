@@ -1,3 +1,14 @@
+<!-- 
+bootstrap_wtf.html - WTForms Bootstrap Integration
+
+This template is used in:
+- generic_form.html (Login form)
+- green_score.html (Activity submission form)
+
+Each form field type is rendered with appropriate Bootstrap classes (form-control,
+form-check-input, etc.) and includes error handling with Bootstrap's validation styling.
+-->
+
 {% macro form_field(field, autofocus) %}
   {%- if field.type == 'BooleanField' %}
   <div class="form-check mb-3">
