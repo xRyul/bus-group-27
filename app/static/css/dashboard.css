@@ -1017,8 +1017,9 @@
 .breakdown-info-content {
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    transform: none;
     width: 0;
     max-width: 0;
     background-color: white;
@@ -1034,8 +1035,8 @@
 }
 
 .breakdown-hover:hover .breakdown-info-content {
-    width: 300px;
-    max-width: 90vw;
+    width: 100%;
+    max-width: 100%;
     opacity: 1;
     display: block;
     pointer-events: auto;
@@ -1092,7 +1093,7 @@
 /* Mobile adjustments for energy breakdown */
 @media (max-width: 768px) {
     .energy-breakdown-row {
-        margin-top: -10px;
+        margin-top: 0;
         margin-bottom: 20px;
     }
     
@@ -1101,9 +1102,11 @@
     }
     
     .breakdown-hover:hover .breakdown-info-content {
-        width: 280px;
-        left: 50%;
-        transform: translateX(-50%);
+        width: 100%;
+        max-width: 100%;
+        left: 0;
+        right: 0;
+        transform: none;
     }
     
     .energy-breakdown-item {
