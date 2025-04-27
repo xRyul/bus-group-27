@@ -977,3 +977,136 @@
         max-width: 100%;
     }
 }
+
+/* --------------------- ENERGY BREAKDOWN HOVER ----------------- */
+.energy-breakdown-row {
+    margin-top: 0;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 5;
+}
+
+.energy-breakdown-item {
+    position: relative;
+}
+
+.breakdown-hover {
+    position: relative;
+    cursor: pointer;
+    padding: 5px 0;
+}
+
+.chart-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.chart-title i {
+    margin-right: 5px;
+    color: #4CAF50;
+}
+
+.chart-wrapper {
+    height: 30px;
+    width: 100%;
+}
+
+.breakdown-info-content {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    max-width: 0;
+    background-color: white;
+    border-radius: 8px;
+    transition: opacity 0.3s ease, width 0.3s ease, max-width 0.3s ease;
+    opacity: 0;
+    display: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    pointer-events: none;
+    margin-top: 10px;
+    border: 1px solid #e9ecef;
+}
+
+.breakdown-hover:hover .breakdown-info-content {
+    width: 300px;
+    max-width: 90vw;
+    opacity: 1;
+    display: block;
+    pointer-events: auto;
+}
+
+.breakdown-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.breakdown-header h6 {
+    margin: 0;
+    color: #333;
+}
+
+.breakdown-body {
+    padding: 10px 15px;
+}
+
+.breakdown-body p {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.breakdown-body ul {
+    padding-left: 15px;
+    margin-bottom: 0;
+}
+
+.breakdown-body li {
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+}
+
+.breakdown-body .badge {
+    color: white;
+    font-weight: normal;
+    padding: 3px 6px;
+}
+
+/* Arrow for the hover content */
+.breakdown-info-content:before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 8px 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+    z-index: 1;
+}
+
+/* Mobile adjustments for energy breakdown */
+@media (max-width: 768px) {
+    .energy-breakdown-row {
+        margin-top: -10px;
+        margin-bottom: 20px;
+    }
+    
+    .chart-wrapper {
+        height: 35px;
+    }
+    
+    .breakdown-hover:hover .breakdown-info-content {
+        width: 280px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .energy-breakdown-item {
+        margin-bottom: 15px;
+    }
+}

@@ -233,16 +233,41 @@ function initEnergyMixChart() {
     
     const energyMixCtx = energyMixEl.getContext('2d');
     new Chart(energyMixCtx, {
-        type: 'doughnut',
+        type: 'bar',
         data: {
-            labels: ['Grid Electricity', 'Natural Gas', 'Solar PV', 'Other Renewables'],
-            datasets: [{
-                data: [58, 10, 25, 7],
-                backgroundColor: ['#1976D2', '#F44336', '#FFB300', '#00BFA5'],
-                borderWidth: 0
-            }]
+            labels: ['Energy Sources'],
+            datasets: [
+                {
+                    label: 'Grid Electricity',
+                    data: [58],
+                    backgroundColor: '#1976D2',
+                    borderColor: '#1976D2',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Natural Gas',
+                    data: [10],
+                    backgroundColor: '#F44336',
+                    borderColor: '#F44336',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Solar PV',
+                    data: [25],
+                    backgroundColor: '#FFB300',
+                    borderColor: '#FFB300',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Other Renewables',
+                    data: [7],
+                    backgroundColor: '#00BFA5',
+                    borderColor: '#00BFA5',
+                    borderWidth: 1
+                }
+            ]
         },
-        options: getPieChartOptions(true)
+        options: getStackedBarChartOptions(true)
     });
 }
 
@@ -253,16 +278,41 @@ function initSystemBreakdownChart() {
     
     const ctx = chartEl.getContext('2d');
     new Chart(ctx, {
-        type: 'pie',
+        type: 'bar',
         data: {
-            labels: ['HVAC', 'Lighting', 'Plug Loads', 'Other'],
-            datasets: [{
-                data: [42, 27, 18, 13],
-                backgroundColor: ['#1976D2', '#4CAF50', '#00ACC1', '#FFB300'],
-                borderWidth: 0
-            }]
+            labels: ['System Usage'],
+            datasets: [
+                {
+                    label: 'HVAC',
+                    data: [42],
+                    backgroundColor: '#1976D2',
+                    borderColor: '#1976D2',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Lighting',
+                    data: [27],
+                    backgroundColor: '#4CAF50',
+                    borderColor: '#4CAF50',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Plug Loads',
+                    data: [18],
+                    backgroundColor: '#00ACC1',
+                    borderColor: '#00ACC1',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Other',
+                    data: [13],
+                    backgroundColor: '#FFB300',
+                    borderColor: '#FFB300',
+                    borderWidth: 1
+                }
+            ]
         },
-        options: getPieChartOptions()
+        options: getStackedBarChartOptions()
     });
 }
 
@@ -273,59 +323,75 @@ function initEmissionsBreakdownChart() {
     
     const ctx = chartEl.getContext('2d');
     new Chart(ctx, {
-        type: 'pie',
+        type: 'bar',
         data: {
-            labels: ['Scope 1 (Direct)', 'Scope 2 (Electricity)', 'Scope 3 (Indirect)'],
-            datasets: [{
-                data: [210, 680, 90],
-                backgroundColor: ['#F44336', '#FFB300', '#00ACC1'],
-                borderWidth: 0
-            }]
+            labels: ['Emissions'],
+            datasets: [
+                {
+                    label: 'Scope 1 (Direct)',
+                    data: [210],
+                    backgroundColor: '#F44336',
+                    borderColor: '#F44336',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Scope 2 (Electricity)',
+                    data: [680],
+                    backgroundColor: '#FFB300',
+                    borderColor: '#FFB300',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Scope 3 (Indirect)',
+                    data: [90],
+                    backgroundColor: '#00ACC1',
+                    borderColor: '#00ACC1',
+                    borderWidth: 1
+                }
+            ]
         },
-        options: getPieChartOptions(false, true)
+        options: getStackedBarChartOptions(false, true)
     });
 }
 
-// Pie/doughnut chart options
-function getPieChartOptions(isDoughnut = false, isEmissions = false) {
-    const options = {
+// Stacked Bar chart options
+function getStackedBarChartOptions(isEnergyMix = false, isEmissions = false) {
+    return {
         responsive: true,
         maintainAspectRatio: false,
+        indexAxis: 'y',
+        barThickness: 10,
+        maxBarThickness: 10, 
+        layout: {
+            padding: 0
+        },
+        scales: {
+            x: {
+                stacked: true,
+                display: false,
+                grid: {
+                    display: false,
+                    drawBorder: false
+                }
+            },
+            y: {
+                stacked: true,
+                display: false,
+                grid: {
+                    display: false,
+                    drawBorder: false
+                }
+            }
+        },
         plugins: {
             legend: {
                 display: false
             },
             tooltip: {
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                titleColor: '#333',
-                bodyColor: '#333',
-                borderColor: '#ddd',
-                borderWidth: 1,
-                padding: 10,
-                boxPadding: 5,
-                usePointStyle: true,
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.parsed || 0;
-                        const total = context.dataset.data.reduce((acc, data) => acc + data, 0);
-                        const percentage = ((value / total) * 100).toFixed(1) + '%';
-                        
-                        if (isEmissions) {
-                            return `${label}: ${value} kg CO₂e (${percentage})`;
-                        }
-                        return `${label}: ${percentage}`;
-                    }
-                }
+                enabled: false
             }
         }
     };
-    
-    if (isDoughnut) {
-        options.cutout = '70%';
-    }
-    
-    return options;
 }
 
 // Setup dashboard controls and event listeners

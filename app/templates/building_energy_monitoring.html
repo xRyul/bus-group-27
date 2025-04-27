@@ -170,7 +170,7 @@
     </div>
     
     <!-- Summary Cards -->
-    <div class="row mb-5">
+    <div class="row mb-3">
         <!-- All 7 cards in a single row -->
         <div class="row card-row-7">
             <!-- Total Energy Consumption Card -->
@@ -294,6 +294,77 @@
         </div>
     </div>
     
+    <!-- Energy Breakdown Charts Row -->
+    <div class="row mb-4 energy-breakdown-row">
+        <!-- Energy Mix Chart with Hover Info -->
+        <div class="col-md-4 energy-breakdown-item">
+            <div class="breakdown-hover">
+                <div class="chart-wrapper">
+                    <canvas id="energyMixChart"></canvas>
+                </div>
+                <div class="breakdown-info-content">
+                    <div class="breakdown-header">
+                        <h6>Energy Sources Breakdown</h6>
+                    </div>
+                    <div class="breakdown-body">
+                        <p>Shows the distribution of energy sources used by the building.</p>
+                        <ul>
+                            <li><span class="badge" style="background-color: #1976D2;">Grid Electricity</span>: 58%</li>
+                            <li><span class="badge" style="background-color: #F44336;">Natural Gas</span>: 10%</li>
+                            <li><span class="badge" style="background-color: #FFB300;">Solar PV</span>: 25%</li>
+                            <li><span class="badge" style="background-color: #00BFA5;">Other Renewables</span>: 7%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- System Breakdown Chart with Hover Info -->
+        <div class="col-md-4 energy-breakdown-item">
+            <div class="breakdown-hover">
+                <div class="chart-wrapper">
+                    <canvas id="systemBreakdownChart"></canvas>
+                </div>
+                <div class="breakdown-info-content">
+                    <div class="breakdown-header">
+                        <h6>System Usage Breakdown</h6>
+                    </div>
+                    <div class="breakdown-body">
+                        <p>Shows how energy is consumed across different building systems.</p>
+                        <ul>
+                            <li><span class="badge" style="background-color: #1976D2;">HVAC</span>: 42%</li>
+                            <li><span class="badge" style="background-color: #4CAF50;">Lighting</span>: 27%</li>
+                            <li><span class="badge" style="background-color: #00ACC1;">Plug Loads</span>: 18%</li>
+                            <li><span class="badge" style="background-color: #FFB300;">Other</span>: 13%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Emissions Chart with Hover Info -->
+        <div class="col-md-4 energy-breakdown-item">
+            <div class="breakdown-hover">
+                <div class="chart-wrapper">
+                    <canvas id="emissionsBreakdownChart"></canvas>
+                </div>
+                <div class="breakdown-info-content">
+                    <div class="breakdown-header">
+                        <h6>Emissions Breakdown</h6>
+                    </div>
+                    <div class="breakdown-body">
+                        <p>Shows carbon emissions by source category.</p>
+                        <ul>
+                            <li><span class="badge" style="background-color: #F44336;">Scope 1 (Direct)</span>: 210 kg CO₂e (21.4%)</li>
+                            <li><span class="badge" style="background-color: #FFB300;">Scope 2 (Electricity)</span>: 680 kg CO₂e (69.4%)</li>
+                            <li><span class="badge" style="background-color: #00ACC1;">Scope 3 (Indirect)</span>: 90 kg CO₂e (9.2%)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Energy Consumption & Usage Pattern Section -->
     <div class="row mb-5">
         <div class="col-md-12">
@@ -382,34 +453,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                
-                <!-- Mini Charts Row -->
-                <div class="row mt-5 mb-5">
-                    <h6 class="mb-3">Energy Breakdown</h6>
-                    <!-- Energy Mix Mini Chart -->
-                    <div class="col-md-4 d-flex align-items-center justify-content-center">
-                        <div style="width: 120px; height: 120px;">
-                            <canvas id="energyMixChart"></canvas>
-                            <p class="text-center small mt-2">Energy Sources</p>
-                        </div>
-                    </div>
-                    
-                    <!-- System Breakdown Mini Chart -->
-                    <div class="col-md-4 d-flex align-items-center justify-content-center">
-                        <div style="width: 120px; height: 120px;">
-                            <canvas id="systemBreakdownChart"></canvas>
-                            <p class="text-center small mt-2">System Usage</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Emissions Mini Chart -->
-                    <div class="col-md-4 d-flex align-items-center justify-content-center">
-                        <div style="width: 120px; height: 120px;">
-                            <canvas id="emissionsBreakdownChart"></canvas>
-                            <p class="text-center small mt-2">Emissions</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
