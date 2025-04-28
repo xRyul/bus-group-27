@@ -116,7 +116,7 @@ def generate_energy_data():
 def simulate_midweek_energy_readings(raw_data, building_map):
     buildings = ["Computer Science", "Physics", "Library"]
     energy_types = {
-        "electric": ("kWh", 80, 160),
+        "electricity": ("kWh", 80, 160),
         "water": ("litres", 150, 250),
         "gas": ("m3", 2.5, 4.5),
     }
@@ -131,7 +131,7 @@ def simulate_midweek_energy_readings(raw_data, building_map):
                 timestamp = start_day + timedelta(minutes=15 * interval)
                 hour = timestamp.hour
                 base = {
-                    "electric": 100 if 8 <= hour <= 18 else 60,
+                    "electricity": 100 if 8 <= hour <= 18 else 60,
                     "water": 200 if 7 <= hour <= 20 else 150,
                     "gas": 3.5 if 6 <= hour <= 22 else 2.5,
                 }[energy_type]
@@ -144,7 +144,7 @@ def inject_known_anomalies(raw_data):
     updated = []
     for building_id, timestamp, energy_type, value, unit in raw_data:
         if (
-            timestamp.hour == 8 and timestamp.minute == 0 and energy_type == "electric"
+            timestamp.hour == 8 and timestamp.minute == 0 and energy_type == "electricity"
         ) or (timestamp.hour == 14 and energy_type == "water"):
             # Exaggerate electric/water anomalies by multiplying
             value = round(value * 2.5, 2)

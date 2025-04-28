@@ -86,7 +86,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
             )
             .filter(
                 BuildingEnergy.building_id == building_id,
-                BuildingEnergy.energy_type.in_(["electric", "gas", "water"]),
+                BuildingEnergy.energy_type.in_(["electricity", "gas", "water"]),
                 BuildingEnergy.is_anomaly.is_(True),
             )
             .order_by(BuildingEnergy.timestamp, BuildingEnergy.energy_type)
@@ -94,7 +94,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         )
 
         # Anomalies dictionary, keyed by energy type
-        anomalies_by_type = {"electric": [], "gas": [], "water": []}
+        anomalies_by_type = {"electricity": [], "gas": [], "water": []}
         for timestamp, value, energy_type in anomaly_records:
             if energy_type in anomalies_by_type:
                 hour_index = timestamp.hour
