@@ -132,16 +132,32 @@ def edit_role(user_id):
 
 @app.route("/update_status/<int:submission_id>/<status>", methods=["POST"])
 def update_status(submission_id, status):
-    # Use service layer to update activity status
-    community_engagement = CommunityEngagement()
-    result, status_code = community_engagement.update_activity_status(
-        submission_id, status
-    )
-
-    if status_code == 200:
-        flash(f"The submission has been updated to {status}.", "success")
+    # Get the activity
+    activity = SustainableActivity.query.get_or_404(submission_id)
+    
+    if status == "verified":
+        user = User.query.get(activity.user_id)
+        community_engagement = CommunityEngagement(user)
+        community_engagement.add_display_names_to_activities(activity, activity_types)
+        
+        # Verify the activity
+        result, status_code = community_engagement.verify_activity(activity)
+        
+        if status_code == 200:
+            flash(f"The submission has been verified and {result['message']}", "success")
+        else:
+            flash(result["error"], "danger")
     else:
-        flash(result["error"], "danger")
+        # For rejection, use the simpler status update method
+        community_engagement = CommunityEngagement()
+        result, status_code = community_engagement.update_activity_status(
+            submission_id, status
+        )
+        
+        if status_code == 200:
+            flash(f"The submission has been {status}.", "success")
+        else:
+            flash(result["error"], "danger")
 
     return redirect(url_for("user_submissions"))
 
@@ -154,36 +170,20 @@ def verify_activity(activity_id):
         return redirect(url_for("admin"))
 
     activity = SustainableActivity.query.get_or_404(activity_id)
-
-    if activity.activity_type in activity_types:
-        # Use the predefined value from activity_types
-        carbon_saved = activity_types[activity.activity_type]["carbon_saved"]
-        points_awarded = activity_types[activity.activity_type]["points"]
-    else:
-        # Fallback to manual calculation if activity type not found
-        carbon_saved = float(request.form.get("carbon_saved", 0))
-        points_awarded = int(carbon_saved * 10)
+    carbon_saved = None
+    if request.form.get("carbon_saved"):
+        carbon_saved = float(request.form.get("carbon_saved"))
     
-    activity.status = "verified"
-    activity.carbon_saved = carbon_saved
-    activity.points_awarded = points_awarded
-    db.session.commit()
-
-    # Use service to award points to user's total (this updates UserPoints record, not the activity)
+    # Handle verification and Verify the activity
     user = User.query.get(activity.user_id)
-    if user:
-        community_engagement = CommunityEngagement(user)
-        community_engagement.add_display_names_to_activities(activity, activity_types)
-
-        result, status_code = community_engagement.award_points(activity)
-
-        if status_code == 200:
-            flash(result["message"], "success")
-        else:
-            flash(result["error"], "danger")
-        db.session.commit()
+    community_engagement = CommunityEngagement(user)
+    community_engagement.add_display_names_to_activities(activity, activity_types)
+    result, status_code = community_engagement.verify_activity(activity, carbon_saved)
+    
+    if status_code == 200:
+        flash(result["message"], "success")
     else:
-        flash("User not found", "danger")
+        flash(result["error"], "danger")
 
     return redirect(url_for("admin"))
 

@@ -490,6 +490,36 @@ class CommunityEngagement:
             "total_points": total_points,
         }, 200
 
+    # Verify activity (combines the verification and points awarding)
+    def verify_activity(self, activity: SustainableActivity, carbon_saved: Optional[float] = None):
+        if not activity:
+            return {"error": "Invalid activity"}, 400
+            
+        if not self.user:
+            user = User.query.get(activity.user_id)
+            if not user:
+                return {"error": "User not found"}, 404
+            self.user = user
+            
+        # Set the carbon saved and points values and use predefined values from activity_types
+        if activity.activity_type in activity_types:
+            activity.carbon_saved = activity_types[activity.activity_type]["carbon_saved"]
+            activity.points_awarded = activity_types[activity.activity_type]["points"]
+        elif carbon_saved is not None:
+            activity.carbon_saved = carbon_saved
+            activity.points_awarded = int(carbon_saved * 10)
+        else:
+            # Default case - minimum values
+            activity.carbon_saved = 0.1
+            activity.points_awarded = 1
+            
+        activity.status = "verified"
+        result, status_code = self.award_points(activity)
+        
+        db.session.commit()
+        
+        return result, status_code
+
     # Methods for admin/user operations
 
     def get_user_points(self, user_id=None):
@@ -547,7 +577,7 @@ class CommunityEngagement:
         
         # If verifying the activity, set carbon_saved and points_awarded from activity_types
         if status == "verified" and activity.activity_type in activity_types:
-
+            
             # Set carbon and points values from the predefined dictionary
             activity.carbon_saved = activity_types[activity.activity_type]["carbon_saved"]
             activity.points_awarded = activity_types[activity.activity_type]["points"]
