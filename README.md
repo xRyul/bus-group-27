@@ -25,6 +25,8 @@ It is deployed using a custom domain `green-campus.me` registered through Namech
 2. **Set up the environment** (two options):
 
    **Option 1: Using conda (recommended)**:
+    Make sure you have conda installed and added into PATH, then simply install the dependencies and activate newly created environment.
+
    ```bash
    conda env create -f environment.yml
    conda activate BUS-prototype-env
@@ -33,7 +35,7 @@ It is deployed using a custom domain `green-campus.me` registered through Namech
    **Option 2: Using pip and venv**:
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate  # On Windows: source venv/Scripts/activate
    pip install -r requirements.txt
    ```
 
