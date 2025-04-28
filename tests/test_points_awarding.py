@@ -4,10 +4,11 @@
 """
 Tests for the Point/GreenScore Awarding functionality (FR6).
 
-This file contains a positive test case:
+This file contains positive and negative test cases:
 1. POSITIVE TEST: Verifies successful awarding of points for verified sustainable activities
+2. NEGATIVE TEST: Verifies proper rejection when attempting to award points to an activity that already has points
 
-The test uses Behavior-Driven Development (BDD) methodology with Given-When-Then
+The tests use Behavior-Driven Development (BDD) methodology with Given-When-Then
 steps defined in points_awarding.feature
 """
 
@@ -128,3 +129,93 @@ def verify_user_points_updated(award_result):
     # Verify the user's total points were updated correctly
     expected_total = award_result['initial_points'] + activity.points_awarded
     assert user.points.total_points == expected_total, f"Expected user to have {expected_total} points, but got {user.points.total_points}"
+
+# =============================================================================
+# 2. NEGATIVE TEST: POINTS REJECTION FOR ALREADY AWARDED ACTIVITY
+# =============================================================================
+@scenario('points_awarding.feature', 'Attempt to award points to an already awarded activity')
+def test_award_points_already_awarded():
+    pass
+
+# 2.1 GIVEN: Activity with points already awarded exists
+@given('a sustainable activity with points already awarded exists', target_fixture='awarded_activity')
+def create_awarded_activity(test_client):
+    # Get first user from database
+    user = db.session.query(User).first()
+    assert user is not None, "No user found in test database"
+    
+    # Create a new activity that already has points awarded
+    activity_type = next(iter(activity_types.keys()))
+    activity = SustainableActivity(
+        user_id=user.id,
+        activity_type=activity_type,
+        description="Activity with points already awarded",
+        status="verified",
+        carbon_saved=3.0,
+        points_awarded=30
+    )
+    
+    db.session.add(activity)
+    db.session.commit()
+    
+    # Verify the activity was created and has points
+    activity = db.session.query(SustainableActivity).filter_by(
+        description="Activity with points already awarded"
+    ).first()
+    
+    assert activity is not None, "Failed to create test activity"
+    assert activity.points_awarded > 0, "Activity should have points already awarded"
+    
+    return activity
+
+# 2.2 WHEN: Administrator attempts to award points again
+@when('an administrator attempts to award points again', target_fixture='second_award_result')
+def attempt_second_award(awarded_activity):
+    # Get the user who performed the activity
+    # Save the current activity points for verification and attempt to award points again
+    user = db.session.query(User).get(awarded_activity.user_id)
+    assert user is not None, "User not found"
+    initial_points = 0
+    if hasattr(user, "points") and user.points:
+        initial_points = user.points.total_points
+    original_points = awarded_activity.points_awarded
+    community = CommunityEngagement(user)
+    result, status_code = community.award_points(awarded_activity)
+    
+    return {
+        'result': result,
+        'status_code': status_code,
+        'user_id': user.id,
+        'activity_id': awarded_activity.id,
+        'initial_points': initial_points,
+        'original_activity_points': original_points
+    }
+
+# 2.3 THEN: System should reject the request
+@then('the system should reject the request')
+def verify_request_rejected(second_award_result):
+    # Verify the request was rejected with a 400 status code
+    assert second_award_result['status_code'] == 400, f"Expected status code 400, got {second_award_result['status_code']}"
+    
+    # Verify the response contains an error message about points already awarded
+    assert 'error' in second_award_result['result'], "Result should contain an 'error' key"
+    assert "already been awarded" in second_award_result['result']['error'], \
+        f"Error should indicate points already awarded, got: {second_award_result['result']['error']}"
+
+# 2.4 AND: Original points should remain unchanged
+@then('the original points should remain unchanged')
+def verify_points_unchanged(second_award_result):
+    # Get the activity to verify points are unchanged
+    activity = db.session.query(SustainableActivity).get(second_award_result['activity_id'])
+    assert activity is not None, "Activity not found"
+    assert activity.points_awarded == second_award_result['original_activity_points'], \
+        f"Activity points should remain at {second_award_result['original_activity_points']}, " \
+        f"but got {activity.points_awarded}"
+    
+    # Get the user to verify their total points are unchanged
+    user = db.session.query(User).get(second_award_result['user_id'])
+    assert user is not None, "User not found"
+    assert hasattr(user, "points") and user.points is not None, "User has no points record"
+    assert user.points.total_points == second_award_result['initial_points'], \
+        f"User points should remain at {second_award_result['initial_points']}, " \
+        f"but got {user.points.total_points}"
