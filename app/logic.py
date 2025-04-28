@@ -10,7 +10,7 @@ from app.models.building_energy import BuildingEnergy
 from app.models.sustainable_activity import SustainableActivity
 from app.models.user import User
 from app.models.user_points import UserPoints
-
+from app.debug_utils import activity_types
 
 class SingletonMeta(type):
     _instances = {}
@@ -462,11 +462,12 @@ class CommunityEngagement:
             return {"error": "Invalid user"}, 400
 
         if activity.points_awarded > 0:
-            return {"error": "Points have already been awarded for this activity."}, 400
-
-        # Award 10 points per kg CO2 saved (ensure int conversion)
-        points_awarded = int(activity.carbon_saved * 10)
-        activity.points_awarded = points_awarded
+            # Use the existing points_awarded value instead of rejecting
+            points_awarded = activity.points_awarded
+        else:
+            # Award 10 points per kg CO2 saved (ensure int conversion)
+            points_awarded = int(activity.carbon_saved * 10)
+            activity.points_awarded = points_awarded
 
         total_points = 0
         if hasattr(self.user, "points") and self.user.points:
@@ -543,6 +544,29 @@ class CommunityEngagement:
             return {"error": "Activity not found"}, 404
 
         activity.status = status
+        
+        # If verifying the activity, set carbon_saved and points_awarded from activity_types
+        if status == "verified" and activity.activity_type in activity_types:
+
+            # Set carbon and points values from the predefined dictionary
+            activity.carbon_saved = activity_types[activity.activity_type]["carbon_saved"]
+            activity.points_awarded = activity_types[activity.activity_type]["points"]
+            
+            # Also update the user's points record
+            user = User.query.get(activity.user_id)
+            if user:
+                if hasattr(user, "points") and user.points:
+                    user.points.total_points += activity.points_awarded 
+                    user.points.green_score += activity.carbon_saved
+                else:
+                    # Create new points record if user doesn't have one
+                    new_points = UserPoints(
+                        total_points=activity.points_awarded,
+                        green_score=activity.carbon_saved,
+                        user_id=user.id
+                    )
+                    db.session.add(new_points)
+        
         db.session.commit()
         return {"message": f"Activity status updated to {status}"}, 200
 

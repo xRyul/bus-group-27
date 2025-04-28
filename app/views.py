@@ -154,17 +154,25 @@ def verify_activity(activity_id):
         return redirect(url_for("admin"))
 
     activity = SustainableActivity.query.get_or_404(activity_id)
-    carbon_saved = float(request.form.get("carbon_saved", 0))
 
+    if activity.activity_type in activity_types:
+        # Use the predefined value from activity_types
+        carbon_saved = activity_types[activity.activity_type]["carbon_saved"]
+        points_awarded = activity_types[activity.activity_type]["points"]
+    else:
+        # Fallback to manual calculation if activity type not found
+        carbon_saved = float(request.form.get("carbon_saved", 0))
+        points_awarded = int(carbon_saved * 10)
+    
     activity.status = "verified"
     activity.carbon_saved = carbon_saved
+    activity.points_awarded = points_awarded
+    db.session.commit()
 
-    # Use service to award points
+    # Use service to award points to user's total (this updates UserPoints record, not the activity)
     user = User.query.get(activity.user_id)
     if user:
         community_engagement = CommunityEngagement(user)
-
-        # Add display name to activity (for logging/flash messages)
         community_engagement.add_display_names_to_activities(activity, activity_types)
 
         result, status_code = community_engagement.award_points(activity)
@@ -173,7 +181,6 @@ def verify_activity(activity_id):
             flash(result["message"], "success")
         else:
             flash(result["error"], "danger")
-
         db.session.commit()
     else:
         flash("User not found", "danger")
