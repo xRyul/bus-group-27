@@ -19,11 +19,20 @@ It is deployed using a custom domain `green-campus.me` registered through Namech
 
 ...
 
+### Running Tests
+
+We used pytest with Behavior-Driven Development (BDD) for testing (pytest-bdd). Each core feature has both positive and negative test cases.
+
+To run all tests with verbose output:
+```bash
+python -m pytest -v
+```
+
 ## Technologies Used
 - **Backend**: Python 3.11, Flask (Web Framework), SQLAlchemy (ORM)
-- **Frontend**: HTML, CSS, JavaScript, Bootstrap 5, Chart.js/Plotly
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap 5, Chart.js
 - **Database**: SQLite, SQLAlchemy ORM
-- **Testing**: Pytest
+- **Testing**: Pytest, pytest-bdd
 - **Version Control**: Git
 - **Deployment**: Render.com (hosting platform), Namecheap (domain registration)
 
