@@ -16,8 +16,44 @@ The live version of the project is accessible through two URLs:
 It is deployed using a custom domain `green-campus.me` registered through Namecheap, hosted on Render.com with automatic SSL certificate management. CI/CD pipeline is configured to build and deploy on commits to the `main` branch.
 
 ### Local Setup
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/xRyul/bus-group-27.git
+   cd bus-group-27
+   ```
 
-...
+2. **Set up the environment** (two options):
+
+   **Option 1: Using conda (recommended)**:
+   ```bash
+   conda env create -f environment.yml
+   conda activate BUS-prototype-env
+   ```
+
+   **Option 2: Using pip and venv**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. **Run the application**:
+   ```bash
+   flask run
+   ```
+   
+   The application should be available at http://127.0.0.1:5000/
+
+4. **Reset the database** (if needed):
+   ```bash
+   flask shell
+   ```
+   
+   Then in the flask shell:
+   ```python
+   reset_db()
+   exit()
+   ```
 
 ### Running Tests
 

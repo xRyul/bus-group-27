@@ -2,9 +2,8 @@
 # SUSTAINABLE ACTIVITY SUBMISSION TESTS
 # =============================================================================
 """
-Tests for the Sustainable Activity Submission (FR5).
+Tests for the Sustainable Activity Submission (FR5)
 
-This file contains positive and negative test cases:
 1. POSITIVE TEST: Verifies successful submission of sustainable activities by authenticated users
 2. NEGATIVE TEST: Verifies proper handling when non-authenticated users attempt to submit activities
 

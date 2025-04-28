@@ -2,9 +2,8 @@
 # BUILDING ENERGY TESTS
 # =============================================================================
 """
-Tests for the Building Energy Monitoring functionality (FR2).
+Tests for the Building Energy Monitoring (FR2)
 
-This file contains both positive and negative test cases:
 1. POSITIVE TEST: Verifies successful retrieval of energy data for existing buildings
 2. NEGATIVE TEST: Verifies proper handling when requesting data for non-existent buildings
 
