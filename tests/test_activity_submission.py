@@ -109,7 +109,7 @@ def attempt_submit_without_auth(unauthenticated):
     activity_type = next(iter(activity_types.keys()))
     description = "This should fail"
     
-    # Submit the activity (this should fail)
+    # Submit the activity expecting to fail
     result, status_code = unauthenticated.submit_activity(
         activity_type=activity_type,
         description=description

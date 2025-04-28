@@ -2,9 +2,8 @@
 # POINTS AWARDING TESTS
 # =============================================================================
 """
-Tests for the Point/GreenScore Awarding functionality (FR6).
+Tests for the Point/GreenScore Awarding (FR6)
 
-This file contains positive and negative test cases:
 1. POSITIVE TEST: Verifies successful awarding of points for verified sustainable activities
 2. NEGATIVE TEST: Verifies proper rejection when attempting to award points to an activity that already has points
 
@@ -17,7 +16,6 @@ from pytest_bdd import given, when, then, scenario
 from app.logic import CommunityEngagement
 from app.models.user import User
 from app.models.sustainable_activity import SustainableActivity
-from app.models.user_points import UserPoints
 from app import db, app
 from app.debug_utils import reset_db, activity_types
 
