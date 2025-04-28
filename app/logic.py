@@ -461,7 +461,7 @@ class CommunityEngagement:
         if not self.user:
             return {"error": "Invalid user"}, 400
 
-        if activity.points_awarded is not None:
+        if activity.points_awarded > 0:
             return {"error": "Points have already been awarded for this activity."}, 400
 
         # Award 10 points per kg CO2 saved (ensure int conversion)
