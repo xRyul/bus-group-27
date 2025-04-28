@@ -12,14 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
 function getChartData() {
     const chartDataElement = document.getElementById('chartData');
     const data = {
-        electricData: [],
+        electricityData: [],
         gasData: [],
         waterData: [],
         anomaliesByType: {}
     };
     
     try {
-        data.electricData = JSON.parse(chartDataElement.dataset.electric || '[]');
+        data.electricityData = JSON.parse(chartDataElement.dataset.electricity || '[]');
         data.gasData = JSON.parse(chartDataElement.dataset.gas || '[]');
         data.waterData = JSON.parse(chartDataElement.dataset.water || '[]');
         data.anomaliesByType = JSON.parse(chartDataElement.dataset.anomalies || '{}'); 
@@ -44,7 +44,7 @@ function initMainChart(chartData) {
     if (!mainChartEl) return;
     
     const anomalyData = {
-        electric: prepareAnomalyData('electric', chartData.anomaliesByType),
+        electricity: prepareAnomalyData('electricity', chartData.anomaliesByType),
         gas: prepareAnomalyData('gas', chartData.anomaliesByType),
         water: prepareAnomalyData('water', chartData.anomaliesByType)
     };
@@ -57,10 +57,10 @@ function initMainChart(chartData) {
                     '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', 
                     '20:00', '21:00', '22:00', '23:00'],
             datasets: [
-                createDataset('Electricity (kWh)', chartData.electricData, '#4CAF50', false),
+                createDataset('Electricity (kWh)', chartData.electricityData, '#4CAF50', false),
                 createDataset('Gas (m3)', chartData.gasData, '#FFB300', true),
                 createDataset('Water (litres)', chartData.waterData, '#00ACC1', true),
-                createAnomalyDataset('Electric Anomalies', anomalyData.electric, false),
+                createAnomalyDataset('Electricity Anomalies', anomalyData.electricity, false),
                 createAnomalyDataset('Gas Anomalies', anomalyData.gas, true),
                 createAnomalyDataset('Water Anomalies', anomalyData.water, true)
             ]
@@ -735,7 +735,7 @@ function getExportOptions() {
     return {
         building_id: document.getElementById('exportBuildingId').value,
         time_period: document.getElementById('exportTimePeriod').value,
-        include_electric: document.getElementById('includeElectric').checked,
+        include_electricity: document.getElementById('includeElectricity').checked,
         include_gas: document.getElementById('includeGas').checked,
         include_water: document.getElementById('includeWater').checked,
         include_anomalies: document.getElementById('includeAnomalies').checked,

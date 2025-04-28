@@ -108,12 +108,12 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
     def get_anomaly_count(self, anomalies_by_type):
         return sum(len(v) for v in anomalies_by_type.values())
 
-    # Calculate total energy consumption for a building (electric + gas)
+    # Calculate total energy consumption for a building (electricity + gas)
     def calculate_total_consumption(
-        self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None
+        self, hourly_data_electricity, hourly_data_gas, time_period="day", custom_days=None
     ):
         # Daily consumption - sum of hourly values
-        total_electric_daily = sum(hourly_data_electric)
+        total_electricity_daily = sum(hourly_data_electricity)
         total_gas_daily = sum(hourly_data_gas)
 
         # Scale based on selected time period
@@ -127,21 +127,21 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
         scaling = scaling_factors.get(time_period, 1)
 
-        total_electric = total_electric_daily * scaling
+        total_electricity = total_electricity_daily * scaling
         total_gas = total_gas_daily * scaling
 
         # Convert gas (m3) to kWh using the EON formula: https://www.eonnext.com/business/help/convert-gas-units-to-kwh#:~:text=You%20can%20find%20this%20on,your%20gas%20usage%20in%20kWh.
         # m3 × calorific value × correction factor (1.02264) ÷ kWh conversion factor (3.6)
         # Using hardcoded average calorific value of 38
         gas_to_kwh = total_gas * 38 * 1.02264 / 3.6
-        final_total = round(total_electric + gas_to_kwh)
+        final_total = round(total_electricity + gas_to_kwh)
 
         return final_total
 
     # Calculate estimated cost based on consumption
-    def calculate_estimated_cost(self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None):
+    def calculate_estimated_cost(self, hourly_data_electricity, hourly_data_gas, time_period="day", custom_days=None):
         # Get total consumption for the time period
-        total_electric_daily = sum(hourly_data_electric)
+        total_electricity_daily = sum(hourly_data_electricity)
         total_gas_daily = sum(hourly_data_gas)
 
         # Scale based on selected time period
@@ -155,7 +155,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
         scaling = scaling_factors.get(time_period, 1)
 
-        total_electric = total_electric_daily * scaling
+        total_electricity = total_electricity_daily * scaling
         total_gas = total_gas_daily * scaling
         
         # Convert gas (m3) to kWh using the EON formula:
@@ -164,12 +164,12 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         gas_to_kwh = total_gas * 38 * 1.02264 / 3.6
 
         #  £0.40 per kWh for electricity, £0.25 per kWh for gas
-        return round(total_electric * 0.40 + gas_to_kwh * 0.25, 2)
+        return round(total_electricity * 0.40 + gas_to_kwh * 0.25, 2)
 
     # Calculate carbon footprint based on consumption
-    def calculate_carbon_footprint(self, hourly_data_electric, hourly_data_gas, time_period="day", custom_days=None):
+    def calculate_carbon_footprint(self, hourly_data_electricity, hourly_data_gas, time_period="day", custom_days=None):
         # Get total consumption for the time period
-        total_electric_daily = sum(hourly_data_electric)
+        total_electricity_daily = sum(hourly_data_electricity)
         total_gas_daily = sum(hourly_data_gas)
 
         # Scale based on selected time period
@@ -183,7 +183,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
 
         scaling = scaling_factors.get(time_period, 1)
 
-        total_electric = total_electric_daily * scaling
+        total_electricity = total_electricity_daily * scaling
         total_gas = total_gas_daily * scaling
         
         # Convert gas (m3) to kWh using the EON formula:
@@ -195,7 +195,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         # https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2024
         # ~0.23 kg CO2 per kWh of electricity
         # ~0.18 kg CO2 per kWh of gas
-        return round(total_electric * 0.23 + gas_to_kwh * 0.18)
+        return round(total_electricity * 0.23 + gas_to_kwh * 0.18)
 
     # Calculate energy intensity (kWh/m²/yr)
     def calculate_energy_intensity(self, total_consumption, building_area, time_period="day", custom_days=None):
@@ -264,7 +264,7 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
         Args:
             building_id: The ID of the building to export data for
             export_options: Dict of boolean flags for what data to include:
-                - include_electric: Include electricity data
+                - include_electricity: Include electricity data
                 - include_gas: Include gas data
                 - include_water: Include water data
                 - include_anomalies: Include anomaly data
@@ -299,8 +299,8 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
             result["end_date"] = end_date
 
         # Add energy data based on options
-        if export_options.get("include_electric", False):
-            result["electric_data"] = self._get_energy_data_for_export(building_id, "electric", time_period, start_date, end_date)
+        if export_options.get("include_electricity", False):
+            result["electricity_data"] = self._get_energy_data_for_export(building_id, "electricity", time_period, start_date, end_date)
 
         if export_options.get("include_gas", False):
             result["gas_data"] = self._get_energy_data_for_export(building_id, "gas", time_period, start_date, end_date)
@@ -324,16 +324,16 @@ class BuildingEnergyMonitoring(metaclass=SingletonMeta):
                 custom_days = (end - start).days + 1
 
             # Get hourly data for calculations
-            hourly_data_electric = self.get_hourly_average("electric", building_id)
+            hourly_data_electricity = self.get_hourly_average("electricity", building_id)
             hourly_data_gas = self.get_hourly_average("gas", building_id)
             hourly_data_water = self.get_hourly_average("water", building_id)
 
             # Calculate summary statistics
             result["summary"] = {
-                "total_consumption": self.calculate_total_consumption(hourly_data_electric, hourly_data_gas, time_period, custom_days),
-                "estimated_cost": self.calculate_estimated_cost(hourly_data_electric, hourly_data_gas, time_period, custom_days),
-                "carbon_footprint": self.calculate_carbon_footprint(hourly_data_electric, hourly_data_gas, time_period, custom_days),
-                "energy_intensity": self.calculate_energy_intensity(self.calculate_total_consumption(hourly_data_electric, hourly_data_gas, "year"), 
+                "total_consumption": self.calculate_total_consumption(hourly_data_electricity, hourly_data_gas, time_period, custom_days),
+                "estimated_cost": self.calculate_estimated_cost(hourly_data_electricity, hourly_data_gas, time_period, custom_days),
+                "carbon_footprint": self.calculate_carbon_footprint(hourly_data_electricity, hourly_data_gas, time_period, custom_days),
+                "energy_intensity": self.calculate_energy_intensity(self.calculate_total_consumption(hourly_data_electricity, hourly_data_gas, "year"), 
                 building.total_area, "year",),
                 "renewable_percent": self.estimate_renewable_percentage(building.energy_class),
                 "water_intensity": self.calculate_water_intensity(hourly_data_water, building.total_area, "year"),

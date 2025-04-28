@@ -146,7 +146,7 @@ def inject_known_anomalies(raw_data):
         if (
             timestamp.hour == 8 and timestamp.minute == 0 and energy_type == "electricity"
         ) or (timestamp.hour == 14 and energy_type == "water"):
-            # Exaggerate electric/water anomalies by multiplying
+            # Exaggerate electricity/water anomalies by multiplying
             value = round(value * 2.5, 2)
         elif timestamp.hour == 20 and energy_type == "gas":
             # Exaggerate gas

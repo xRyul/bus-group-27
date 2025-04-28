@@ -203,7 +203,7 @@ def building_energy_monitoring():
             buildings=[],
             selected_building_id=None,
             selected_building=None,
-            hourly_data_electric=[],
+            hourly_data_electricity=[],
             hourly_data_gas=[],
             hourly_data_water=[],
             anomalies=[],
@@ -230,7 +230,7 @@ def building_energy_monitoring():
     )
 
     # Get energy data
-    hourly_data_electric = bem.get_hourly_average("electric", selected_building_id)
+    hourly_data_electricity = bem.get_hourly_average("electricity", selected_building_id)
     hourly_data_gas = bem.get_hourly_average("gas", selected_building_id)
     hourly_data_water = bem.get_hourly_average("water", selected_building_id)
 
@@ -277,13 +277,13 @@ def building_energy_monitoring():
 
     # Calculate metrics using service methods with time period
     total_consumption = bem.calculate_total_consumption(
-        hourly_data_electric, hourly_data_gas, time_period, custom_days
+        hourly_data_electricity, hourly_data_gas, time_period, custom_days
     )
     estimated_cost = bem.calculate_estimated_cost(
-        hourly_data_electric, hourly_data_gas, time_period, custom_days
+        hourly_data_electricity, hourly_data_gas, time_period, custom_days
     )
     carbon_footprint = bem.calculate_carbon_footprint(
-        hourly_data_electric, hourly_data_gas, time_period, custom_days
+        hourly_data_electricity, hourly_data_gas, time_period, custom_days
     )
     energy_intensity = bem.calculate_energy_intensity(
         total_consumption, building_area, time_period, custom_days
@@ -299,7 +299,7 @@ def building_energy_monitoring():
         buildings=buildings,
         selected_building_id=selected_building_id,
         selected_building=selected_building,
-        hourly_data_electric=hourly_data_electric,
+        hourly_data_electricity=hourly_data_electricity,
         hourly_data_gas=hourly_data_gas,
         hourly_data_water=hourly_data_water,
         anomalies=anomalies_by_type,
@@ -362,7 +362,7 @@ def export_building_data():
 
     # Extract export options
     export_options = {
-        "include_electric": data.get("include_electric", False),
+        "include_electricity": data.get("include_electricity", False),
         "include_gas": data.get("include_gas", False),
         "include_water": data.get("include_water", False),
         "include_anomalies": data.get("include_anomalies", False),
@@ -393,10 +393,10 @@ def export_building_data():
         # For CSV, we need to flatten the data
         csv_data = "timestamp,type,consumption_value,is_anomaly\n"
 
-        # Add electric data if included
-        if "electric_data" in export_data:
-            for entry in export_data["electric_data"]:
-                csv_data += f"{entry['timestamp']},electric,{entry['consumption_value']},{entry['is_anomaly']}\n"
+        # Add electricity data if included
+        if "electricity_data" in export_data:
+            for entry in export_data["electricity_data"]:
+                csv_data += f"{entry['timestamp']},electricity,{entry['consumption_value']},{entry['is_anomaly']}\n"
 
         # Add gas data if included
         if "gas_data" in export_data:
