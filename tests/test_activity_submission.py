@@ -4,9 +4,11 @@
 """
 Tests for the Sustainable Activity Submission (FR5).
 
+This file contains positive and negative test cases:
 1. POSITIVE TEST: Verifies successful submission of sustainable activities by authenticated users
+2. NEGATIVE TEST: Verifies proper handling when non-authenticated users attempt to submit activities
 
-The test uses Behavior-Driven Development (BDD) methodology with Given-When-Then
+The tests use Behavior-Driven Development (BDD) methodology with Given-When-Then
 steps defined in activity_submission.feature
 """
 
@@ -74,7 +76,6 @@ def verify_activity_saved(submission_result):
         activity_type=submission_result['activity_type']
     ).order_by(SustainableActivity.id.desc()).first()
     
-    # Verify the activity exists and has the correct status
     assert activity is not None, "Activity was not saved to the database"
     assert activity.status == "pending", f"Activity status should be 'pending', got '{activity.status}'"
 
@@ -87,3 +88,44 @@ def verify_confirmation_message(submission_result):
     # Verify the result contains a success message
     assert 'message' in submission_result['result'], "Result should contain a 'message' key"
     assert "submitted for review" in submission_result['result']['message'], "Message should indicate activity was submitted for review"
+
+# =============================================================================
+# 2. NEGATIVE TEST: HANDLING OF NON-AUTHENTICATED USERS
+# =============================================================================
+@scenario('activity_submission.feature', 'Submit activity without authentication')
+def test_submit_activity_without_auth():
+    pass
+
+# 2.1 GIVEN: No user is authenticated
+@given('no user is authenticated', target_fixture='unauthenticated')
+def no_authenticated_user():
+    # Create a CommunityEngagement instance with no user
+    return CommunityEngagement(user=None)
+
+# 2.2 WHEN: Attempt to submit activity
+@when('I attempt to submit a sustainable activity', target_fixture='error_result')
+def attempt_submit_without_auth(unauthenticated):
+    # Attempt to submit an activity without authentication
+    activity_type = next(iter(activity_types.keys()))
+    description = "This should fail"
+    
+    # Submit the activity (this should fail)
+    result, status_code = unauthenticated.submit_activity(
+        activity_type=activity_type,
+        description=description
+    )
+    
+    return {
+        'result': result,
+        'status_code': status_code
+    }
+
+# 2.3 THEN: Verify authentication error
+@then('an authentication error should be returned')
+def verify_auth_error(error_result):
+    # Verify the status code is 401 (Unauthorized)
+    assert error_result['status_code'] == 401, f"Expected status code 401, got {error_result['status_code']}"
+    
+    # Verify the result contains an error message
+    assert 'error' in error_result['result'], "Result should contain an 'error' key"
+    assert "not authenticated" in error_result['result']['error'].lower(), "Error should indicate user is not authenticated"
