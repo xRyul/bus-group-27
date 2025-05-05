@@ -1,0 +1,944 @@
+commit 97a5f76f1c4a2b111af3aa890af62398d592ea74
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 16:58:52 2025 +0100
+
+    ref: rename electric to electricity
+
+commit 7537bb86a6d5aad94e2648cb0f58e63af5a00ff0
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 16:30:54 2025 +0100
+
+    db
+
+commit 15fdc848909854a15641495ffb5106e59fa3f26b
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 16:25:18 2025 +0100
+
+    Refactor activity verification to follow MVC+S architecture
+
+commit e2d8640eb242085635cfa96e8be72709082c1cb4
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 16:18:17 2025 +0100
+
+    Fix activity verification to properly set carbon saved and points values
+
+commit 068ac91f00764efb5122f00193f61d8a21d08f18
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 15:47:55 2025 +0100
+
+    docs: Update README.md with clarification steps e.g.: conda must be in path and correct path to venv/activate on Windows
+
+commit a5744b4dd30ec24df0eb61d4cc6e3c5f481cc73a
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 15:27:52 2025 +0100
+
+    docs: Update Readme.md with environent setup instructions
+
+commit 65e86d1fd079ecfb821bbda44d61043a2d2f6789
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 14:49:32 2025 +0100
+
+    fix: Clean up test files and formatting
+
+commit dd5affae36bd5ff2a40459c11574201f446dada7
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 14:47:06 2025 +0100
+
+    test(FR6): Negative test case for Points Awarding when activity already has points
+
+commit 4ca9f90dbfa17ca08734fe66654114ec95acf8c9
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 14:34:48 2025 +0100
+
+    test(FR6): Positive test case for Points Awarding using BDD
+
+commit 6186e61f14b5096e68112eb5030f3b578876f4ad
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 14:25:23 2025 +0100
+
+    fix(FR6): Fix bug in award_points method that prevented points from being awarded
+
+commit 1fbfcc75ca4b0a73a7f790823209b96cc3f75acd
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 13:58:06 2025 +0100
+
+    test(FR5): Negative test case for Activity Submission using BDD
+
+commit 8c852afd61c6d8848977c771df5c5d81791d9910
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 13:53:22 2025 +0100
+
+    test(FR5): Positive test case for Activity Submission using BDD
+
+commit 0b15232e76de02ab4ba0d16c37c4057f299ef4a0
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 12:24:49 2025 +0100
+
+    docs: Update Readme with instructions on how to run tests
+
+commit 9aeb583233d7879f2a85b75291c06bbcac9eb217
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 12:15:14 2025 +0100
+
+    test(FR2): Negative test case for building energy monitoring using BDD
+
+commit caf33b8e8a04b0565c30f27229ccc42b66c15857
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 11:42:15 2025 +0100
+
+    Add positive test case for FR2: Building Energy Monitoring - Implements BDD tests for energy data retrieval
+
+commit bd7835b6c2ba8c47be312f16ff57727fbc383692
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 28 09:42:11 2025 +0100
+
+    Setup BDD test structure with empty test files for core features (FR2, FR5, FR6)
+
+commit 81c52758a72d14c111a90b4a25e194900bf4b445
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sun Apr 27 18:17:30 2025 +0100
+
+    Replace placeholder hero image with actual building dashboard
+
+commit 69ebe22f760bc4457478d26e7166d09c6f3e4208
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sun Apr 27 16:29:36 2025 +0100
+
+    ref: Piecharts into Bars above chart view
+
+commit a6c6de050dfce58301732e79d315f3ee2dd5b489
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sun Apr 27 15:57:43 2025 +0100
+
+    ref: All mobile specific styles are now at the bottom of the dashboard.css; Added some comments with seperators for clarity
+
+commit f9a37254009552d539c9687f1ba8c79ce4184be3
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sun Apr 27 15:14:57 2025 +0100
+
+    Rename home.html to landing_page.html
+
+commit aa40eb76b4d83b0adb6fafe51acedb5e585d6c37
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sun Apr 27 15:08:41 2025 +0100
+
+    ref: Cleanup templates and add comments
+
+commit be941c4cb50abce5b7336e084787bb7b914a600a
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 24 02:15:47 2025 +0100
+
+    Extend export button functionality: option to specify what data to export and in what format
+
+commit 4527b43292c66cbc0576d48b53d11c5ce4c0bee9
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 24 01:41:27 2025 +0100
+
+    Move Export button and Notification opttions into Building info bar line
+
+commit cab9023175581c6f8f4fa9c19b15982f4970e44b
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 24 00:50:20 2025 +0100
+
+    Remove old unused JS code for summary cards
+
+commit 6e603961c43e0e4f5d65337778cd52715d23f607
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 24 00:46:23 2025 +0100
+
+    Refactor summary cards to use data from database
+
+commit 0167ffed0f3b94a81d72efdfd8c43867588eaaf8
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 23:34:41 2025 +0100
+
+    Improve navbar responsiveness on tablet devices by changing breakpoint and adding tablet-specific styles
+
+commit 0ba42aebc0ef565fbaac3e9526972ffafe9f81e1
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 23:25:58 2025 +0100
+
+    UI: Integrate custom date range into time period dropdown with modal calendar
+
+commit 6d02356b2bec7118b40253eb5c6ec35b6cd56c5a
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 23:21:14 2025 +0100
+
+    UI: Convert time period controls to dropdown with labels
+
+commit 25bcf16c6ba85d26385df21b1d43c65fc4dbf998
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 23:14:29 2025 +0100
+
+    UI: Center energy type buttons in building info bar
+
+commit 9a9abe9261a75085a88ba5c455dd5b69c93caf95
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 23:07:04 2025 +0100
+
+    UI: Move Energy Type filters next to Building selector and improve mobile experience
+
+commit 1f1bfb291c25414690de7388198d9fa8585722a9
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 22:47:15 2025 +0100
+
+    Fix Building info expansion
+
+commit d607784808f891718c5b0508a9712a1ee49fecd3
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 22:43:10 2025 +0100
+
+    Fix Building info expansion
+
+commit 56d525b9d564f7e0a179a2056c67987369eef3e2
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 22:17:53 2025 +0100
+
+    Cleaned up CSS styles and improved organization
+
+commit 3e31c7ce71cf7903e27816ce0dafcabd51299911
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 22:16:22 2025 +0100
+
+    Fixed building selector dropdown positioning and improved UI
+
+commit 135724f9a27755819d7c4785eab6469126150edb
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:57:23 2025 +0100
+
+    Improved building selector dropdown with better visibility and fixed layering issues
+
+commit aed1d5c75556825ced621cea53a7e962a490f092
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:53:35 2025 +0100
+
+    Fixed building info display to use correct model attributes and update anomaly count display
+
+commit 988d7ff7d2b954c85af5b8078f497c5d290d9729
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:49:30 2025 +0100
+
+    Made building name clickable with dropdown selection and dynamic info display
+
+commit 360c530fbdf763603eb00d2c6cefdf4eaac24aef
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:45:38 2025 +0100
+
+    Made building info bar more seamless and integrated into the page design
+
+commit b2b3c98e50b2bbfbc457b08ea4d17208226a6b61
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:41:12 2025 +0100
+
+    Redesigned building info as a single line bar and removed redundant building information section
+
+commit 7f95e5fbea0b824102e2084ca2c8511824b362b3
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:38:22 2025 +0100
+
+    Added Building Quick Info section between controls and summary cards
+
+commit b8ec06cffac53c45058e52094c0fc546fd3b6ba9
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:30:54 2025 +0100
+
+    Improved card layout: removed BREEAM Rating card and prevented title text wrapping
+
+commit 21adb34c919d172886094e41502a87102c746e68
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:27:24 2025 +0100
+
+    Improved dashboard card layout with horizontal icon and title placement
+
+commit 12a2f7846669ed69f7c60c45e153dd86a6064dad
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:24:17 2025 +0100
+
+    Update dashboard to show all 8 summary cards in a single row
+
+commit 098140788ae35532855388ba9fb7a6439ee586ac
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 21:21:05 2025 +0100
+
+    Improve mobile responsiveness across the application
+
+commit 619b24d7f1c7eb0652d233940c61d5be2776b050
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 17:36:05 2025 +0100
+
+    Improve UX: Redirect authenticated users to role-specific dashboards when clicking logo
+
+commit d2ddded58b46017cbc29313d05ac0d33972822d1
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 17:05:32 2025 +0100
+
+    Clean up unused imports in forms.py and views.py
+
+commit 342a428b616b81e71d35b4399448dffa56436fd4
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 23 16:54:31 2025 +0100
+
+    Remove unused imports and improve relationship documentation in User model
+
+commit 77cd4d64a905e2c36aef3cda8de90b86f6497c58
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 17 13:12:37 2025 +0100
+
+    Edit: Upload button in form changed to submit.
+
+commit 382959de3e0938dde34a85495a89ca63ca6e642e
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 17 13:10:34 2025 +0100
+
+    Fix: When user logs in, log in card has been removed from home/ landing page.
+
+commit 0c233915ab5edf4f8dcd5198807dd67503452e36
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 12:06:36 2025 +0100
+
+    Cleanup unused devdbrc file, which is used only locally to preview DB entires in a GUI
+
+commit 089791198409c64acca5f7feb5bd24938acf0176
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 12:03:37 2025 +0100
+
+    Update Readme.md: Move live demo link to How to run section. Deployment and CICD is important to comply with our document e.g. that it must run on mobile
+
+commit 7545c47be907016abdb269781fc413e810607c88
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 11:24:10 2025 +0100
+
+    Update Readme with URL to Live Project Demo which is deployed via Render.com, domain via namecheap and live at green-campus.me
+
+commit 55cdcec154ffcb3238d1f4589c875147bea0c7cb
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 11:17:30 2025 +0100
+
+    Organise README.md into sections needed for submission, add general information into each section, populate contribution table based on commit history
+
+commit 3a5f9577b7b2c730f75c3a1a971e408d4ef4d56f
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 09:38:38 2025 +0100
+
+    Add type check for evidence: fallback to an empty string when evidence is none
+
+commit f500534984795b527bbe8b49f74feaf1a77f3ff0
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 09:13:32 2025 +0100
+
+    Refactor: Fix type hints and type handling
+
+commit 4a6cff92cb900b6f4cc91f8fecdc9562a2f39224
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 09:12:06 2025 +0100
+
+    Refactor: Update views to use logic.py methods
+
+commit d00498dc5249318fe5126aab9435195039469df5
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 09:07:56 2025 +0100
+
+    Refactor: Extend CommunityEngagement class with admin and user operations
+
+commit 35508fc169ceb45ce9ffce4723020da92fef1253
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 01:39:35 2025 +0100
+
+    Update README.md explaining key decisions/assumptions made
+
+commit 04d902b652540faec55492a96364a756c9b75bf8
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 01:25:45 2025 +0100
+
+    Refactor activity display names to use with their full names instead of short DB names and to follow MVC architecture.
+
+commit c7947690d7eda30cae18086863fa5db7f94d5052
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 17 00:01:58 2025 +0100
+
+    Linting, formatting and typechecking setup via MyPy, Pylance, Pylint, Ruff and Black
+
+commit 914c1d9ce2fb07d7e88806b36a0ebe01ff190cb2
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Mon Apr 14 22:01:51 2025 +0100
+
+    Large Update: Green Score updated with database data, Admin updated with database data and split into two pages.
+
+commit 48e3d24f9020f7f3413d332d713d817cc8a42305
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 14:32:17 2025 +0100
+
+    ref: Move fade-in from JS to CSS for performance reasons and simplicity
+
+commit fee4806cf1debf1c5f4abaef21d4c0bfe10a786b
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 13:00:36 2025 +0100
+
+    chore: Push up-to-date DB version into remote for ease of access
+
+commit 8d5e1434746920a36e1d52feeabcb6b0b8abf993
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 12:49:32 2025 +0100
+
+    fix: admin and greenscore pages not loading
+
+commit ddb754c95865479a61cb3d1d2be9685678e45245
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 12:22:38 2025 +0100
+
+    fix: Admin page not laoding
+
+commit 28f818c16197b7970a09f665918d1a416d54b700
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 12:11:59 2025 +0100
+
+    ref: Move data SIMULATION into debug_utils.py - this should offer better seperation of convcern and follow MVC architecture more closely
+
+commit 61dda5aec457f88a769397471580e9eeab757ebd
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 11:49:20 2025 +0100
+
+    ref: Make sure we follow MVC architecture. Views.py is only for HTTP requests etc and anything to deal with db interaction calculation fetching is inside logic.py
+
+commit b1d20fbfa23babb951304cc4658c1bda0567d092
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 11:09:17 2025 +0100
+
+    feat: Anomalies will now show up depending on selected building and energy type. All anomalies can be viewed at the same time across 3 charts: electricity, gas and water
+
+commit 632f048323e387de10279d6d57d261c4c4055898
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 09:57:43 2025 +0100
+
+    ref: Replace dynamic JS Heatmap with simple hardcoded HTML and CSS version
+
+commit 7a767f4babdd5087cee505964508ced1c05bef6a
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 09:21:13 2025 +0100
+
+    feat: Migrate gas and water chart data to use DB queries
+
+commit dff5cdceb05df840c3e5a3c1b8203b0e300812f9
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 09:20:16 2025 +0100
+
+    Feat: Migrate gas and water chart data to use DB queries
+
+commit 2df1af0423273d806ded9b5c233e16afd60ef225
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 09:18:35 2025 +0100
+
+    Fix: Fetch building energy data from DB for monitoring chart
+
+commit 54cf7323cf835d025db987e4fd1c381b9403e8ce
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 12 09:03:24 2025 +0100
+
+    chore: Cleanup imports
+
+commit d243c0fd678aa81be3dd4a82c1dd6c42741313d2
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Fri Apr 11 22:15:29 2025 +0100
+
+    Commas added - syntax error
+
+commit 7a20a25df8810773e1bc1895a6e4bccdae8891cc
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Fri Apr 11 21:59:07 2025 +0100
+
+    Added admin role change privileges
+
+commit 5df55faa0366323409940aba16114e5d40423301
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Fri Apr 11 20:53:34 2025 +0100
+
+    Role based access to the different pages.
+
+commit b01775ee4badf1871d1a7f5593fc80cc0041d21f
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Fri Apr 11 20:37:14 2025 +0100
+
+    Added more users to debug_utils.py with more roles
+
+commit 5c583d88462cc4553525936d218b81d70910340e
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Fri Apr 11 14:23:24 2025 +0100
+
+    fix: Flask shell unable to run due to linting errors in debug_utils
+
+commit 3ae9e1de04dadc30f8c130fec55be91caa752189
+Merge: 26be4ad fabc78b
+Author: Jamie W. Chappell <jamiewchappell03@gmail.com>
+Date:   Fri Apr 11 14:00:20 2025 +0100
+
+    Merge branch 'main' of github.com:xRyul/bus-group-27
+
+commit 26be4ade1d624abbaa23cb4b4569b6c6d75888b3
+Author: Jamie W. Chappell <jamiewchappell03@gmail.com>
+Date:   Fri Apr 11 13:56:40 2025 +0100
+
+    - Updated BuildingEnergyMonitoring class logic and to populate DB.
+    
+    - Updated BuildingEnergyMonitoring to be used as a singleton.
+    
+    - Added mock building data to populated DB.
+
+commit fabc78bd47489bc06da483114c975cc7d5e61876
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Fri Apr 11 13:47:16 2025 +0100
+
+    Changed logic for FR6
+
+commit f7c28dc2c99ac0870f6aab5df188e45a2e51f612
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Fri Apr 11 13:38:20 2025 +0100
+
+    Added activities database template and related functions
+
+commit 92f0cfa829d48cc667bb0f9f8757dd18c6745a6a
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 10 13:59:46 2025 +0100
+
+    Added Submission table to Admin
+
+commit 1a148f71ae54fc5dbf75339945d7df25b4fcc744
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 10 13:36:37 2025 +0100
+
+    Added User Role Table to Admin
+
+commit 9d51b28a8e47959664fc699c52c76c5c9387ce90
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 10 13:03:52 2025 +0100
+
+    Added Achievement Cards
+
+commit fe7be4f1f84a9e0654808944b74b0881351a005f
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 10 12:28:55 2025 +0100
+
+    Added Submission form to Green Score Page
+
+commit b6ea89a37522efa5c00087edd502eb0ceb684746
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 10 12:08:13 2025 +0100
+
+    Added User Sub Form
+
+commit 1ad184d62af362ba0af357d3a21f39b3120d2100
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 10 12:04:17 2025 +0100
+
+    Added Weekly Score Graph
+
+commit e70db8393d69edbf92ec42617f086b52d1f91423
+Merge: 1ef0585 06698b2
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 10 11:41:00 2025 +0100
+
+    Merge remote-tracking branch 'origin/main'
+
+commit 1ef0585736009e442fe77ab47ad3b1c336692215
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Thu Apr 10 11:40:12 2025 +0100
+
+    Added User Submission card
+
+commit 06698b2f9ac0a3d375fc6dd3008451dc8eb1ac70
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Thu Apr 10 11:38:57 2025 +0100
+
+    ref: Duplicate model imports
+
+commit 5b90cee1ac0e619aad21e4cb4ecb37f9b7b4cfdd
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Wed Apr 9 23:50:50 2025 +0100
+
+    Added Leaderboard
+
+commit 8dd8cb49755e8ff87813fc894f367720c411c936
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Wed Apr 9 23:48:46 2025 +0100
+
+    Added Score Gauge
+
+commit e9788f345530a7f30c55fb1f47529cc74a2c01bd
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Wed Apr 9 21:08:20 2025 +0100
+
+    Added CSS for score and layout for green_score
+
+commit aff31868d7843eba89102616b7461b5dfa2ca4d9
+Author: Yztto <charley.ottey@gmail.com>
+Date:   Wed Apr 9 20:28:46 2025 +0100
+
+    Added nav links for green score and admin
+
+commit bb1be114a96c71a9d01dbd0f3f15265b29fda0ad
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Wed Apr 9 10:01:18 2025 +0100
+
+    fix: App failing to deploy
+
+commit 452eecddeeb2fca2b1ddad5dabf8642ad7968fe9
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Wed Apr 9 08:00:05 2025 +0100
+
+    Update logic.py
+    
+    FR6 logic with object oriented implementation
+
+commit e5f818246f37be5d3308651ea569d25534cd6270
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Wed Apr 9 07:25:06 2025 +0100
+
+    Update logic.py
+    
+    Making FR5 logic object oriented.
+
+commit afb72e2495f0075198980a307f2eecb5b4050af6
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Wed Apr 9 06:59:54 2025 +0100
+
+    Update logic.py
+
+commit 1e3915aadd579fdc264f77548b86cc1ea27ff6ae
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Tue Apr 8 17:19:01 2025 +0100
+
+    Update logic.py
+
+commit 235866cd8e84d8a4efce2b09f191fc2623a45e1f
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Tue Apr 8 11:57:20 2025 +0100
+
+    feat: Make Copyright date to auto update based on current YEAR
+
+commit 70d1247ac3ccf6765b75b91731ec265c18728de5
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Tue Apr 8 11:43:00 2025 +0100
+
+    Add requirements.txt
+
+commit 1e122b3fcecf471c53efdd07911cdaced2d7bd5c
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 22:34:17 2025 +0100
+
+    fix: Calculation of campus size
+
+commit 7cb1c57b47e9431562075cdee5272044d60f7524
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 22:30:59 2025 +0100
+
+    Add footer
+
+commit 93ad83bb5249d246c0338224d0b9d2b504623bb9
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 22:29:51 2025 +0100
+
+    Remove dash
+
+commit c6aac4d430ab1fabf5e3a2ed55bb0f7b95f27607
+Author: Daniel Alesko <47340038+xRyul@users.noreply.github.com>
+Date:   Mon Apr 7 17:14:43 2025 -0400
+
+    Update README.md add DEMO image
+
+commit f09f83428c161e840d29c34212b2a2da05558d2f
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 22:10:25 2025 +0100
+
+    fix: Energy dashboard appearing for unauthenticated users. Moved login button all the way to the right.
+
+commit 29b7a9cd84af7f1a5a52aceba1e4983ce413e55e
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 22:07:41 2025 +0100
+
+    Added conditional logic to how Login and Account buttons appear in the navbar
+
+commit fade42a88aecdc42a4f11579081ac5f967f038a8
+Merge: c5159f2 e0d3168
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 22:02:56 2025 +0100
+
+    Merge branch 'main' of github.com:xRyul/bus-group-27
+
+commit c5159f2f088ffffcaa4c9ad14f430817dfae36e8
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 22:01:14 2025 +0100
+
+    ref: Refactor dashboard: UI/UX changes to graphs and pie charts added logi to auto calclate and update summaries
+
+commit f8ec2d1c449eaed52aca7533acc24abf126dd0ac
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 21:04:29 2025 +0100
+
+    ref: Refactor Dashboard
+
+commit e0d3168055620c6312683a3cf473f5f1c622b3bc
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Mon Apr 7 20:24:49 2025 +0100
+
+    Update logic.py
+
+commit 867e7c49730d95523cc96e0e7f9df87a568fc5af
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 20:10:54 2025 +0100
+
+    Add SUstainability KPIs
+
+commit 8e59c761af792cfde2a6ff5640e29c69ed6cfa4b
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Mon Apr 7 20:00:47 2025 +0100
+
+    Update logic.py
+
+commit 180598f307e870195906c09c2da6e4056d763032
+Author: JESSIAH <jbuamah57@gmail.com>
+Date:   Mon Apr 7 19:57:47 2025 +0100
+
+    Update logic.py
+
+commit 87232fcd966cdde27db480e64bada26b75bb03eb
+Author: Daniel Alesko <47340038+xRyul@users.noreply.github.com>
+Date:   Mon Apr 7 13:42:59 2025 -0400
+
+    Update README.md
+
+commit 49ee8450b9949217989536ee7d4c6dea7c891de1
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 18:38:10 2025 +0100
+
+    Add Energy Dashboard to navbar
+
+commit e18b61bc2ef7a66a27f24e55e513bdacc38ea648
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 18:36:19 2025 +0100
+
+    Add User Interaction Features with modals for issue reporting, alert configuration, and note adding
+
+commit 2c99b3730f0c2f2ff75baa74c73d26353b1fac93
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 18:34:21 2025 +0100
+
+    Add Building Details card with AI recommendations
+
+commit 00f0c2c53e3f305cfff1fdde7c4ae7c71d5b7ea8
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 18:31:59 2025 +0100
+
+    Add charts: electricity and anomaly detection
+
+commit db30d18c723821ff4ca92aca8a097d6e97ef1839
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 18:17:11 2025 +0100
+
+    Add charts
+
+commit e07fd7b65ab606a6f8bd028e576f2ad88f0b3baa
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 18:14:51 2025 +0100
+
+    Add Summary Cards with energy consumption, cost, carbon footprint, and anomaly indicators
+
+commit 43376dbb0cc7a65d056f18c4e23d11d886f94584
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 18:14:18 2025 +0100
+
+    Add Dashboard Overview Section with building selector, time period controls, and energy type filters
+
+commit bca3eff5db857ecdf7f7237ffaf1d98809eb86e2
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 18:13:05 2025 +0100
+
+    Add basic Building Energy Monitoring dashboard template and route
+
+commit 84214ae30851cbe3caaff11720cd9b838d9f5094
+Merge: 107b242 3856d90
+Author: Jamie W. Chappell <161766723+JCOriginals@users.noreply.github.com>
+Date:   Mon Apr 7 17:01:39 2025 +0100
+
+    Merge pull request #10 from xRyul/dev
+    
+    Updated BuildingEnergyMonitoring class logic and made it easier to get values and outliers to plot.
+
+commit 3856d90155da69d008c41ef8bd539bc289f626b8
+Author: Jamie W. Chappell <jamiewchappell03@gmail.com>
+Date:   Mon Apr 7 16:59:56 2025 +0100
+
+    - Updated anomaly detection logic to find anomalies based on hour of day but only over a 5 day week to avoid involving the further dimension of day since data trends change over the weekend as we can assume consumption usage is fairly constant by the hour between Mon-Fri. See logic.py.
+    
+    - Daily data consumption values and outlier information is accessible within a dictionary. See logic.py.
+    
+    - Pre-included the import of the BuildingEnergyMonitoring class in views.py.
+
+commit 107b2428b354bed775b7a07b6b5adc7188b2c00b
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 15:58:58 2025 +0100
+
+    Update README.md with assignment 2 FAQ provided by Wendy
+
+commit b79f7d1ad0f7ba893acb882a5954960c239bc1c0
+Merge: c5c7126 62fa6af
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Mon Apr 7 14:15:35 2025 +0100
+
+    Merge branch 'dev'
+
+commit 62fa6af0d9060eeff5309e6906bc38327760136d
+Author: Jamie W. Chappell <jamiewchappell03@gmail.com>
+Date:   Mon Apr 7 13:58:01 2025 +0100
+
+    - Renamed controller.py to logic.py.
+    
+    - Implemented hardcoded data and anomaly detection logic.
+
+commit c5c712692c10d3ce0d3caf1cff518c49d4edf67a
+Merge: c554616 a15050e
+Author: Jamie W. Chappell <161766723+JCOriginals@users.noreply.github.com>
+Date:   Sun Apr 6 19:46:41 2025 +0100
+
+    Merge pull request #8 from xRyul/dev
+    
+    Update templated structure with the addition of a 'controller.py' mod…
+
+commit a15050eaf9f6c9f52395541b6cc75c77f839c327
+Author: Jamie W. Chappell <jamiewchappell03@gmail.com>
+Date:   Sun Apr 6 19:45:57 2025 +0100
+
+    Update templated structure with the addition of a 'controller.py' module.
+
+commit c554616b76131d7cebbbd1faaa8d78a8d299284a
+Merge: c353ec1 a175b8a
+Author: Daniel Alesko <47340038+xRyul@users.noreply.github.com>
+Date:   Sat Apr 5 23:12:02 2025 +0100
+
+    Merge pull request #7 from xRyul/dev
+
+commit a175b8a6ad42a2c1040e4274642ec64abf1fcee4
+Author: Jamie W. Chappell <jamiewchappell03@gmail.com>
+Date:   Sat Apr 5 22:59:50 2025 +0100
+
+    Added print statement - 'Hello, World!'
+
+commit c353ec1a6559bbe14c97b83132ebf8e8ddf4eedd
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 21:32:29 2025 +0100
+
+    refactor: Cleanup routes which caused page not to load when user was logged in
+
+commit 888c5bae2738aa09e5312744817bfc67714353eb
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 18:39:01 2025 +0100
+
+    feat: Show flash messages
+
+commit 78f1794e68f072747ea9a3a090ef638234fc1d3f
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 18:35:01 2025 +0100
+
+    feat(landingPage): :art: Added animations and interactivity for landing page elements
+    
+    Added scroll effect for navbar to change background and shadow on scroll.  Adding fade-in animations for elements as they load or come into view
+
+commit a54a81afe898d62543c452e3ca6d799c936b48d0
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 18:25:54 2025 +0100
+
+    feat: :art: Add background image to the landing page
+
+commit 0ad17bec6b21ed3da429cc9b0f38239ee14990c8
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 18:25:07 2025 +0100
+
+    feat: :art: Created landing Page with HERO section, CTO, Intro to the platform, place for quick access links
+    
+    Whole page auto-adjust based on auth status and user type e.g.: logged vs non-logged-in user type: student, staff, facilities, admin  Hero Section / tagline "Get Started" for anonymous users (links to login) "View Your Dashboard" for authenticated users Intro to the platform based on SRS submitted doc 3 features and its description: Energy Monitoring, Community Engagement, Leaderboard Dual approach to sustainability GreenScore calculation: what it is, what it does, how it is calculated? Sustainable Transportation (Cycle or use public transport instead of driving) Waste (use reusable containers instead of disposables) Communityparticip. (Attend and participate in sustainability events) Report Energy/Waste (Report energy or water waste when you see it) Recycle (Recycle materials in designated bins) Quick access to main features based on the user type Community dashboard Activity submission (all) Energy monitoring (for Facilities/Admin roles) Activity verification (for Admin role) User management (for Admin role) CTO
+
+commit f8fa8d170c83b45970752d101bb3bb47477adb59
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 18:12:50 2025 +0100
+
+    feat(navbar): :lipstick: Add styling to the NavBar; Make links appear as buttons.
+
+commit 670a9e5ede53f8e331ee8043410f3aa9cc64feea
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 17:53:04 2025 +0100
+
+    docs: :memo: Update README with relationships in use
+
+commit 2024ddb3b0434fe970cacb8e6a07b13f7d3ae7d9
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 17:43:18 2025 +0100
+
+    feat(database): add ORM models and relationship mapping (association & aggregation)
+    
+    - Added skeletons for database models:  - Building      - BuildingEnergy        - SustainableActivity   - UserPoints    - User - Relationship types:    - **Association:** Defined the following bidirectional relationships using `ForeignKey` and `relationship()` with `back_populates`:             - **One-to-many** between Buildings and BuildingEnergy:                         - Building can have multiple energy readings. Each BuildingEnergy reading belongs to exactly one Building.                      - `Building.energy_readings` references all associated energy readings.                         - `BuildingEnergy.building` references the parent building.             - **One-to-many** between Users and SustainableActivities:                      - User can have multiple sustainable activities. Each SustainableActivity belongs to exactly one User                   - `User.activities` references all associated activities                        - `SustainableActivity.user` references the parent user         - **Aggregation**:              - **One-to-one** between Users and UserPoints:                  - User can have one associated UserPoints record. Each UserPoints record belongs to exactly one User.                   - `User.points` references the associated UserPoints record.                    - `UserPoints.user` references the parent user.
+
+commit 570752bd910c73f77af260c5caf29171397e8ee1
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Sat Apr 5 16:23:28 2025 +0100
+
+    feat: :art: Basic user authentication
+    
+    - Added a `models` folder to organize database models. - Introduced the `User` model with fields for username, email, and password hashing. - Implemented password management methods (`set_password` and `check_password`) in the `User` model. - Integrated Flask-Login with a user loader function. - Created a `LoginForm` for user authentication. - Added `/login` and `/logout` routes for user authentication. - Configured Flask-Login in the application initialization.
+
+commit 092f8218499e2be0b0c6f1e9cafafbbae286f8f3
+Author: Daniel Alesko <47340038+xRyul@users.noreply.github.com>
+Date:   Fri Apr 4 12:34:12 2025 -0400
+
+    Delete .DS_Store
+
+commit 148de25aac8fa6874b0eb5561d372fb32ac8b514
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Fri Apr 4 17:31:23 2025 +0100
+
+    Add gitignore file
+
+commit d21554d36a840ba68e45cc7ec3ebc87b903374db
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Fri Apr 4 16:50:39 2025 +0100
+
+    Initial template and project setup
+
+commit f57707f885a53bd9afa1670caa2ef99fa77c9bf8
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Fri Apr 4 15:54:43 2025 +0100
+
+    Added a sample folder for testing
+
+commit 8d0fb2e166fdcf592a8b88bc8febf8728544fbf5
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Fri Apr 4 15:53:32 2025 +0100
+
+    We added only 1 line
+
+commit a8c8ebc64ba4e24b1941148133ac7376a243952a
+Author: Daniel Alesko <47340038+xRyul@users.noreply.github.com>
+Date:   Fri Apr 4 10:06:43 2025 -0400
+
+    Update README.md
+
+commit a68028728fc47d2aef03e6921e255a4f5ef28380
+Author: Daniel Alesko <47340038+xRyul@users.noreply.github.com>
+Date:   Fri Apr 4 09:19:23 2025 -0400
+
+    Update README.md
+
+commit 56117528f97feed9ce859368b1d5628b8e4cbde6
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Tue Mar 18 11:50:23 2025 +0000
+
+    Test2
+
+commit 96dbd0a55fe800c4328cf4dfa486e47077bfc531
+Author: xRyul <47340038+xRyul@users.noreply.github.com>
+Date:   Tue Mar 18 07:49:41 2025 -0400
+
+    Update README.md
+
+commit 1156a7955cf9375896f5894908c2a3fcb19b5c1e
+Author: xRyul <daniel.alesko@gmail.com>
+Date:   Tue Mar 18 11:48:38 2025 +0000
+
+    Created new repo and init skjfnsdkl
