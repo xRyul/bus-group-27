@@ -57,6 +57,14 @@ It is deployed using a custom domain `green-campus.me` registered through Namech
    exit()
    ```
 
+5. Login details: 
+
+Admin: `amy`
+Password: `p123`
+
+Student: `tom`
+Password: `p123`
+
 ### Running Tests
 
 We used pytest with Behavior-Driven Development (BDD) for testing (pytest-bdd). Each core feature has both positive and negative test cases.
