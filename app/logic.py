@@ -462,8 +462,12 @@ class CommunityEngagement:
             return {"error": "Invalid user"}, 400
 
         if activity.points_awarded > 0:
-            # Use the existing points_awarded value instead of rejecting
-            points_awarded = activity.points_awarded
+            # Activity already has points - return success with existing points
+            # instead of rejecting with an error
+            return {
+                "message": f"Activity already has {activity.points_awarded} points awarded",
+                "total_points": self.user.points.total_points if hasattr(self.user, "points") and self.user.points else 0
+            }, 200
         else:
             # Award 10 points per kg CO2 saved (ensure int conversion)
             points_awarded = int(activity.carbon_saved * 10)

@@ -25,7 +25,7 @@ It is deployed using a custom domain `green-campus.me` registered through Namech
 2. **Set up the environment** (two options):
 
    **Option 1: Using conda (recommended)**:
-    Make sure you have conda installed and added into PATH, then simply install the dependencies and activate newly created environment.
+    Make sure you have `conda` installed and added into PATH, then simply install the dependencies and activate newly created environment by using below two commands:
 
    ```bash
    conda env create -f environment.yml
@@ -41,7 +41,7 @@ It is deployed using a custom domain `green-campus.me` registered through Namech
 
 3. **Run the application**:
    ```bash
-   flask run
+   flask run # On Windows you might need to run: python -m flask run
    ```
    
    The application should be available at http://127.0.0.1:5000/

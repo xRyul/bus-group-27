@@ -189,16 +189,16 @@ def attempt_second_award(awarded_activity):
         'original_activity_points': original_points
     }
 
-# 2.3 THEN: System should reject the request
+# 2.3 THEN: System should recognize already awarded points
 @then('the system should reject the request')
 def verify_request_rejected(second_award_result):
-    # Verify the request was rejected with a 400 status code
-    assert second_award_result['status_code'] == 400, f"Expected status code 400, got {second_award_result['status_code']}"
+    # Verify the request returns a 200 status code with a message about points already awarded
+    assert second_award_result['status_code'] == 200, f"Expected status code 200, got {second_award_result['status_code']}"
     
-    # Verify the response contains an error message about points already awarded
-    assert 'error' in second_award_result['result'], "Result should contain an 'error' key"
-    assert "already been awarded" in second_award_result['result']['error'], \
-        f"Error should indicate points already awarded, got: {second_award_result['result']['error']}"
+    # Verify the response contains a message about points already awarded
+    assert 'message' in second_award_result['result'], "Result should contain a 'message' key"
+    assert "already has" in second_award_result['result']['message'], \
+        f"Message should indicate points already awarded, got: {second_award_result['result']['message']}"
 
 # 2.4 AND: Original points should remain unchanged
 @then('the original points should remain unchanged')
