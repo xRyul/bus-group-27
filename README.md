@@ -207,6 +207,9 @@ https://canvas.bham.ac.uk/courses/78939/assignments/512861
 <summary><b>Architecture</b></summary>
 
 ### MVC Architecture with Service Layer (MVCS)
+![BUS - Assignment 2-202506021909071414](https://github.com/user-attachments/assets/1587423c-fd0c-446a-be52-0c36aa505c19)
+
+
 - **Model** (app/models/): Data structures using SQLAlchemy ORM, entity relationships and defines database schema
 - **View** (app/templates/): HTML templates with Jinja2, presents data to users and handles UI
 - **Controller** (app/views.py): Flask routes that handle HTTP requests, coordination between components, manages form submission and validation, renders templates with appropriate data
